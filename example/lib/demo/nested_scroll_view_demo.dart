@@ -106,11 +106,33 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
   }
 
   Widget builderAppbar(PullToRefreshScrollNotificationInfo info) {
-    var action = Padding(
+    Widget action = Padding(
       child: info?.refreshWiget ?? Icon(Icons.more_horiz),
       padding: EdgeInsets.all(15.0),
     );
     var offset = info?.dragOffset ?? 0.0;
+    Widget child = Container();
+    if (info != null) {
+      if (info.mode == RefreshIndicatorMode.error) {
+        child = GestureDetector(
+            onTap: () {
+              // refreshNotification;
+              info?.pullToRefreshNotificationState?.show();
+            },
+            child: Text(
+              (info.mode?.toString() ?? "") + "  click to retry" ?? "",
+                style: TextStyle(fontSize: 10.0),
+              ),
+            );
+        action=Container();
+      } else {
+        child = Text(
+          info?.mode?.toString() ?? "",
+          style: TextStyle(fontSize: 10.0),
+        );
+      }
+    }
+
     return SliverAppBar(
         pinned: true,
         title: Text("NestedScrollViewDemo"),
@@ -119,10 +141,7 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
         actions: <Widget>[action],
         flexibleSpace: FlexibleSpaceBar(
             //centerTitle: true,
-            title: Text(
-              info?.mode?.toString() ?? "",
-              style: TextStyle(fontSize: 10.0),
-            ),
+            title: child,
             collapseMode: CollapseMode.pin,
             background: Image.asset(
               "assets/467141054.jpg",
@@ -134,7 +153,7 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
   Future<bool> onRefresh() async {
     print("onRefresh");
     if (primaryTC.index == 0) {
-      return await listSourceRepository.refresh(true);
+      return await listSourceRepository.refresh(false);
     } else if (primaryTC.index == 1) {
       listSourceRepository2.clear();
       return await listSourceRepository1.refresh(true);

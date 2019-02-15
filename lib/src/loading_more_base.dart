@@ -51,7 +51,7 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
     } else {
       if (indicatorStatus == IndicatorStatus.FullScreenBusying) {
         indicatorStatus = IndicatorStatus.FullScreenError;
-      } else {
+      } else if (indicatorStatus == IndicatorStatus.LoadingMoreBusying) {
         indicatorStatus = IndicatorStatus.Error;
       }
     }
@@ -65,12 +65,11 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
   @override
   //@protected
   @mustCallSuper
-  Future<bool> refresh([bool clearBeforeRequest = false]) async {
+  Future<bool> refresh([bool notifyStateChanged = true]) async {
     // TODO: implement OnRefresh
-    if (clearBeforeRequest) this.clear();
-    var preStatus = indicatorStatus;
+    this.clear();
     indicatorStatus = IndicatorStatus.FullScreenBusying;
-    if (preStatus != indicatorStatus) {
+    if (notifyStateChanged) {
       onStateChanged(this);
     }
     return await _innerloadData();

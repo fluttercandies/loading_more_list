@@ -1,3 +1,8 @@
+## [0.2.7]
+
+* add notifyStateChanged parameter for LoadingMoreBase's refresh method to notify state changed or not
+  (you can not rebuild ui before complete refresh)
+
 ## [0.2.6]
 
 * fix LoadingMoreList not listen onScrollNotification

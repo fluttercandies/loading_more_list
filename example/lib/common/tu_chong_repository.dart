@@ -11,20 +11,30 @@ class TuChongRepository extends LoadingMoreBase<TuChongItem> {
   // TODO: implement hasMore
   bool _hasMore = true;
   bool forceRefresh = false;
-  bool get hasMore => (_hasMore && length < 20) || forceRefresh;
+  bool get hasMore => (_hasMore && length < 20);
 
   @override
-  Future<bool> refresh([bool clearBeforeRequest = false]) async {
-    // TODO: implement onRefresh
+  Future<bool> refresh([bool notifyStateChanged = true]) async {
+    // TODO: implement refresh
     _hasMore = true;
     pageindex = 1;
-    //force to refresh list when you don't want clear list before request
-    //for the case, if your list already has 20 items.
-    forceRefresh = !clearBeforeRequest;
-    var result = await super.refresh(clearBeforeRequest);
+    var result = await super.refresh(notifyStateChanged);
     forceRefresh = false;
     return result;
   }
+
+//  @override
+//  Future<bool> refresh([bool clearBeforeRequest = false]) async {
+//    // TODO: implement onRefresh
+//    _hasMore = true;
+//    pageindex = 1;
+//    //force to refresh list when you don't want clear list before request
+//    //for the case, if your list already has 20 items.
+//    forceRefresh = !clearBeforeRequest;
+//    var result = await super.refresh(clearBeforeRequest);
+//    forceRefresh = false;
+//    return result;
+//  }
 
   @override
   Future<bool> loadData([bool isloadMoreAction = false]) async {

@@ -200,7 +200,6 @@ class _LoadingMoreCustomScrollViewState
   Widget build(BuildContext context) {
     List<Widget> widgets = List<Widget>();
     var loadingMoreWidgets = this._loadingMoreWidgets;
-    print("_LoadingMoreCustomScrollViewState_build---------------");
     if (loadingMoreWidgets.length > 0) {
       var slivers = widget.slivers;
       if (widget.reverse) {
