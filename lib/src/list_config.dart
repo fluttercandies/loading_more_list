@@ -408,8 +408,8 @@ class LoadingMoreListConfig<T> {
     }
     //empty
     else if (source.length == 0 &&
-            source.indicatorStatus == IndicatorStatus.Empty ||
-        source.indicatorStatus == IndicatorStatus.FullScreenError) {
+        (source.indicatorStatus == IndicatorStatus.Empty ||
+            source.indicatorStatus == IndicatorStatus.FullScreenError)) {
       Widget widget1;
       if (indicatorBuilder != null)
         widget1 = indicatorBuilder(context, sourceList.indicatorStatus);
