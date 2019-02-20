@@ -67,9 +67,9 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
   @mustCallSuper
   Future<bool> refresh([bool notifyStateChanged = false]) async {
     // TODO: implement OnRefresh
-    this.clear();
     indicatorStatus = IndicatorStatus.FullScreenBusying;
     if (notifyStateChanged) {
+      this.clear();
       onStateChanged(this);
     }
     return await _innerloadData();
