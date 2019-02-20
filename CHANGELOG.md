@@ -1,3 +1,7 @@
+## [0.2.8]
+
+* set notifyStateChanged default value: false
+
 ## [0.2.7]
 
 * add notifyStateChanged parameter for LoadingMoreBase's refresh method to notify state changed or not

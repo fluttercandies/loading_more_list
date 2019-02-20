@@ -65,7 +65,7 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
   @override
   //@protected
   @mustCallSuper
-  Future<bool> refresh([bool notifyStateChanged = true]) async {
+  Future<bool> refresh([bool notifyStateChanged = false]) async {
     // TODO: implement OnRefresh
     this.clear();
     indicatorStatus = IndicatorStatus.FullScreenBusying;
