@@ -80,7 +80,7 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
   @mustCallSuper
   Future<bool> errorRefresh() async {
     // TODO: implement OnRefresh
-    if (this.length == 0) return await refresh(false);
+    if (this.length == 0) return await refresh(true);
     return await loadMore();
   }
 

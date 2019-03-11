@@ -1,20 +1,16 @@
 import 'package:example/common/tu_chong_source.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_networkimage/flutter_advanced_networkimage.dart';
-import 'package:flutter_advanced_networkimage/transition_to_image.dart';
-class ItemBuilder
-{
+import 'package:extended_image/extended_image.dart';
+
+class ItemBuilder {
   static Widget itemBuilder(BuildContext context, TuChongItem item, int index) {
     return Container(
       height: 200.0,
       child: Stack(
         children: <Widget>[
           Positioned(
-            child: TransitionToImage(
-              AdvancedNetworkImage(
-                item.imageUrl,
-                useDiskCache: true,
-              ),
+            child: ExtendedImage.network(
+              item.imageUrl,
               fit: BoxFit.fill,
               width: double.infinity,
               //height: 200.0,
@@ -40,7 +36,10 @@ class ItemBuilder
                         Icons.comment,
                         color: Colors.amberAccent,
                       ),
-                      Text(item.comments.toString(),style: TextStyle(color: Colors.white),)
+                      Text(
+                        item.comments.toString(),
+                        style: TextStyle(color: Colors.white),
+                      )
                     ],
                   ),
                   Row(
@@ -49,7 +48,10 @@ class ItemBuilder
                         Icons.favorite,
                         color: Colors.deepOrange,
                       ),
-                      Text(item.favorites.toString(),style: TextStyle(color: Colors.white),)
+                      Text(
+                        item.favorites.toString(),
+                        style: TextStyle(color: Colors.white),
+                      )
                     ],
                   )
                 ],

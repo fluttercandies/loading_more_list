@@ -72,7 +72,7 @@ class TuChongRepository extends LoadingMoreBase<TuChongItem> {
 ```
 
 ## 2.loading more for ListView/GridView
-![](https://github.com/zmtzawqlp/Flutter_Candies/blob/master/gif/LoadingMoreListView.gif)
+![](https://github.com/fluttercandies/Flutter_Candies/tree/master/gif/loading_moe_list/listview.gif)
 
 ListConfig for ListView/Grid
 ```dart
@@ -175,11 +175,11 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
 ```
 and it also support to loading error
 
-![](https://github.com/zmtzawqlp/Flutter_Candies/blob/master/gif/LoadingMoreError.gif)
+![](https://github.com/fluttercandies/Flutter_Candies/tree/master/gif/loading_moe_list/error.gif)
 
 
 ## 3.loading more for Sliver or MultipleSlivers
-![](https://github.com/zmtzawqlp/Flutter_Candies/blob/master/gif/LoadingMoreMultipleSliver.gif)
+![](https://github.com/fluttercandies/Flutter_Candies/tree/master/gif/loading_moe_list/multiple_sliver.gif)
 
 SliverListConfig for SliverList/SliverGrid
 
@@ -320,7 +320,7 @@ and you can also use multiple sliver list.
   }
 ```
 ## 4.loading more for CustomIndicator
-![](https://github.com/zmtzawqlp/Flutter_Candies/blob/master/gif/LoadingMoreCustomIndicator.gif)
+![](https://github.com/fluttercandies/Flutter_Candies/tree/master/gif/loading_moe_list/custom_indicator.gif)
 
 provide indicatorBuilder and you can define your indicator base on loading status
 ```dart
@@ -425,7 +425,7 @@ provide indicatorBuilder and you can define your indicator base on loading statu
 ```
 
 ## 5.loading more for CustomIndicator
-![](https://github.com/zmtzawqlp/Flutter_Candies/blob/master/gif/LoadingMoreNestedScrollView.gif)
+![](https://github.com/fluttercandies/Flutter_Candies/tree/master/gif/loading_moe_list/nested_scrollView.gif)
 
 show how to use loading more list in NestedScrollView. in this demo, also support pull to refresh.
 
