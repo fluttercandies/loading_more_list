@@ -73,6 +73,7 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
         onRefresh: onRefresh,
         maxDragOffset: 100.0,
         child: extended.NestedScrollView(
+          physics: ClampingScrollPhysics(),
           pinnedHeaderSliverHeightBuilder: () {
             return pinnedHeaderHeight;
           },
@@ -115,16 +116,16 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
     if (info != null) {
       if (info.mode == RefreshIndicatorMode.error) {
         child = GestureDetector(
-            onTap: () {
-              // refreshNotification;
-              info?.pullToRefreshNotificationState?.show();
-            },
-            child: Text(
-              (info.mode?.toString() ?? "") + "  click to retry" ?? "",
-                style: TextStyle(fontSize: 10.0),
-              ),
-            );
-        action=Container();
+          onTap: () {
+            // refreshNotification;
+            info?.pullToRefreshNotificationState?.show();
+          },
+          child: Text(
+            (info.mode?.toString() ?? "") + "  click to retry" ?? "",
+            style: TextStyle(fontSize: 10.0),
+          ),
+        );
+        action = Container();
       } else {
         child = Text(
           info?.mode?.toString() ?? "",
@@ -204,6 +205,7 @@ class _Tab0State extends State<Tab0> with AutomaticKeepAliveClientMixin {
         LoadingMoreCustomScrollView(
           showGlowLeading: false,
           rebuildCustomScrollView: true,
+          physics: ClampingScrollPhysics(),
           slivers: <Widget>[
             SliverPersistentHeader(
                 pinned: false,
@@ -248,6 +250,7 @@ class _Tab1State extends State<Tab1> with AutomaticKeepAliveClientMixin {
         LoadingMoreCustomScrollView(
           rebuildCustomScrollView: true,
           showGlowLeading: false,
+          physics: ClampingScrollPhysics(),
           slivers: <Widget>[
             SliverPersistentHeader(
                 pinned: true,
@@ -321,6 +324,7 @@ class _Tab2State extends State<Tab2> with AutomaticKeepAliveClientMixin {
                     itemBuilder: ItemBuilder.itemBuilder,
                     sourceList: widget.listSourceRepository3,
                     showGlowLeading: false,
+                    physics: ClampingScrollPhysics(),
 //                    showGlowTrailing: false,
                     padding: EdgeInsets.all(0.0)),
               ),
