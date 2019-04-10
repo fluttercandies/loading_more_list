@@ -1,4 +1,4 @@
-## [0.3.2]
+## [0.3.3]
 
 * set notifyStateChanged default value: false
   clear list when notifyStateChanged is true.
