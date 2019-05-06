@@ -25,6 +25,7 @@ class LoadingMoreList<T> extends StatelessWidget {
             ));
       },
       stream: listConfig.sourceList?.rebuild,
+      initialData: listConfig.sourceList,
     );
   }
 

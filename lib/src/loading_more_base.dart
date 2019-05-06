@@ -12,13 +12,14 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
   @override
   T operator [](int index) {
     // TODO: implement []
-    return _array[index];
+    if (0 <= index && index < _array.length) return _array[index];
+    return null;
   }
 
   @override
   void operator []=(int index, T value) {
     // TODO: implement []=
-    _array[index] = value;
+    if (0 <= index && index < _array.length) _array[index] = value;
   }
 
   bool get hasMore => true;

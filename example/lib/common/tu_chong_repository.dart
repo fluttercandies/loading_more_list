@@ -14,11 +14,11 @@ class TuChongRepository extends LoadingMoreBase<TuChongItem> {
   bool get hasMore => (_hasMore && length < 20);
 
   @override
-  Future<bool> refresh([bool notifyStateChanged = true]) async {
+  Future<bool> refresh([bool notifyStateChanged = false]) async {
     // TODO: implement refresh
     _hasMore = true;
     pageindex = 1;
-    var result = await super.refresh(notifyStateChanged);
+    var result = await super.refresh(true);
     forceRefresh = false;
     return result;
   }

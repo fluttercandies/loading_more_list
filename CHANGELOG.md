@@ -1,3 +1,8 @@
+## [0.3.5]
+
+* set list StreamBuilder's initialData
+* index range check for LoadingMoreBase
+
 ## [0.3.4]
 
 * set notifyStateChanged default value: false

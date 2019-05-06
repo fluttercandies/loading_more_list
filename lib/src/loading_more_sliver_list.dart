@@ -16,6 +16,7 @@ class LoadingMoreSliverList<T> extends StatelessWidget {
         return sliverListConfig.buildContent(context, s.data);
       },
       stream: sliverListConfig.sourceList?.rebuild,
+      initialData: sliverListConfig.sourceList,
     );
   }
 }
