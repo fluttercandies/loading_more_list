@@ -1,4 +1,4 @@
-## [0.3.5]
+## [0.3.6]
 
 * set list StreamBuilder's initialData
 * index range check for LoadingMoreBase
