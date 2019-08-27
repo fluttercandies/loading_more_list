@@ -6,7 +6,13 @@ import 'package:example/common/tu_chong_source.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_more_list/loading_more_list.dart';
+import 'package:ff_annotation_route/ff_annotation_route.dart';
 
+@FFRoute(
+    name: "fluttercandies://CustomIndicatorDemo",
+    routeName: "CustomIndicator",
+    description:
+        "Show how to build loading more list with custom indicator quickly")
 class CustomIndicatorDemo extends StatefulWidget {
   @override
   _CustomIndicatorDemoState createState() => _CustomIndicatorDemoState();

@@ -3,7 +3,12 @@ import 'package:example/common/tu_chong_repository.dart';
 import 'package:example/common/tu_chong_source.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_more_list/loading_more_list.dart';
+import 'package:ff_annotation_route/ff_annotation_route.dart';
 
+@FFRoute(
+    name: "fluttercandies://MultipleSliverDemo",
+    routeName: "MultipleSliver",
+    description: "Show how to build loading more multiple sliver list quickly")
 class MultipleSliverDemo extends StatefulWidget {
   @override
   _MultipleSliverDemoState createState() => _MultipleSliverDemoState();

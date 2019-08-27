@@ -6,7 +6,13 @@ import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart'
     as extended;
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:pull_to_refresh_notification/pull_to_refresh_notification.dart';
+import 'package:ff_annotation_route/ff_annotation_route.dart';
 
+@FFRoute(
+    name: "fluttercandies://NestedScrollViewDemo",
+    routeName: "NestedScrollView",
+    description:
+        "Show how to build loading more list in NestedScrollView quickly")
 class NestedScrollViewDemo extends StatefulWidget {
   @override
   _NestedScrollViewDemoState createState() => _NestedScrollViewDemoState();
