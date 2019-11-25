@@ -10,3 +10,4 @@ export 'src/loading_more_list.dart';
 export 'src/loading_more_sliver_list.dart';
 export 'src/refresh_base.dart';
 export 'src/glow_notification_widget.dart';
+export 'package:extended_list_library/extended_list_library.dart';

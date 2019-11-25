@@ -23,7 +23,6 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
 
   @override
   void initState() {
-    // TODO: implement initState
     listSourceRepository = new TuChongRepository();
     super.initState();
   }
@@ -31,7 +30,6 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
   @override
   void dispose() {
     listSourceRepository?.dispose();
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -44,7 +42,8 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
             title: Text("CustomIndicatorDemo"),
           ),
           Expanded(
-            child: LoadingMoreList(
+            child: 
+            LoadingMoreList(
               ListConfig<TuChongItem>(
                 itemBuilder: ItemBuilder.itemBuilder,
                 sourceList: listSourceRepository,

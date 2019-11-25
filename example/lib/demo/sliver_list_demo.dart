@@ -18,7 +18,6 @@ class _SliverListDemoState extends State<SliverListDemo> {
   TuChongRepository listSourceRepository;
   @override
   void initState() {
-    // TODO: implement initState
     listSourceRepository = new TuChongRepository();
     super.initState();
   }
@@ -26,7 +25,6 @@ class _SliverListDemoState extends State<SliverListDemo> {
   @override
   void dispose() {
     listSourceRepository?.dispose();
-    // TODO: implement dispose
     super.dispose();
   }
 

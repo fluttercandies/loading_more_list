@@ -27,7 +27,6 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
   TabController primaryTC;
   @override
   void initState() {
-    // TODO: implement initState
     listSourceRepository = new TuChongRepository();
     listSourceRepository1 = new TuChongRepository();
     listSourceRepository2 = new TuChongRepository();
@@ -42,7 +41,6 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
     listSourceRepository1.dispose();
     listSourceRepository2.dispose();
     listSourceRepository3.dispose();
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -167,6 +165,7 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
     } else if (primaryTC.index == 2) {
       return await listSourceRepository3.refresh(true);
     }
+    return true;
   }
 }
 
@@ -197,7 +196,7 @@ class CommonSliverPersistentHeaderDelegate
 }
 
 class Tab0 extends StatefulWidget {
-  TuChongRepository listSourceRepository;
+  final TuChongRepository listSourceRepository;
   Tab0(this.listSourceRepository);
   @override
   _Tab0State createState() => _Tab0State();
@@ -206,6 +205,7 @@ class Tab0 extends StatefulWidget {
 class _Tab0State extends State<Tab0> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return extended.NestedScrollViewInnerScrollPositionKeyWidget(
         Key("Tab0"),
         LoadingMoreCustomScrollView(
@@ -236,13 +236,12 @@ class _Tab0State extends State<Tab0> with AutomaticKeepAliveClientMixin {
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
 
 class Tab1 extends StatefulWidget {
-  TuChongRepository listSourceRepository1;
-  TuChongRepository listSourceRepository2;
+  final TuChongRepository listSourceRepository1;
+  final TuChongRepository listSourceRepository2;
   Tab1(this.listSourceRepository1, this.listSourceRepository2);
   @override
   _Tab1State createState() => _Tab1State();
@@ -251,6 +250,7 @@ class Tab1 extends StatefulWidget {
 class _Tab1State extends State<Tab1> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return extended.NestedScrollViewInnerScrollPositionKeyWidget(
         Key("Tab1"),
         LoadingMoreCustomScrollView(
@@ -299,12 +299,11 @@ class _Tab1State extends State<Tab1> with AutomaticKeepAliveClientMixin {
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
 
 class Tab2 extends StatefulWidget {
-  TuChongRepository listSourceRepository3;
+  final TuChongRepository listSourceRepository3;
   Tab2(this.listSourceRepository3);
 
   @override
@@ -314,6 +313,7 @@ class Tab2 extends StatefulWidget {
 class _Tab2State extends State<Tab2> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return extended.NestedScrollViewInnerScrollPositionKeyWidget(
         Key("Tab2"),
         Column(
@@ -340,6 +340,5 @@ class _Tab2State extends State<Tab2> with AutomaticKeepAliveClientMixin {
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

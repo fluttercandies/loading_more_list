@@ -17,12 +17,12 @@ class MultipleSliverDemo extends StatefulWidget {
 class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
   TuChongRepository listSourceRepository;
   TuChongRepository listSourceRepository1;
-
+  TuChongRepository listSourceRepository2;
   @override
   void initState() {
-    // TODO: implement initState
     listSourceRepository = new TuChongRepository();
     listSourceRepository1 = new TuChongRepository();
+    listSourceRepository2 = new TuChongRepository();
     super.initState();
   }
 
@@ -30,7 +30,7 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
   void dispose() {
     listSourceRepository.dispose();
     listSourceRepository1.dispose();
-    // TODO: implement dispose
+    listSourceRepository2.dispose();
     super.dispose();
   }
 
@@ -43,6 +43,8 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
             pinned: true,
             title: Text("MultipleSliverDemo"),
           ),
+
+          ///SliverList
           LoadingMoreSliverList(SliverListConfig<TuChongItem>(
             itemBuilder: ItemBuilder.itemBuilder,
             sourceList: listSourceRepository,
@@ -55,6 +57,19 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
               height: 100.0,
             ),
           ),
+
+          ///SliverGrid
+          LoadingMoreSliverList(
+            SliverListConfig<TuChongItem>(
+              itemBuilder: ItemBuilder.itemBuilder,
+              sourceList: listSourceRepository1,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 3.0,
+                mainAxisSpacing: 3.0,
+              ),
+            ),
+          ),
           SliverPersistentHeader(
             delegate: CommonExtentSliverPersistentHeaderDelegate(
                 Container(
@@ -65,16 +80,20 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
                 100.0),
             pinned: true,
           ),
-          LoadingMoreSliverList(SliverListConfig<TuChongItem>(
-            itemBuilder: ItemBuilder.itemBuilder,
-            sourceList: listSourceRepository1,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 3.0,
-              mainAxisSpacing: 3.0,
-//                    childAspectRatio: 0.5
+
+          ///SliverWaterfallFlow
+          LoadingMoreSliverList(
+            SliverListConfig<TuChongItem>(
+              itemBuilder: buildWaterfallFlowItem,
+              sourceList: listSourceRepository2,
+              padding: EdgeInsets.symmetric(horizontal: 5.0),
+              waterfallFlowDelegate: WaterfallFlowDelegate(
+                crossAxisCount: 2,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+              ),
             ),
-          ))
+          ),
         ],
       ),
     );

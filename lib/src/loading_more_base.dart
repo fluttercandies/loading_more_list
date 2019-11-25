@@ -11,14 +11,12 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
 
   @override
   T operator [](int index) {
-    // TODO: implement []
     if (0 <= index && index < _array.length) return _array[index];
     return null;
   }
 
   @override
   void operator []=(int index, T value) {
-    // TODO: implement []=
     if (0 <= index && index < _array.length) _array[index] = value;
   }
 
@@ -41,8 +39,6 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
 
   Future<bool> _innerloadData([bool isloadMoreAction = false]) async {
     if (isLoading || !hasMore) return true;
-    // TODO: implement loadMore
-
     isLoading = true;
     var isSuccess = await loadData(isloadMoreAction);
     isLoading = false;
@@ -67,7 +63,6 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
   //@protected
   @mustCallSuper
   Future<bool> refresh([bool notifyStateChanged = false]) async {
-    // TODO: implement OnRefresh
     if (notifyStateChanged) {
       this.clear();
       indicatorStatus = IndicatorStatus.FullScreenBusying;
@@ -80,7 +75,6 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
   //@protected
   @mustCallSuper
   Future<bool> errorRefresh() async {
-    // TODO: implement OnRefresh
     if (this.length == 0) return await refresh(true);
     return await loadMore();
   }
@@ -93,13 +87,18 @@ abstract class LoadingMoreBase<T> extends ListBase<T>
   //@protected
   @mustCallSuper
   void onStateChanged(LoadingMoreBase<T> source) {
-    // TODO: implement notice
     super.onStateChanged(source);
   }
 
   bool get hasError {
     return indicatorStatus == IndicatorStatus.FullScreenError ||
         indicatorStatus == IndicatorStatus.Error;
+  }
+  
+  /// update ui
+  void setState()
+  {
+    super.onStateChanged(this);
   }
 }
 

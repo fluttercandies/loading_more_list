@@ -10,6 +10,7 @@ class LoadingMoreList<T> extends StatelessWidget {
   /// Called when a ScrollNotification of the appropriate type arrives at this
   /// location in the tree.
   final NotificationListenerCallback<ScrollNotification> onScrollNotification;
+  
   LoadingMoreList(this.listConfig, {Key key, this.onScrollNotification})
       : super(key: key);
   @override
@@ -38,9 +39,11 @@ class LoadingMoreList<T> extends StatelessWidget {
     if (notification.metrics.axisDirection == AxisDirection.down &&
         notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
       if (listConfig.hasMore && !listConfig.hasError && !listConfig.isLoading) {
-        listConfig.sourceList.length == 0
-            ? listConfig.sourceList.refresh()
-            : listConfig.sourceList.loadMore();
+        if (listConfig.sourceList.length == 0) {
+          listConfig.sourceList.refresh();
+        } else if (listConfig.autoLoadMore) {
+          listConfig.sourceList.loadMore();
+        }
       }
     }
     return false;

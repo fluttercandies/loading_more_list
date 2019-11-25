@@ -18,7 +18,6 @@ class _ListViewDemoState extends State<ListViewDemo> {
   TuChongRepository listSourceRepository;
   @override
   void initState() {
-    // TODO: implement initState
     listSourceRepository = new TuChongRepository();
     super.initState();
   }
@@ -26,7 +25,6 @@ class _ListViewDemoState extends State<ListViewDemo> {
   @override
   void dispose() {
     listSourceRepository?.dispose();
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -39,13 +37,22 @@ class _ListViewDemoState extends State<ListViewDemo> {
             title: Text("ListViewDemo"),
           ),
           Expanded(
-            child: LoadingMoreList(
+            child: 
+            LoadingMoreList(
               ListConfig<TuChongItem>(
-                  itemBuilder: ItemBuilder.itemBuilder,
-                  sourceList: listSourceRepository,
+                itemBuilder: ItemBuilder.itemBuilder,
+                sourceList: listSourceRepository,
 //                    showGlowLeading: false,
 //                    showGlowTrailing: false,
-                  padding: EdgeInsets.all(0.0)),
+                padding: EdgeInsets.all(0.0),
+                collectGarbage: (List<int> garbages) {
+                  print("collect garbage : $garbages");
+                },
+                viewportBuilder: (int firstIndex, int lastIndex) {
+                  print("viewport : [$firstIndex,$lastIndex]");
+                },
+                closeToTrailing: true
+              ),
             ),
           )
         ],

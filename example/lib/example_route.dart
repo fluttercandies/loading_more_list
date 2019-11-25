@@ -12,6 +12,7 @@ import 'demo/multiple_sliver_demo.dart';
 import 'demo/nested_scroll_view_demo.dart';
 import 'demo/sliver_grid_demo.dart';
 import 'demo/sliver_list_demo.dart';
+import 'demo/waterfall_flow_demo.dart';
 
 RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
   switch (name) {
@@ -65,6 +66,12 @@ RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
         routeName: "SliverList",
         description: "Show how to build loading more SliverList quickly",
       );
+    case "fluttercandies://WaterfallFlowDemo":
+      return RouteResult(
+        widget: WaterfallFlowDemo(),
+        routeName: "WaterfallFlow",
+        description: "Show how to build loading more WaterfallFlow quickly",
+      );
     default:
       return RouteResult();
   }
@@ -98,11 +105,12 @@ enum PageRouteType { material, cupertino, transparent }
 
 List<String> routeNames = [
   "fluttercandies://CustomIndicatorDemo",
+  "fluttercandies://WaterfallFlowDemo",
   "fluttercandies://GridViewDemo",
   "fluttercandies://ListViewDemo",
   "fluttercandies://mainpage",
   "fluttercandies://MultipleSliverDemo",
   "fluttercandies://NestedScrollViewDemo",
   "fluttercandies://SliverGridDemo",
-  "fluttercandies://SliverListDemo"
+  "fluttercandies://SliverListDemo",
 ];

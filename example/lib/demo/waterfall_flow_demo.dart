@@ -6,15 +6,15 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
 @FFRoute(
-    name: "fluttercandies://GridViewDemo",
-    routeName: "GridView",
-    description: "Show how to build loading more GridView quickly")
-class GridViewDemo extends StatefulWidget {
+    name: "fluttercandies://WaterfallFlowDemo",
+    routeName: "WaterfallFlow",
+    description: "Show how to build loading more WaterfallFlow quickly")
+class WaterfallFlowDemo extends StatefulWidget {
   @override
-  _GridViewDemoState createState() => _GridViewDemoState();
+  _WaterfallFlowDemoState createState() => _WaterfallFlowDemoState();
 }
 
-class _GridViewDemoState extends State<GridViewDemo> {
+class _WaterfallFlowDemoState extends State<WaterfallFlowDemo> {
   TuChongRepository listSourceRepository;
   @override
   void initState() {
@@ -34,21 +34,20 @@ class _GridViewDemoState extends State<GridViewDemo> {
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text("GridViewDemo"),
+            title: Text("WaterfallFlowDemo"),
           ),
           Expanded(
-            child: 
-            LoadingMoreList(
+            child: LoadingMoreList(
               ListConfig<TuChongItem>(
-                itemBuilder: ItemBuilder.itemBuilder,
-                sourceList: listSourceRepository,
-                padding: EdgeInsets.all(0.0),
-                lastChildLayoutType: LastChildLayoutType.foot,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                waterfallFlowDelegate: WaterfallFlowDelegate(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 3.0,
-                  mainAxisSpacing: 3.0,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
                 ),
+                itemBuilder: buildWaterfallFlowItem,
+                sourceList: listSourceRepository,
+                padding: EdgeInsets.all(5.0),
+                lastChildLayoutType: LastChildLayoutType.foot,
               ),
             ),
           )
