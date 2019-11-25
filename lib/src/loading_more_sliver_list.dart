@@ -170,9 +170,9 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
       this.cacheExtent,
       this.slivers = const <Widget>[],
       this.semanticChildCount,
-      this.showGlowLeading: true,
-      this.showGlowTrailing: true,
-      this.rebuildCustomScrollView: false,
+      this.showGlowLeading = true,
+      this.showGlowTrailing = true,
+      this.rebuildCustomScrollView = false,
       this.onScrollNotification})
       : assert(slivers != null),
         super(key: key);
@@ -193,8 +193,20 @@ class _LoadingMoreCustomScrollViewState
         })
         .map<LoadingMoreSliverList>((f) => f as LoadingMoreSliverList)
         .toList();
-    // TODO: implement initState
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(LoadingMoreCustomScrollView oldWidget) {
+    if (oldWidget.slivers != widget.slivers) {
+      _loadingMoreWidgets = widget.slivers
+          .where((x) {
+            return x is LoadingMoreSliverList;
+          })
+          .map<LoadingMoreSliverList>((f) => f as LoadingMoreSliverList)
+          .toList();
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -203,11 +215,6 @@ class _LoadingMoreCustomScrollViewState
     var loadingMoreWidgets = this._loadingMoreWidgets;
     if (loadingMoreWidgets.length > 0) {
       var slivers = widget.slivers;
-      if (widget.reverse) {
-        slivers = slivers.reversed;
-        loadingMoreWidgets = loadingMoreWidgets.reversed;
-      }
-
       for (int i = 0; i < slivers.length; i++) {
         var item = slivers[i];
         widgets.add(item);
@@ -229,8 +236,6 @@ class _LoadingMoreCustomScrollViewState
           }
         }
       }
-    } else {
-      widgets = widget.reverse ? widget.slivers.reversed : widget.slivers;
     }
 
     return NotificationListener<ScrollNotification>(
@@ -245,6 +250,7 @@ class _LoadingMoreCustomScrollViewState
               cacheExtent: widget.cacheExtent,
               controller: widget.controller,
               slivers: widgets,
+              reverse: widget.reverse,
             ),
             showGlowLeading: widget.showGlowLeading,
             showGlowTrailing: widget.showGlowTrailing));
@@ -258,15 +264,10 @@ class _LoadingMoreCustomScrollViewState
     if (notification.depth != 0) return false;
 
     //reach the pixels to loading more
-    if (notification.metrics.axisDirection == AxisDirection.down &&
-        notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
+    if (notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
       var loadingMoreWidgets = this._loadingMoreWidgets;
 
       if (loadingMoreWidgets.length > 0) {
-        if (widget.reverse) {
-          loadingMoreWidgets = loadingMoreWidgets.reversed;
-        }
-
         LoadingMoreSliverList preList;
         for (int i = 0; i < loadingMoreWidgets.length; i++) {
           var item = loadingMoreWidgets[i];
@@ -284,14 +285,20 @@ class _LoadingMoreCustomScrollViewState
             if (preList != item && loadingMoreWidgets.length > 1) {
               //if(item.sliverListConfig.sourceList)
               setState(() {
-                item.sliverListConfig.sourceList.length == 0
-                    ? item.sliverListConfig.sourceList.refresh()
-                    : item.sliverListConfig.sourceList.loadMore();
+                final sourceList = item.sliverListConfig.sourceList;
+                if (sourceList.length == 0) {
+                  sourceList.refresh();
+                } else if (item.sliverListConfig.autoLoadMore) {
+                  sourceList.loadMore();
+                }
               });
             } else {
-              item.sliverListConfig.sourceList.length == 0
-                  ? item.sliverListConfig.sourceList.refresh()
-                  : item.sliverListConfig.sourceList.loadMore();
+              final sourceList = item.sliverListConfig.sourceList;
+              if (sourceList.length == 0) {
+                sourceList.refresh();
+              } else if (item.sliverListConfig.autoLoadMore) {
+                sourceList.loadMore();
+              }
             }
             break;
           }
