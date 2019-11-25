@@ -1,29 +1,32 @@
 # loading_more_list
 
-A loading more list which supports ListView,GridView,WaterfallFlow and Slivers.
+加载更多列表支持ListView,GridView以及瀑布流。
 
 [![pub package](https://img.shields.io/pub/v/loading_more_list.svg)](https://pub.dartlang.org/packages/loading_more_list) [![GitHub stars](https://img.shields.io/github/stars/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/stargazers) [![GitHub forks](https://img.shields.io/github/forks/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/network)  [![GitHub license](https://img.shields.io/github/license/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/blob/master/LICENSE)  [![GitHub issues](https://img.shields.io/github/issues/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/issues) <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5bcc0gy"><img border="0" src="https://pub.idqqimg.com/wpa/images/group.png" alt="flutter-candies" title="flutter-candies"></a>
 
-Language: English | [中文简体](README-ZH.md)
+[掘金社区文章](https://juejin.im/post/5bfb9cb7e51d45592b766769)
+
+语言: [English](README.md) | 中文简体
+
 
 - [loading_more_list](#loadingmorelist)
-  - [Use](#use)
-  - [Prepare Data Collection](#prepare-data-collection)
-  - [Argument](#argument)
+  - [使用](#%e4%bd%bf%e7%94%a8)
+  - [准备数据源](#%e5%87%86%e5%a4%87%e6%95%b0%e6%8d%ae%e6%ba%90)
+  - [参数](#%e5%8f%82%e6%95%b0)
   - [Widget](#widget)
   - [ListView](#listview)
   - [GridView](#gridview)
-  - [WaterfallFlow](#waterfallflow)
+  - [瀑布流](#%e7%80%91%e5%b8%83%e6%b5%81)
   - [Sliver/CustomScrollView](#slivercustomscrollview)
-  - [IndicatorStatus](#indicatorstatus)
-  - [CollectGarbage](#collectgarbage)
-  - [ViewportBuilder](#viewportbuilder)
+  - [状态效果](#%e7%8a%b6%e6%80%81%e6%95%88%e6%9e%9c)
+  - [内存回收](#%e5%86%85%e5%ad%98%e5%9b%9e%e6%94%b6)
+  - [可视区域追踪](#%e5%8f%af%e8%a7%86%e5%8c%ba%e5%9f%9f%e8%bf%bd%e8%b8%aa)
   - [LastChildLayoutType](#lastchildlayouttype)
   - [CloseToTrailing](#closetotrailing)
 
-## Use
+## 使用
 
-* add library to your pubspec.yaml
+* 添加库到 pubspec.yaml
   
 ```yaml
 
@@ -31,7 +34,7 @@ dependencies:
   loading_more_list: any
 
 ```  
-* import library in dart file
+* 导入库
   
 ```dart
 
@@ -39,9 +42,9 @@ dependencies:
   
 ```
 
-## Prepare Data Collection
+## 准备数据源
 
-LoadingMoreBase<T> is data collection for loading more. override loadData method to load your data. set hasMore to false when it has no more data.
+你需要继承LoadingMoreBase<T>来实现加载更多的数据源. 通过重写loadData方法来加载数据. 当没有数据的时候记得把hasMore设置为flase.
 
 ```dart
 class TuChongRepository extends LoadingMoreBase<TuChongItem> {
@@ -102,60 +105,60 @@ class TuChongRepository extends LoadingMoreBase<TuChongItem> {
 
 ```
 
-## Argument
+## 参数
 
-almost of arguments are the same as official.
+大部分参数都跟官方列表一样.
 
-following arguments are made for loading more.
+下面的参数是为加载更多而设计的.
 
-ListConfig<T> and SliverListConfig<T>
+ListConfig<T> 和 SliverListConfig<T>
 
-| argument              | description                                                                    | default                  |
-| --------------------- | ------------------------------------------------------------------------------ | ------------------------ |
-| itemBuilder           | The item builder of list.                                                      | required                 |
-| sourceList            | The source list of data which extends LoadingMoreBase<T>.                      | required                 |
-| showGlowLeading       | Whether to show the overscroll glow on the side with negative scroll offsets.  | 0.0                      |
-| showGlowTrailing      | Whether to show the overscroll glow on the side with positive scroll offsets.  | -                        |
-| lastChildLayoutType   | Layout type of last child(loadmore/no more item).                              | LastChildLayoutType.foot |
-| viewportBuilder       | The builder to get indexs in viewport.                                         | -                        |
-| closeToTrailing       | Whether make layout close to trailing.                                         | false                    |
-| collectGarbage        | Call when collect garbage and return indexs to collect.                        | -                        |
-| gridDelegate          | The delegate for GridView.                                                     | -                        |
-| waterfallFlowDelegate | The delegate for WaterfallFlow.                                                | -                        |
-| indicatorBuilder      | widget builder for different loading state.                                    | IndicatorWidget          |
-| padding               | The amount of space by which to inset the child sliver for SliverListConfig<T> | -                        |
+| 参数                  | 描述                                          | 默认                     |
+| --------------------- | --------------------------------------------- | ------------------------ |
+| itemBuilder           | 列表元素构建器.                               | 必填                     |
+| sourceList            | 数据源继承于LoadingMoreBase<T>.               | 必填                     |
+| showGlowLeading       | 是否显示过度拖拽上部波纹.                     | 0.0                      |
+| showGlowTrailing      | 是否显示过度拖拽下部波纹.                     | -                        |
+| lastChildLayoutType   | 最后一个元素的布局样式(loadmore/no more元素). | LastChildLayoutType.foot |
+| viewportBuilder       | 可视区域中元素indexes变化时的回调.            | -                        |
+| closeToTrailing       | 可否让布局紧贴trailing.                       | false                    |
+| collectGarbage        | 元素回收时候的回调.                           | -                        |
+| gridDelegate          | GridView定义委托.                             | -                        |
+| waterfallFlowDelegate | 瀑布流定义委托.                               | -                        |
+| indicatorBuilder      | 状态指示构建器.                               | IndicatorWidget          |
+| padding               | 边距，SliverListConfig<T>的参数               | -                        |
 
 
 WaterfallFlowDelegate
 
-| argument         | description                                                           | default  |
-| ---------------- | --------------------------------------------------------------------- | -------- |
-| crossAxisCount   | The number of children in the cross axis.                             | required |
-| mainAxisSpacing  | The number of logical pixels between each child along the main axis.  | 0        |
-| crossAxisSpacing | The number of logical pixels between each child along the cross axis. | 0        |
+| 参数             | 描述                 | 默认 |
+| ---------------- | -------------------- | ---- |
+| crossAxisCount   | 横轴的等长度元素数量 | 必填 |
+| mainAxisSpacing  | 主轴元素之间的距离   | 0.0  |
+| crossAxisSpacing | 横轴元素之间的距离   | 0.0  |
 
 
 ## Widget
 
 LoadingMoreList<T>
 
-| argument             | description                                                                                    | default  |
-| -------------------- | ---------------------------------------------------------------------------------------------- | -------- |
-| listConfig           | ListConfig<T>                                                                                  | required |
-| onScrollNotification | Called when a ScrollNotification of the appropriate type arrives at this location in the tree. | -        |
+| 参数                 | 描述                   | 默认     |
+| -------------------- | ---------------------- | -------- |
+| listConfig           | ListConfig<T> 构建参数 | required |
+| onScrollNotification | 获取滚动冒泡通知.      | -        |
 
-LoadingMoreSliverList<T>
+LoadingMoreSliverList<T> 
 
-| argument         | description         | default  |
-| ---------------- | ------------------- | -------- |
-| sliverListConfig | SliverListConfig<T> | required |
+| 参数             | 描述                         | 默认     |
+| ---------------- | ---------------------------- | -------- |
+| sliverListConfig | SliverListConfig<T> 构建参数 | required |
 
 LoadingMoreCustomScrollView
 
-| argument                | description                                                                                    | default |
-| ----------------------- | ---------------------------------------------------------------------------------------------- | ------- |
-| onScrollNotification    | Called when a ScrollNotification of the appropriate type arrives at this location in the tree. | -       |
-| rebuildCustomScrollView | in NestedScrollView, rebuild CustomScrollView, viewport can be computed again.                 | false   |
+| 参数                    | 描述                                                                      | 默认  |
+| ----------------------- | ------------------------------------------------------------------------- | ----- |
+| onScrollNotification    | 获取滚动冒泡通知.                                                         | -     |
+| rebuildCustomScrollView | 在NestedScrollView中, 需要重建CustomScrollView, 这样可视区域才会重新计算. | false |
 
 
 ## ListView
@@ -174,7 +177,7 @@ LoadingMoreCustomScrollView
 
 ## GridView
 
-define GridView with gridDelegate argument.
+通过gridDelegate定义GridView
 
 ```dart
             LoadingMoreList(
@@ -191,11 +194,11 @@ define GridView with gridDelegate argument.
             ),
 ```
 
-## WaterfallFlow
+## 瀑布流
 
 ![](https://github.com/fluttercandies/Flutter_Candies/tree/master/gif/waterfall_flow/known_sized.gif)
 
-define WaterfallFlow with waterfallFlowDelegate argument.
+通过waterfallFlowDelegate定义瀑布流
 
 ```dart
             LoadingMoreList(
@@ -217,7 +220,7 @@ define WaterfallFlow with waterfallFlowDelegate argument.
 | ![](https://github.com/fluttercandies/Flutter_Candies/tree/master/gif/loading_moe_list/multiple_sliver.gif) | ![](https://github.com/fluttercandies/Flutter_Candies/tree/master/gif/loading_moe_list/nested_scrollView.gif) |
 | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 
-following codes are show how to build loading more list within CustomScrollView.
+下面的代码展示怎么在CustomScrollView中构建加载更多列表
 
 ```dart
       LoadingMoreCustomScrollView(
@@ -278,12 +281,12 @@ following codes are show how to build loading more list within CustomScrollView.
       ),
 ```
 
-## IndicatorStatus
+## 状态效果
 
 | ![](https://github.com/fluttercandies/Flutter_Candies/tree/master/gif/loading_moe_list/error.gif) | ![](https://github.com/fluttercandies/Flutter_Candies/tree/master/gif/loading_moe_list/custom_indicator.gif) |
 | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 
-define loading status with indicatorBuilder argument.
+为各种状态定义展示效果.
 
 ``` dart
         enum IndicatorStatus {
@@ -431,9 +434,9 @@ define loading status with indicatorBuilder argument.
 
 ```
 
-## CollectGarbage
+## 内存回收
 
-track the indexes are collect, you can collect garbage at that monment(for example Image cache)
+追踪列表元素回收，你可以在这个时刻回收一些内存，比如图片的内存缓存。
 
 ```dart
         LoadingMoreList(
@@ -445,9 +448,9 @@ track the indexes are collect, you can collect garbage at that monment(for examp
         ),
 ```
 
-## ViewportBuilder
+## 可视区域追踪
 
-track the indexes go into the viewport, it's not include cache extent.
+追踪进入Viewport的列表元素的index（即你看到的可视区域，并不包括缓存距离）
 
 ```dart
         LoadingMoreList(
@@ -461,31 +464,28 @@ track the indexes go into the viewport, it's not include cache extent.
 ```
 ## LastChildLayoutType
 
-build lastChild as special child in the case that it is loadmore/no more item.
+为最后一个元素创建特殊布局，这主要是用在将最后一个元素作为loadmore/no more的时候。
 
 ```dart
         enum LastChildLayoutType {
-        /// as default child
+        /// 普通的
         none,
 
-        /// follow max child trailing layout offset and layout with full cross axis extend
-        /// last child as loadmore item/no more item in [ExtendedGridView] and [WaterfallFlow]
-        /// with full cross axis extend
+        /// 将最后一个元素绘制在最大主轴Item之后，并且使用横轴大小最为layout size
+        /// 主要使用在[ExtendedGridView] and [WaterfallFlow]中，最后一个元素作为loadmore/no more元素的时候。
         fullCrossAxisExtend,
 
-        /// as foot at trailing and layout with full cross axis extend
-        /// show no more item at trailing when children are not full of viewport
-        /// if children is full of viewport, it's the same as fullCrossAxisExtend
+        /// 将最后一个child绘制在trailing of viewport，并且使用横轴大小最为layout size
+        /// 这种常用于最后一个元素作为loadmore/no more元素，并且列表元素没有充满整个viewport的时候
+        /// 如果列表元素充满viewport，那么效果跟fullCrossAxisExtend一样
         foot,
         }
 ```
 
-
 ## CloseToTrailing
 
-when reverse property of List is true, layout is as following.
-it likes chat list, and new session will insert to zero index.
-but it's not right when items are not full of viewport.
+
+当reverse设置为true的时候，布局会变成如下。常用于聊天列表，新的会话会被插入0的位置，但是当会话没有充满viewport的时候，下面的布局不是我们想要的。
 
 ```
      trailing
@@ -499,9 +499,9 @@ but it's not right when items are not full of viewport.
      leading
 ```     
 
-to solve it, you could set closeToTrailing to true, layout is as following.
-support [ExtendedGridView],[ExtendedList],[WaterfallFlow].
-and it also works when reverse is flase, layout will close to trailing.
+为了解决这个问题，你可以设置 closeToTrailing 为true, 布局将变成如下
+该属性同时支持[ExtendedGridView],[ExtendedList],[WaterfallFlow]。
+当然如果reverse如果不为ture，你设置这个属性依然会生效，没满viewport的时候布局会紧靠trailing
 
 ```
      trailing

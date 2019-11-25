@@ -1,3 +1,15 @@
+## [1.0.0]
+
+* Features:
+  Support WaterfallFlow
+  Support to layout no more item as foot
+  Support to track collect garbage
+  Support to track viewport indexes
+  Support to layout close to trailing
+
+* Issues:
+  Fix issue about reverse is true with LoadingMoreCustomScrollView
+
 ## [0.3.7]
 
 * set list StreamBuilder's initialData
