@@ -435,6 +435,8 @@ define loading status with indicatorBuilder argument.
 
 track the indexes are collect, you can collect garbage at that monment(for example Image cache)
 
+[more detail](https://github.com/fluttercandies/extended_image/blob/e1577bc4d0b57c725110a9d886703b98a72772b5/example/lib/pages/photo_view_demo.dart#L91)
+
 ```dart
         LoadingMoreList(
           ListConfig<TuChongItem>(
