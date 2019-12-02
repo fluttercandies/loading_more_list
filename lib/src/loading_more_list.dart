@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_more_list/src/glow_notification_widget.dart';
 import 'package:loading_more_list/src/list_config.dart';
-import 'package:loading_more_list/src/loading_more_base.dart';
+import 'package:loading_more_list_library/loading_more_list_library.dart';
 
 //loading more for listview and gridview
 class LoadingMoreList<T> extends StatelessWidget {

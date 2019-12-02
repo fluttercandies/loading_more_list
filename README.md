@@ -440,9 +440,18 @@ track the indexes are collect, you can collect garbage at that monment(for examp
 ```dart
         LoadingMoreList(
           ListConfig<TuChongItem>(
-            collectGarbage: (List<int> garbages) {
-              print("collect garbage : $garbages");
-            },
+                collectGarbage: (List<int> indexes) {
+                  ///collectGarbage
+                  indexes.forEach((index) {
+                    final item = listSourceRepository[index];
+                    if (item.hasImage) {
+                      final provider = ExtendedNetworkImageProvider(
+                        item.imageUrl,
+                      );
+                      provider.evict();
+                    }
+                  });
+                },
           ),
         ),
 ```

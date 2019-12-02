@@ -1,3 +1,14 @@
+## [1.0.1]
+
+* Features:
+  Support SliverFixedExtentList
+
+* Breaking change:
+  Change values of IndicatorStatus to lowercase
+
+* Improve:
+  Extract core codes to loading_more_list_library
+
 ## [1.0.0]
 
 * Features:

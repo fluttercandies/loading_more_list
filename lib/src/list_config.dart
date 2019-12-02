@@ -1,8 +1,8 @@
 import 'package:extended_list/extended_list.dart';
 import 'package:flutter/material.dart' hide ViewportBuilder;
 import 'package:loading_more_list/src/indicator_widget.dart';
-import 'package:loading_more_list/src/loading_more_base.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
+import 'package:loading_more_list_library/loading_more_list_library.dart';
 
 int _kDefaultSemanticIndexCallback(Widget _, int localIndex) {
   return localIndex;
@@ -318,6 +318,15 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   /// The amount of space by which to inset the child sliver.
   final EdgeInsetsGeometry padding;
 
+  /// If non-null, forces the children to have the given extent in the scroll
+  /// direction.
+  ///
+  /// Specifying an [itemExtent] is more efficient than letting the children
+  /// determine their own extent because the scrolling machinery can make use of
+  /// the foreknowledge of the children's extent to save work, for example when
+  /// the scroll position changes drastically.
+  final double itemExtent;
+
   SliverListConfig({
     Widget Function(BuildContext context, T item, int index) itemBuilder,
     LoadingMoreBase<T> sourceList,
@@ -336,6 +345,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     CollectGarbage collectGarbage,
     bool closeToTrailing = false,
     this.padding,
+    this.itemExtent,
   }) : super(
           itemBuilder,
           sourceList,
@@ -422,18 +432,36 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           ),
           gridDelegate: gridDelegate);
     } else {
-      widget = ExtendedSliverList(
-        extendedListDelegate: _getExtendedListDelegate(showNoMore: showNoMore),
-        delegate: new SliverChildBuilderDelegate(
-          buildItem,
-          addAutomaticKeepAlives: addAutomaticKeepAlives,
-          addRepaintBoundaries: addRepaintBoundaries,
-          addSemanticIndexes: addSemanticIndexes,
-          semanticIndexCallback: semanticIndexCallback,
-          semanticIndexOffset: semanticIndexOffset,
-          childCount: count + lastOne,
-        ),
-      );
+      if (itemExtent != null) {
+        widget = ExtendedSliverFixedExtentList(
+          itemExtent: itemExtent,
+          extendedListDelegate:
+              _getExtendedListDelegate(showNoMore: showNoMore),
+          delegate: new SliverChildBuilderDelegate(
+            buildItem,
+            addAutomaticKeepAlives: addAutomaticKeepAlives,
+            addRepaintBoundaries: addRepaintBoundaries,
+            addSemanticIndexes: addSemanticIndexes,
+            semanticIndexCallback: semanticIndexCallback,
+            semanticIndexOffset: semanticIndexOffset,
+            childCount: count + lastOne,
+          ),
+        );
+      } else {
+        widget = ExtendedSliverList(
+          extendedListDelegate:
+              _getExtendedListDelegate(showNoMore: showNoMore),
+          delegate: new SliverChildBuilderDelegate(
+            buildItem,
+            addAutomaticKeepAlives: addAutomaticKeepAlives,
+            addRepaintBoundaries: addRepaintBoundaries,
+            addSemanticIndexes: addSemanticIndexes,
+            semanticIndexCallback: semanticIndexCallback,
+            semanticIndexOffset: semanticIndexOffset,
+            childCount: count + lastOne,
+          ),
+        );
+      }
     }
     if (padding != null && widget != null) {
       widget = SliverPadding(
@@ -527,17 +555,17 @@ class LoadingMoreListConfig<T> {
     //from stream builder or from refresh
     if (source == null ||
         (source.length == 0 &&
-            source.indicatorStatus == IndicatorStatus.FullScreenBusying)) {
+            source.indicatorStatus == IndicatorStatus.fullScreenBusying)) {
       if (source == null || !source.isLoading) {
         //first load
         sourceList.refresh();
       }
       Widget widget;
       if (indicatorBuilder != null)
-        widget = indicatorBuilder(context, IndicatorStatus.FullScreenBusying);
+        widget = indicatorBuilder(context, IndicatorStatus.fullScreenBusying);
       widget = widget ??
           IndicatorWidget(
-            IndicatorStatus.FullScreenBusying,
+            IndicatorStatus.fullScreenBusying,
             isSliver: isSliver,
           );
 
@@ -545,8 +573,8 @@ class LoadingMoreListConfig<T> {
     }
     //empty
     else if (source.length == 0 &&
-        (source.indicatorStatus == IndicatorStatus.Empty ||
-            source.indicatorStatus == IndicatorStatus.FullScreenError)) {
+        (source.indicatorStatus == IndicatorStatus.empty ||
+            source.indicatorStatus == IndicatorStatus.fullScreenError)) {
       Widget widget1;
       if (indicatorBuilder != null)
         widget1 = indicatorBuilder(context, sourceList.indicatorStatus);
@@ -554,7 +582,7 @@ class LoadingMoreListConfig<T> {
           IndicatorWidget(
             sourceList.indicatorStatus,
             isSliver: isSliver,
-            tryAgain: source.indicatorStatus == IndicatorStatus.FullScreenError
+            tryAgain: source.indicatorStatus == IndicatorStatus.fullScreenError
                 ? () {
                     sourceList.errorRefresh();
                   }
@@ -575,8 +603,8 @@ class LoadingMoreListConfig<T> {
       if (widget != null) return widget;
 
       var status = sourceList.hasMore
-          ? IndicatorStatus.LoadingMoreBusying
-          : IndicatorStatus.NoMoreLoad;
+          ? IndicatorStatus.loadingMoreBusying
+          : IndicatorStatus.noMoreLoad;
 
       if (sourceList.hasMore && autoLoadMore) {
         sourceList.loadMore();
@@ -595,13 +623,13 @@ class LoadingMoreListConfig<T> {
   }
 
   Widget buildErrorItem(BuildContext context) {
-    var hasError = sourceList.indicatorStatus == IndicatorStatus.Error;
+    var hasError = sourceList.indicatorStatus == IndicatorStatus.error;
     if (hasError) {
       Widget widget;
       if (indicatorBuilder != null)
-        widget = indicatorBuilder(context, IndicatorStatus.Error);
+        widget = indicatorBuilder(context, IndicatorStatus.error);
       widget = widget ??
-          IndicatorWidget(IndicatorStatus.Error, isSliver: isSliver,
+          IndicatorWidget(IndicatorStatus.error, isSliver: isSliver,
               tryAgain: () {
             sourceList.errorRefresh();
           });

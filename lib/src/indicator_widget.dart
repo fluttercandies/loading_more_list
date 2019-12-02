@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_more_list/src/empty_widget.dart';
+import 'package:loading_more_list_library/loading_more_list_library.dart';
 
 class IndicatorWidget extends StatelessWidget {
   ///Status of indicator
@@ -33,10 +34,10 @@ class IndicatorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget widget;
     switch (status) {
-      case IndicatorStatus.None:
+      case IndicatorStatus.none:
         widget = Container(height: 0.0);
         break;
-      case IndicatorStatus.LoadingMoreBusying:
+      case IndicatorStatus.loadingMoreBusying:
         widget = Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,7 +53,7 @@ class IndicatorWidget extends StatelessWidget {
         );
         widget = _setbackground(false, widget, 35.0);
         break;
-      case IndicatorStatus.FullScreenBusying:
+      case IndicatorStatus.fullScreenBusying:
         widget = Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,7 +82,7 @@ class IndicatorWidget extends StatelessWidget {
           );
         }
         break;
-      case IndicatorStatus.Error:
+      case IndicatorStatus.error:
         widget = Text(
           text ?? "load failed,try again.",
         );
@@ -95,7 +96,7 @@ class IndicatorWidget extends StatelessWidget {
           );
         }
         break;
-      case IndicatorStatus.FullScreenError:
+      case IndicatorStatus.fullScreenError:
         widget = Text(
           text ?? "load failed,try again.",
         );
@@ -122,11 +123,11 @@ class IndicatorWidget extends StatelessWidget {
           );
         }
         break;
-      case IndicatorStatus.NoMoreLoad:
+      case IndicatorStatus.noMoreLoad:
         widget = Text(text ?? "No more items.");
         widget = _setbackground(false, widget, 35.0);
         break;
-      case IndicatorStatus.Empty:
+      case IndicatorStatus.empty:
         widget = EmptyWidget(
           text ?? "nothing here",
           emptyWidget: emptyWidget,
@@ -173,12 +174,3 @@ class IndicatorWidget extends StatelessWidget {
   }
 }
 
-enum IndicatorStatus {
-  None,
-  LoadingMoreBusying,
-  FullScreenBusying,
-  Error,
-  FullScreenError,
-  NoMoreLoad,
-  Empty
-}

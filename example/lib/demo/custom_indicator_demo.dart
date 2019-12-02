@@ -66,10 +66,10 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
 
     Widget widget;
     switch (status) {
-      case IndicatorStatus.None:
+      case IndicatorStatus.none:
         widget = Container(height: 0.0);
         break;
-      case IndicatorStatus.LoadingMoreBusying:
+      case IndicatorStatus.loadingMoreBusying:
         widget = Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,7 +85,7 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
         );
         widget = _setbackground(false, widget, 35.0);
         break;
-      case IndicatorStatus.FullScreenBusying:
+      case IndicatorStatus.fullScreenBusying:
         widget = Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,7 +114,7 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
           );
         }
         break;
-      case IndicatorStatus.Error:
+      case IndicatorStatus.error:
         widget = Text(
           "好像出现了问题呢？",
         );
@@ -128,7 +128,7 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
         );
 
         break;
-      case IndicatorStatus.FullScreenError:
+      case IndicatorStatus.fullScreenError:
         widget = Text(
           "好像出现了问题呢？",
         );
@@ -153,11 +153,11 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
           );
         }
         break;
-      case IndicatorStatus.NoMoreLoad:
+      case IndicatorStatus.noMoreLoad:
         widget = Text("没有更多的了。。不要拖了");
         widget = _setbackground(false, widget, 35.0);
         break;
-      case IndicatorStatus.Empty:
+      case IndicatorStatus.empty:
         widget = EmptyWidget(
           "这里是空气！",
         );
