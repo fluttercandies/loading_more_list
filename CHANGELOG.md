@@ -1,3 +1,8 @@
+## [1.0.2]
+
+* Issues:
+  Fix issue about LoadingMoreCustomScrollView miss slivers 
+
 ## [1.0.1]
 
 * Features:

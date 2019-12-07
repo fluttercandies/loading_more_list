@@ -236,7 +236,8 @@ class _LoadingMoreCustomScrollViewState
           }
         }
       }
-    }
+    } else
+      widgets = widget.slivers;
 
     return NotificationListener<ScrollNotification>(
         onNotification: _handleScrollNotification,

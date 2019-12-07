@@ -1,6 +1,6 @@
 name: loading_more_list
 description: A loading more list which supports ListView,GridView,WaterfallFlow and Slivers.
-version: 1.0.1
+version: 1.0.2
 author: zmtzawq <zmtzawqlp@live.com>
 homepage: https://github.com/fluttercandies/loading_more_list
 
