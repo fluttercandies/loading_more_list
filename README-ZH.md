@@ -44,7 +44,7 @@ dependencies:
 
 ## 准备数据源
 
-你需要继承LoadingMoreBase<T>来实现加载更多的数据源. 通过重写loadData方法来加载数据. 当没有数据的时候记得把hasMore设置为flase.
+你需要继承LoadingMoreBase<T>来实现加载更多的数据源. 通过重写loadData方法来加载数据. 当没有数据的时候记得把hasMore设置为false.
 
 ```dart
 class TuChongRepository extends LoadingMoreBase<TuChongItem> {
