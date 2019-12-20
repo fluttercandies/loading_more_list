@@ -134,7 +134,7 @@ class IndicatorWidget extends StatelessWidget {
         );
         widget = _setbackground(true, widget, double.infinity);
         if (isSliver) {
-          widget = SliverToBoxAdapter(
+          widget = SliverFillRemaining(
             child: widget,
           );
         } else {
