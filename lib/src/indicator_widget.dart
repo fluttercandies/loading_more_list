@@ -64,7 +64,7 @@ class IndicatorWidget extends StatelessWidget {
               width: 30.0,
               child: getIndicator(context),
             ),
-            Text(text ?? "loading...")
+            Text(text ?? " loading...")
           ],
         );
         widget = _setbackground(true, widget, double.infinity);
