@@ -59,7 +59,7 @@ class IndicatorWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(right: 0.0),
+              margin: EdgeInsets.only(right: 5.0),
               height: 30.0,
               width: 30.0,
               child: getIndicator(context),
