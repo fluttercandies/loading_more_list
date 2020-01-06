@@ -312,7 +312,7 @@ class _LoadingMoreCustomScrollViewState
 
   void onDataChanged(LoadingMoreBase data) {
     //if (data != null) {
-    setState(() {});
+    if (mounted) setState(() {});
     //}
   }
 }
