@@ -162,15 +162,15 @@ class IndicatorWidget extends StatelessWidget {
   }
 
   Widget getIndicator(BuildContext context) {
-    return Platform.isIOS
+    final theme = Theme.of(context);
+    return theme.platform == TargetPlatform.iOS
         ? CupertinoActivityIndicator(
             animating: true,
             radius: 16.0,
           )
         : CircularProgressIndicator(
             strokeWidth: 2.0,
-            valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+            valueColor: AlwaysStoppedAnimation(theme.primaryColor),
           );
   }
 }
-

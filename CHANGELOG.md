@@ -1,3 +1,11 @@
+## [1.0.4]
+
+* Issues:
+  Fix issue about setState throw exception 
+
+* Improve:
+  Remove io.platform to support web 
+
 ## [1.0.3]
 
 * Issues:
