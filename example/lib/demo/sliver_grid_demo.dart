@@ -1,7 +1,7 @@
-import 'package:example/common/item_builder.dart';
-import 'package:example/common/tu_chong_repository.dart';
-import 'package:example/common/tu_chong_source.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_candies_demo_library/flutter_candies_demo_library.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
@@ -31,26 +31,30 @@ class _SliverGridDemoState extends State<SliverGridDemo> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: LoadingMoreCustomScrollView(
-        showGlowLeading: false,
-        slivers: <Widget>[
-          SliverAppBar(
-            pinned: true,
-            title: Text("SliverGridDemo"),
-          ),
-          LoadingMoreSliverList(SliverListConfig<TuChongItem>(
-            itemBuilder: ItemBuilder.itemBuilder,
-            sourceList: listSourceRepository,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 3.0,
-              mainAxisSpacing: 3.0,
-//                    childAspectRatio: 0.5
+      child: LayoutBuilder(builder: (c, data) {
+        final crossAxisCount =
+            max(data.maxWidth ~/ (ScreenUtil.instance.screenWidthDp / 2.0), 2);
+        return LoadingMoreCustomScrollView(
+          showGlowLeading: false,
+          slivers: <Widget>[
+            SliverAppBar(
+              pinned: true,
+              title: Text("SliverGridDemo"),
             ),
-            //isLastOne: false
-          ))
-        ],
-      ),
+            LoadingMoreSliverList(SliverListConfig<TuChongItem>(
+              itemBuilder: itemBuilder,
+              sourceList: listSourceRepository,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 3.0,
+                mainAxisSpacing: 3.0,
+//                    childAspectRatio: 0.5
+              ),
+              //isLastOne: false
+            ))
+          ],
+        );
+      }),
     );
   }
 }

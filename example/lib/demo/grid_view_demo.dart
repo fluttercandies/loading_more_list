@@ -1,7 +1,7 @@
-import 'package:example/common/item_builder.dart';
-import 'package:example/common/tu_chong_repository.dart';
-import 'package:example/common/tu_chong_source.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_candies_demo_library/flutter_candies_demo_library.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
@@ -37,21 +37,27 @@ class _GridViewDemoState extends State<GridViewDemo> {
             title: Text("GridViewDemo"),
           ),
           Expanded(
-            child: 
-            LoadingMoreList(
-              ListConfig<TuChongItem>(
-                itemBuilder: ItemBuilder.itemBuilder,
-                sourceList: listSourceRepository,
-                padding: EdgeInsets.all(0.0),
-                lastChildLayoutType: LastChildLayoutType.foot,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 3.0,
-                  mainAxisSpacing: 3.0,
-                ),
-              ),
+            child: LayoutBuilder(
+              builder: (c, data) {
+                final crossAxisCount = max(
+                    data.maxWidth ~/ (ScreenUtil.instance.screenWidthDp / 2.0),
+                    2);
+                return LoadingMoreList(
+                  ListConfig<TuChongItem>(
+                    itemBuilder: itemBuilder,
+                    sourceList: listSourceRepository,
+                    padding: EdgeInsets.all(0.0),
+                    lastChildLayoutType: LastChildLayoutType.foot,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 3.0,
+                      mainAxisSpacing: 3.0,
+                    ),
+                  ),
+                );
+              },
             ),
-          )
+          ),
         ],
       ),
     );

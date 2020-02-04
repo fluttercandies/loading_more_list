@@ -1,10 +1,6 @@
-import 'dart:io';
-
-import 'package:example/common/item_builder.dart';
-import 'package:example/common/tu_chong_repository.dart';
-import 'package:example/common/tu_chong_source.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_candies_demo_library/flutter_candies_demo_library.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
@@ -42,10 +38,9 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
             title: Text("CustomIndicatorDemo"),
           ),
           Expanded(
-            child: 
-            LoadingMoreList(
+            child: LoadingMoreList(
               ListConfig<TuChongItem>(
-                itemBuilder: ItemBuilder.itemBuilder,
+                itemBuilder: itemBuilder,
                 sourceList: listSourceRepository,
                 indicatorBuilder: _buildIndicator,
                 padding: EdgeInsets.all(0.0),
@@ -191,7 +186,8 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
   }
 
   Widget getIndicator(BuildContext context) {
-    return Platform.isIOS
+    final platform = Theme.of(context).platform;
+    return platform == TargetPlatform.iOS
         ? CupertinoActivityIndicator(
             animating: true,
             radius: 16.0,

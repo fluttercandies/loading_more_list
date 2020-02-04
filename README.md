@@ -6,6 +6,8 @@ A loading more list which supports ListView,GridView,WaterfallFlow and Slivers.
 
 Language: English | [中文简体](README-ZH.md)
 
+[Web demo for LoadingMoreList](https://fluttercandies.github.io/loading_more_list/)
+
 - [loading_more_list](#loadingmorelist)
   - [Use](#use)
   - [Prepare Data Collection](#prepare-data-collection)

@@ -1,7 +1,5 @@
-import 'package:example/common/item_builder.dart';
-import 'package:example/common/tu_chong_repository.dart';
-import 'package:example/common/tu_chong_source.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_candies_demo_library/flutter_candies_demo_library.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
@@ -46,7 +44,7 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
 
           ///SliverList
           LoadingMoreSliverList(SliverListConfig<TuChongItem>(
-            itemBuilder: ItemBuilder.itemBuilder,
+            itemBuilder: itemBuilder,
             sourceList: listSourceRepository,
           )),
           SliverToBoxAdapter(
@@ -61,7 +59,7 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
           ///SliverGrid
           LoadingMoreSliverList(
             SliverListConfig<TuChongItem>(
-              itemBuilder: ItemBuilder.itemBuilder,
+              itemBuilder: itemBuilder,
               sourceList: listSourceRepository1,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,

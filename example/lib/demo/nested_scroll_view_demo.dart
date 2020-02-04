@@ -1,11 +1,8 @@
-import 'package:example/common/item_builder.dart';
-import 'package:example/common/tu_chong_repository.dart';
-import 'package:example/common/tu_chong_source.dart';
 import 'package:flutter/material.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart'
     as extended;
+import 'package:flutter_candies_demo_library/flutter_candies_demo_library.dart';
 import 'package:loading_more_list/loading_more_list.dart';
-import 'package:pull_to_refresh_notification/pull_to_refresh_notification.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
 @FFRoute(
@@ -227,7 +224,7 @@ class _Tab0State extends State<Tab0> with AutomaticKeepAliveClientMixin {
                     ),
                     50.0)),
             LoadingMoreSliverList(SliverListConfig<TuChongItem>(
-              itemBuilder: ItemBuilder.itemBuilder,
+              itemBuilder: itemBuilder,
               sourceList: widget.listSourceRepository,
               //isLastOne: false
             ))
@@ -272,7 +269,7 @@ class _Tab1State extends State<Tab1> with AutomaticKeepAliveClientMixin {
                     ),
                     50.0)),
             LoadingMoreSliverList(SliverListConfig<TuChongItem>(
-              itemBuilder: ItemBuilder.itemBuilder,
+              itemBuilder: itemBuilder,
               sourceList: widget.listSourceRepository1,
               //isLastOne: false
             )),
@@ -285,7 +282,7 @@ class _Tab1State extends State<Tab1> with AutomaticKeepAliveClientMixin {
               ),
             ),
             LoadingMoreSliverList(SliverListConfig<TuChongItem>(
-              itemBuilder: ItemBuilder.itemBuilder,
+              itemBuilder: itemBuilder,
               sourceList: widget.listSourceRepository2,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -327,7 +324,7 @@ class _Tab2State extends State<Tab2> with AutomaticKeepAliveClientMixin {
             Expanded(
               child: LoadingMoreList(
                 ListConfig<TuChongItem>(
-                    itemBuilder: ItemBuilder.itemBuilder,
+                    itemBuilder: itemBuilder,
                     sourceList: widget.listSourceRepository3,
                     showGlowLeading: false,
                     physics: ClampingScrollPhysics(),

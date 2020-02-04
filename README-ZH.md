@@ -8,6 +8,7 @@
 
 语言: [English](README.md) | 中文简体
 
+[Web demo for LoadingMoreList](https://fluttercandies.github.io/loading_more_list/)
 
 - [loading_more_list](#loadingmorelist)
   - [使用](#%e4%bd%bf%e7%94%a8)
