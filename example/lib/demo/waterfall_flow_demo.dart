@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_candies_demo_library/flutter_candies_demo_library.dart';
 import 'package:loading_more_list/loading_more_list.dart';
@@ -35,19 +37,24 @@ class _WaterfallFlowDemoState extends State<WaterfallFlowDemo> {
             title: Text("WaterfallFlowDemo"),
           ),
           Expanded(
-            child: LoadingMoreList(
-              ListConfig<TuChongItem>(
-                waterfallFlowDelegate: WaterfallFlowDelegate(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
+            child: LayoutBuilder(builder: (c, data) {
+              final crossAxisCount = max(
+                  data.maxWidth ~/ (ScreenUtil.instance.screenWidthDp / 2.0),
+                  2);
+              return LoadingMoreList(
+                ListConfig<TuChongItem>(
+                  waterfallFlowDelegate: WaterfallFlowDelegate(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                  ),
+                  itemBuilder: buildWaterfallFlowItem,
+                  sourceList: listSourceRepository,
+                  padding: EdgeInsets.all(5.0),
+                  lastChildLayoutType: LastChildLayoutType.foot,
                 ),
-                itemBuilder: buildWaterfallFlowItem,
-                sourceList: listSourceRepository,
-                padding: EdgeInsets.all(5.0),
-                lastChildLayoutType: LastChildLayoutType.foot,
-              ),
-            ),
+              );
+            }),
           )
         ],
       ),
