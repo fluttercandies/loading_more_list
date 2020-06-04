@@ -4,9 +4,9 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
 @FFRoute(
-    name: "fluttercandies://SliverListDemo",
-    routeName: "SliverList",
-    description: "Show how to build loading more SliverList quickly")
+    name: 'fluttercandies://SliverListDemo',
+    routeName: 'SliverList',
+    description: 'Show how to build loading more SliverList quickly')
 class SliverListDemo extends StatefulWidget {
   @override
   _SliverListDemoState createState() => _SliverListDemoState();
@@ -16,7 +16,7 @@ class _SliverListDemoState extends State<SliverListDemo> {
   TuChongRepository listSourceRepository;
   @override
   void initState() {
-    listSourceRepository = new TuChongRepository();
+    listSourceRepository = TuChongRepository();
     super.initState();
   }
 
@@ -32,11 +32,11 @@ class _SliverListDemoState extends State<SliverListDemo> {
       child: LoadingMoreCustomScrollView(
         showGlowLeading: false,
         slivers: <Widget>[
-          SliverAppBar(
+          const SliverAppBar(
             pinned: true,
-            title: Text("SliverListDemo"),
+            title: Text('SliverListDemo'),
           ),
-          LoadingMoreSliverList(SliverListConfig<TuChongItem>(
+          LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
             itemBuilder: itemBuilder,
             sourceList: listSourceRepository,
             //isLastOne: false

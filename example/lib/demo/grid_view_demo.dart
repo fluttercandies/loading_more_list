@@ -6,9 +6,9 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
 @FFRoute(
-    name: "fluttercandies://GridViewDemo",
-    routeName: "GridView",
-    description: "Show how to build loading more GridView quickly")
+    name: 'fluttercandies://GridViewDemo',
+    routeName: 'GridView',
+    description: 'Show how to build loading more GridView quickly')
 class GridViewDemo extends StatefulWidget {
   @override
   _GridViewDemoState createState() => _GridViewDemoState();
@@ -18,7 +18,7 @@ class _GridViewDemoState extends State<GridViewDemo> {
   TuChongRepository listSourceRepository;
   @override
   void initState() {
-    listSourceRepository = new TuChongRepository();
+    listSourceRepository = TuChongRepository();
     super.initState();
   }
 
@@ -34,19 +34,19 @@ class _GridViewDemoState extends State<GridViewDemo> {
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text("GridViewDemo"),
+            title: const Text('GridViewDemo'),
           ),
           Expanded(
             child: LayoutBuilder(
-              builder: (c, data) {
-                final crossAxisCount = max(
+              builder: (BuildContext c, BoxConstraints data) {
+                final int crossAxisCount = max(
                     data.maxWidth ~/ (ScreenUtil.instance.screenWidthDp / 2.0),
                     2);
-                return LoadingMoreList(
+                return LoadingMoreList<TuChongItem>(
                   ListConfig<TuChongItem>(
                     itemBuilder: itemBuilder,
                     sourceList: listSourceRepository,
-                    padding: EdgeInsets.all(0.0),
+                    padding: const EdgeInsets.all(0.0),
                     lastChildLayoutType: LastChildLayoutType.foot,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: crossAxisCount,

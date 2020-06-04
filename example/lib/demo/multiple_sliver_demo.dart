@@ -4,9 +4,9 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
 @FFRoute(
-    name: "fluttercandies://MultipleSliverDemo",
-    routeName: "MultipleSliver",
-    description: "Show how to build loading more multiple sliver list quickly")
+    name: 'fluttercandies://MultipleSliverDemo',
+    routeName: 'MultipleSliver',
+    description: 'Show how to build loading more multiple sliver list quickly')
 class MultipleSliverDemo extends StatefulWidget {
   @override
   _MultipleSliverDemoState createState() => _MultipleSliverDemoState();
@@ -18,9 +18,9 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
   TuChongRepository listSourceRepository2;
   @override
   void initState() {
-    listSourceRepository = new TuChongRepository();
-    listSourceRepository1 = new TuChongRepository();
-    listSourceRepository2 = new TuChongRepository();
+    listSourceRepository = TuChongRepository();
+    listSourceRepository1 = TuChongRepository();
+    listSourceRepository2 = TuChongRepository();
     super.initState();
   }
 
@@ -37,31 +37,31 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
     return Material(
       child: LoadingMoreCustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(
+          const SliverAppBar(
             pinned: true,
-            title: Text("MultipleSliverDemo"),
+            title: Text('MultipleSliverDemo'),
           ),
 
           ///SliverList
-          LoadingMoreSliverList(SliverListConfig<TuChongItem>(
+          LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
             itemBuilder: itemBuilder,
             sourceList: listSourceRepository,
           )),
           SliverToBoxAdapter(
             child: Container(
               alignment: Alignment.center,
-              child: Text("Next list"),
+              child: const Text('Next list'),
               color: Colors.blue,
               height: 100.0,
             ),
           ),
 
           ///SliverGrid
-          LoadingMoreSliverList(
+          LoadingMoreSliverList<TuChongItem>(
             SliverListConfig<TuChongItem>(
               itemBuilder: itemBuilder,
               sourceList: listSourceRepository1,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 3.0,
                 mainAxisSpacing: 3.0,
@@ -72,7 +72,7 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
             delegate: CommonExtentSliverPersistentHeaderDelegate(
                 Container(
                   alignment: Alignment.center,
-                  child: Text("Pinned Content"),
+                  child: const Text('Pinned Content'),
                   color: Colors.red,
                 ),
                 100.0),
@@ -80,12 +80,12 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
           ),
 
           ///SliverWaterfallFlow
-          LoadingMoreSliverList(
+          LoadingMoreSliverList<TuChongItem>(
             SliverListConfig<TuChongItem>(
               itemBuilder: buildWaterfallFlowItem,
               sourceList: listSourceRepository2,
-              padding: EdgeInsets.symmetric(horizontal: 5.0),
-              waterfallFlowDelegate: WaterfallFlowDelegate(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              waterfallFlowDelegate: const WaterfallFlowDelegate(
                 crossAxisCount: 2,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,
@@ -100,10 +100,9 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
 
 class CommonExtentSliverPersistentHeaderDelegate
     extends SliverPersistentHeaderDelegate {
+  CommonExtentSliverPersistentHeaderDelegate(this.child, this.extent);
   final Widget child;
   final double extent;
-
-  CommonExtentSliverPersistentHeaderDelegate(this.child, this.extent);
 
   @override
   double get minExtent => extent;
@@ -119,7 +118,7 @@ class CommonExtentSliverPersistentHeaderDelegate
 
   @override
   bool shouldRebuild(CommonExtentSliverPersistentHeaderDelegate oldDelegate) {
-    //print("shouldRebuild---------------");
+    //print('shouldRebuild---------------');
     return oldDelegate != this;
   }
 }

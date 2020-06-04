@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_more_list/src/glow_notification_widget.dart';
 import 'package:loading_more_list/src/list_config.dart';
@@ -5,14 +6,14 @@ import 'package:loading_more_list_library/loading_more_list_library.dart';
 
 //loading more for sliverlist and sliverGrid
 class LoadingMoreSliverList<T> extends StatelessWidget {
+  const LoadingMoreSliverList(this.sliverListConfig, {Key key})
+      : super(key: key);
   final SliverListConfig<T> sliverListConfig;
-
-  LoadingMoreSliverList(this.sliverListConfig, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<LoadingMoreBase>(
-      builder: (b, s) {
+    return StreamBuilder<LoadingMoreBase<T>>(
+      builder: (BuildContext b, AsyncSnapshot<LoadingMoreBase<T>> s) {
         return sliverListConfig.buildContent(context, s.data);
       },
       stream: sliverListConfig.sourceList?.rebuild,
@@ -23,6 +24,27 @@ class LoadingMoreSliverList<T> extends StatelessWidget {
 
 //support for LoadingMoreSliverList
 class LoadingMoreCustomScrollView extends StatefulWidget {
+  const LoadingMoreCustomScrollView({
+    Key key,
+    this.scrollDirection = Axis.vertical,
+    this.reverse = false,
+    this.controller,
+    this.primary,
+    this.physics,
+    this.shrinkWrap = false,
+    this.cacheExtent,
+    this.slivers = const <Widget>[],
+    this.semanticChildCount,
+    this.showGlowLeading = true,
+    this.showGlowTrailing = true,
+    this.rebuildCustomScrollView = false,
+    this.onScrollNotification,
+    this.dragStartBehavior = DragStartBehavior.start,
+  })  : assert(slivers != null),
+        super(
+          key: key,
+        );
+
   /// The slivers to place inside the viewport.
   final List<Widget> slivers;
 
@@ -159,23 +181,15 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   /// location in the tree.
   final NotificationListenerCallback<ScrollNotification> onScrollNotification;
 
-  LoadingMoreCustomScrollView(
-      {Key key,
-      this.scrollDirection = Axis.vertical,
-      this.reverse = false,
-      this.controller,
-      this.primary,
-      this.physics,
-      this.shrinkWrap = false,
-      this.cacheExtent,
-      this.slivers = const <Widget>[],
-      this.semanticChildCount,
-      this.showGlowLeading = true,
-      this.showGlowTrailing = true,
-      this.rebuildCustomScrollView = false,
-      this.onScrollNotification})
-      : assert(slivers != null),
-        super(key: key);
+  /// Configuration of offset passed to [DragStartDetails].
+  ///
+  /// The settings determines when a drag formally starts when the user
+  /// initiates a drag.
+  ///
+  /// See also:
+  ///
+  ///  * [DragGestureRecognizer.dragStartBehavior], which gives an example for the different behaviors.
+  final DragStartBehavior dragStartBehavior;
   @override
   _LoadingMoreCustomScrollViewState createState() =>
       _LoadingMoreCustomScrollViewState();
@@ -184,39 +198,32 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
 class _LoadingMoreCustomScrollViewState
     extends State<LoadingMoreCustomScrollView> {
   ///LoadingMoreSliverList collection
-  List<LoadingMoreSliverList> _loadingMoreWidgets;
+  List<LoadingMoreSliverList<dynamic>> _loadingMoreWidgets;
   @override
   void initState() {
-    _loadingMoreWidgets = widget.slivers
-        .where((x) {
-          return x is LoadingMoreSliverList;
-        })
-        .map<LoadingMoreSliverList>((f) => f as LoadingMoreSliverList)
-        .toList();
+    _loadingMoreWidgets =
+        widget.slivers.whereType<LoadingMoreSliverList<dynamic>>().toList();
     super.initState();
   }
 
   @override
   void didUpdateWidget(LoadingMoreCustomScrollView oldWidget) {
     if (oldWidget.slivers != widget.slivers) {
-      _loadingMoreWidgets = widget.slivers
-          .where((x) {
-            return x is LoadingMoreSliverList;
-          })
-          .map<LoadingMoreSliverList>((f) => f as LoadingMoreSliverList)
-          .toList();
+      _loadingMoreWidgets =
+          widget.slivers.whereType<LoadingMoreSliverList<dynamic>>().toList();
     }
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = List<Widget>();
-    var loadingMoreWidgets = this._loadingMoreWidgets;
-    if (loadingMoreWidgets.length > 0) {
-      var slivers = widget.slivers;
+    List<Widget> widgets = <Widget>[];
+    final List<LoadingMoreSliverList<dynamic>> loadingMoreWidgets =
+        _loadingMoreWidgets;
+    if (loadingMoreWidgets.isNotEmpty) {
+      final List<Widget> slivers = widget.slivers;
       for (int i = 0; i < slivers.length; i++) {
-        var item = slivers[i];
+        final Widget item = slivers[i];
         widgets.add(item);
         if (item is LoadingMoreSliverList) {
           if (loadingMoreWidgets.length > 1) {
@@ -252,6 +259,7 @@ class _LoadingMoreCustomScrollViewState
               controller: widget.controller,
               slivers: widgets,
               reverse: widget.reverse,
+              dragStartBehavior: widget.dragStartBehavior,
             ),
             showGlowLeading: widget.showGlowLeading,
             showGlowTrailing: widget.showGlowTrailing));
@@ -262,18 +270,21 @@ class _LoadingMoreCustomScrollViewState
     if (widget.onScrollNotification != null)
       widget.onScrollNotification(notification);
 
-    if (notification.depth != 0) return false;
+    if (notification.depth != 0) {
+      return false;
+    }
 
     //reach the pixels to loading more
     if (notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
-      var loadingMoreWidgets = this._loadingMoreWidgets;
+      final List<LoadingMoreSliverList<dynamic>> loadingMoreWidgets =
+          _loadingMoreWidgets;
 
-      if (loadingMoreWidgets.length > 0) {
-        LoadingMoreSliverList preList;
+      if (loadingMoreWidgets.isNotEmpty) {
+        LoadingMoreSliverList<dynamic> preList;
         for (int i = 0; i < loadingMoreWidgets.length; i++) {
-          var item = loadingMoreWidgets[i];
+          final LoadingMoreSliverList<dynamic> item = loadingMoreWidgets[i];
 
-          var preListIsloading =
+          final bool preListIsloading =
               preList?.sliverListConfig?.sourceList?.isLoading ?? false;
 
           if (!preListIsloading &&
@@ -286,16 +297,18 @@ class _LoadingMoreCustomScrollViewState
             if (preList != item && loadingMoreWidgets.length > 1) {
               //if(item.sliverListConfig.sourceList)
               setState(() {
-                final sourceList = item.sliverListConfig.sourceList;
-                if (sourceList.length == 0) {
+                final LoadingMoreBase<dynamic> sourceList =
+                    item.sliverListConfig.sourceList;
+                if (sourceList.isEmpty) {
                   sourceList.refresh();
                 } else if (item.sliverListConfig.autoLoadMore) {
                   sourceList.loadMore();
                 }
               });
             } else {
-              final sourceList = item.sliverListConfig.sourceList;
-              if (sourceList.length == 0) {
+              final LoadingMoreBase<dynamic> sourceList =
+                  item.sliverListConfig.sourceList;
+              if (sourceList.isEmpty) {
                 sourceList.refresh();
               } else if (item.sliverListConfig.autoLoadMore) {
                 sourceList.loadMore();
@@ -310,9 +323,11 @@ class _LoadingMoreCustomScrollViewState
     return false;
   }
 
-  void onDataChanged(LoadingMoreBase data) {
+  void onDataChanged(LoadingMoreBase<dynamic> data) {
     //if (data != null) {
-    if (mounted) setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
     //}
   }
 }

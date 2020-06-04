@@ -1,3 +1,9 @@
+## [2.0.0]
+
+* Fix analysis_options
+* Support ScrollViewKeyboardDismissBehavior(breaking change 1.17.0)
+* Support DragStartBehavior
+  
 ## [1.0.5]
 
 * Web support

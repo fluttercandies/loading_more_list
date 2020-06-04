@@ -1,4 +1,5 @@
 import 'package:extended_list/extended_list.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide ViewportBuilder;
 import 'package:loading_more_list/src/indicator_widget.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
@@ -10,6 +11,48 @@ int _kDefaultSemanticIndexCallback(Widget _, int localIndex) {
 
 //config for ListView and GridView
 class ListConfig<T> extends LoadingMoreListConfig<T> {
+  ListConfig({
+    Widget Function(BuildContext context, T item, int index) itemBuilder,
+    LoadingMoreBase<T> sourceList,
+    this.showGlowLeading = true,
+    this.showGlowTrailing = true,
+    LoadingMoreIndicatorBuilder indicatorBuilder,
+    SliverGridDelegate gridDelegate,
+    this.scrollDirection = Axis.vertical,
+    this.reverse = false,
+    this.controller,
+    this.primary,
+    this.physics,
+    this.shrinkWrap = false,
+    this.padding = const EdgeInsets.all(0.0),
+    this.itemExtent,
+    this.itemCount,
+    this.addAutomaticKeepAlives = true,
+    this.addRepaintBoundaries = true,
+    this.addSemanticIndexes = true,
+    this.cacheExtent,
+    this.semanticChildCount,
+    bool autoLoadMore = true,
+    WaterfallFlowDelegate waterfallFlowDelegate,
+    ViewportBuilder viewportBuilder,
+    LastChildLayoutType lastChildLayoutType = LastChildLayoutType.foot,
+    CollectGarbage collectGarbage,
+    bool closeToTrailing = false,
+    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    this.dragStartBehavior = DragStartBehavior.start,
+  }) : super(
+          itemBuilder,
+          sourceList,
+          indicatorBuilder: indicatorBuilder,
+          gridDelegate: gridDelegate,
+          autoLoadMore: autoLoadMore,
+          waterfallFlowDelegate: waterfallFlowDelegate,
+          viewportBuilder: viewportBuilder,
+          lastChildLayoutType: lastChildLayoutType,
+          collectGarbage: collectGarbage,
+          closeToTrailing: closeToTrailing,
+        );
+
   /// The axis along which the scroll view scrolls.
   ///
   /// Defaults to [Axis.vertical].
@@ -193,55 +236,29 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   ///    provide semantic indexes.
   final bool addSemanticIndexes;
 
-  ListConfig({
-    Widget Function(BuildContext context, T item, int index) itemBuilder,
-    LoadingMoreBase<T> sourceList,
-    this.showGlowLeading = true,
-    this.showGlowTrailing = true,
-    LoadingMoreIndicatorBuilder indicatorBuilder,
-    SliverGridDelegate gridDelegate,
-    this.scrollDirection = Axis.vertical,
-    this.reverse = false,
-    this.controller,
-    this.primary,
-    this.physics,
-    this.shrinkWrap = false,
-    this.padding = const EdgeInsets.all(0.0),
-    this.itemExtent,
-    this.itemCount,
-    this.addAutomaticKeepAlives = true,
-    this.addRepaintBoundaries = true,
-    this.addSemanticIndexes = true,
-    this.cacheExtent,
-    this.semanticChildCount,
-    bool autoLoadMore = true,
-    WaterfallFlowDelegate waterfallFlowDelegate,
-    ViewportBuilder viewportBuilder,
-    LastChildLayoutType lastChildLayoutType = LastChildLayoutType.foot,
-    CollectGarbage collectGarbage,
-    bool closeToTrailing = false,
-  }) : super(
-          itemBuilder,
-          sourceList,
-          indicatorBuilder: indicatorBuilder,
-          gridDelegate: gridDelegate,
-          autoLoadMore: autoLoadMore,
-          waterfallFlowDelegate: waterfallFlowDelegate,
-          viewportBuilder: viewportBuilder,
-          lastChildLayoutType: lastChildLayoutType,
-          collectGarbage: collectGarbage,
-          closeToTrailing: closeToTrailing,
-        );
+  /// A representation of how a [ScrollView] should dismiss the on-screen
+  /// keyboard.
+  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
 
+  /// Configuration of offset passed to [DragStartDetails].
+  ///
+  /// The settings determines when a drag formally starts when the user
+  /// initiates a drag.
+  ///
+  /// See also:
+  ///
+  ///  * [DragGestureRecognizer.dragStartBehavior], which gives an example for the different behaviors.
+  final DragStartBehavior dragStartBehavior;
   @override
   Widget buildContent(BuildContext context, LoadingMoreBase<T> source) {
     Widget widget = super.buildContent(context, source);
 
     if (widget == null) {
-      var count = itemCount ?? source.length;
+      final int count = itemCount ?? source.length;
       if (waterfallFlowDelegate != null) {
         widget = WaterfallFlow.builder(
-          gridDelegate: _getExtendedListDelegate(),
+          gridDelegate:
+              _getExtendedListDelegate() as SliverWaterfallFlowDelegate,
           scrollDirection: scrollDirection,
           reverse: reverse,
           controller: controller,
@@ -256,6 +273,8 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           semanticChildCount: semanticChildCount,
           itemBuilder: buildItem,
           itemCount: count + 1,
+          dragStartBehavior: dragStartBehavior,
+          keyboardDismissBehavior: keyboardDismissBehavior,
         );
       } else if (gridDelegate != null) {
         widget = ExtendedGridView.builder(
@@ -275,6 +294,8 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           itemBuilder: buildItem,
           extendedListDelegate: _getExtendedListDelegate(),
           itemCount: count + 1,
+          dragStartBehavior: dragStartBehavior,
+          keyboardDismissBehavior: keyboardDismissBehavior,
         );
       } else {
         widget = ExtendedListView.builder(
@@ -294,6 +315,8 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           itemBuilder: buildItem,
           extendedListDelegate: _getExtendedListDelegate(),
           itemCount: count + 1,
+          dragStartBehavior: dragStartBehavior,
+          keyboardDismissBehavior: keyboardDismissBehavior,
         );
       }
     }
@@ -303,30 +326,6 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
 
 //config for SliverList and SliverGrid
 class SliverListConfig<T> extends LoadingMoreListConfig<T> {
-  //whether show no more  .
-  bool showNoMore = true;
-  //whether show fullscreenLoading for multiple sliver
-  //bool showFullScreenLoading = true;
-
-  final bool addAutomaticKeepAlives;
-  final bool addRepaintBoundaries;
-  final bool addSemanticIndexes;
-  final SemanticIndexCallback semanticIndexCallback;
-  final int semanticIndexOffset;
-  final int childCount;
-
-  /// The amount of space by which to inset the child sliver.
-  final EdgeInsetsGeometry padding;
-
-  /// If non-null, forces the children to have the given extent in the scroll
-  /// direction.
-  ///
-  /// Specifying an [itemExtent] is more efficient than letting the children
-  /// determine their own extent because the scrolling machinery can make use of
-  /// the foreknowledge of the children's extent to save work, for example when
-  /// the scroll position changes drastically.
-  final double itemExtent;
-
   SliverListConfig({
     Widget Function(BuildContext context, T item, int index) itemBuilder,
     LoadingMoreBase<T> sourceList,
@@ -358,6 +357,29 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           collectGarbage: collectGarbage,
           closeToTrailing: closeToTrailing,
         );
+//whether show no more  .
+  bool showNoMore = true;
+  //whether show fullscreenLoading for multiple sliver
+  //bool showFullScreenLoading = true;
+
+  final bool addAutomaticKeepAlives;
+  final bool addRepaintBoundaries;
+  final bool addSemanticIndexes;
+  final SemanticIndexCallback semanticIndexCallback;
+  final int semanticIndexOffset;
+  final int childCount;
+
+  /// The amount of space by which to inset the child sliver.
+  final EdgeInsetsGeometry padding;
+
+  /// If non-null, forces the children to have the given extent in the scroll
+  /// direction.
+  ///
+  /// Specifying an [itemExtent] is more efficient than letting the children
+  /// determine their own extent because the scrolling machinery can make use of
+  /// the foreknowledge of the children's extent to save work, for example when
+  /// the scroll position changes drastically.
+  final double itemExtent;
 
   @override
   Widget buildContent(BuildContext context, LoadingMoreBase<T> source) {
@@ -403,11 +425,12 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   Widget _innerBuilderList(
       BuildContext context, LoadingMoreBase<T> source, int lastOne) {
     Widget widget;
-    var count = childCount ?? source.length;
+    final int count = childCount ?? source.length;
     if (waterfallFlowDelegate != null) {
       widget = SliverWaterfallFlow(
-        gridDelegate: _getExtendedListDelegate(showNoMore: showNoMore),
-        delegate: new SliverChildBuilderDelegate(
+        gridDelegate: _getExtendedListDelegate(showNoMore: showNoMore)
+            as SliverWaterfallFlowDelegate,
+        delegate: SliverChildBuilderDelegate(
           buildItem,
           addAutomaticKeepAlives: addAutomaticKeepAlives,
           addRepaintBoundaries: addRepaintBoundaries,
@@ -421,7 +444,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
       widget = ExtendedSliverGrid(
           extendedListDelegate:
               _getExtendedListDelegate(showNoMore: showNoMore),
-          delegate: new SliverChildBuilderDelegate(
+          delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
             addRepaintBoundaries: addRepaintBoundaries,
@@ -437,7 +460,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           itemExtent: itemExtent,
           extendedListDelegate:
               _getExtendedListDelegate(showNoMore: showNoMore),
-          delegate: new SliverChildBuilderDelegate(
+          delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
             addRepaintBoundaries: addRepaintBoundaries,
@@ -451,7 +474,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
         widget = ExtendedSliverList(
           extendedListDelegate:
               _getExtendedListDelegate(showNoMore: showNoMore),
-          delegate: new SliverChildBuilderDelegate(
+          delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
             addRepaintBoundaries: addRepaintBoundaries,
@@ -474,6 +497,20 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
 }
 
 class LoadingMoreListConfig<T> {
+  LoadingMoreListConfig(
+    this.itemBuilder,
+    this.sourceList, {
+    this.indicatorBuilder,
+    this.gridDelegate,
+    this.autoLoadMore = true,
+    this.waterfallFlowDelegate,
+    this.lastChildLayoutType = LastChildLayoutType.foot,
+    this.closeToTrailing = false,
+    this.collectGarbage,
+    this.viewportBuilder,
+  })  : assert(itemBuilder != null),
+        assert(sourceList != null),
+        assert(autoLoadMore != null);
   //Item builder
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
 
@@ -536,25 +573,10 @@ class LoadingMoreListConfig<T> {
     return this is SliverListConfig<T>;
   }
 
-  LoadingMoreListConfig(
-    this.itemBuilder,
-    this.sourceList, {
-    this.indicatorBuilder,
-    this.gridDelegate,
-    this.autoLoadMore = true,
-    this.waterfallFlowDelegate,
-    this.lastChildLayoutType = LastChildLayoutType.foot,
-    this.closeToTrailing = false,
-    this.collectGarbage,
-    this.viewportBuilder,
-  })  : assert(itemBuilder != null),
-        assert(sourceList != null),
-        assert(autoLoadMore != null);
-
   Widget buildContent(BuildContext context, LoadingMoreBase<T> source) {
     //from stream builder or from refresh
     if (source == null ||
-        (source.length == 0 &&
+        (source.isEmpty &&
             source.indicatorStatus == IndicatorStatus.fullScreenBusying)) {
       if (source == null || !source.isLoading) {
         //first load
@@ -572,7 +594,7 @@ class LoadingMoreListConfig<T> {
       return widget;
     }
     //empty
-    else if (source.length == 0 &&
+    else if (source.isEmpty &&
         (source.indicatorStatus == IndicatorStatus.empty ||
             source.indicatorStatus == IndicatorStatus.fullScreenError)) {
       Widget widget1;
@@ -599,10 +621,12 @@ class LoadingMoreListConfig<T> {
 
   Widget buildItem(BuildContext context, int index) {
     if (index == sourceList.length) {
-      var widget = buildErrorItem(context);
-      if (widget != null) return widget;
+      final Widget widget = buildErrorItem(context);
+      if (widget != null) {
+        return widget;
+      }
 
-      var status = sourceList.hasMore
+      final IndicatorStatus status = sourceList.hasMore
           ? IndicatorStatus.loadingMoreBusying
           : IndicatorStatus.noMoreLoad;
 
@@ -611,7 +635,9 @@ class LoadingMoreListConfig<T> {
       }
 
       Widget widget1;
-      if (indicatorBuilder != null) widget1 = indicatorBuilder(context, status);
+      if (indicatorBuilder != null) {
+        widget1 = indicatorBuilder(context, status);
+      }
       widget1 = widget1 ??
           IndicatorWidget(
             status,
@@ -623,7 +649,7 @@ class LoadingMoreListConfig<T> {
   }
 
   Widget buildErrorItem(BuildContext context) {
-    var hasError = sourceList.indicatorStatus == IndicatorStatus.error;
+    final bool hasError = sourceList.indicatorStatus == IndicatorStatus.error;
     if (hasError) {
       Widget widget;
       if (indicatorBuilder != null)
@@ -649,7 +675,7 @@ class LoadingMoreListConfig<T> {
         mainAxisSpacing: waterfallFlowDelegate.mainAxisSpacing,
         crossAxisSpacing: waterfallFlowDelegate.crossAxisSpacing,
         lastChildLayoutTypeBuilder: showNoMore
-            ? ((index) => sourceList.length == index
+            ? ((int index) => sourceList.length == index
                 ? lastChildLayoutType
                 : LastChildLayoutType.none)
             : null,
@@ -660,7 +686,7 @@ class LoadingMoreListConfig<T> {
     } else {
       return ExtendedListDelegate(
         lastChildLayoutTypeBuilder: showNoMore
-            ? ((index) => sourceList.length == index
+            ? ((int index) => sourceList.length == index
                 ? lastChildLayoutType
                 : LastChildLayoutType.none)
             : null,

@@ -5,10 +5,10 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
 @FFRoute(
-    name: "fluttercandies://CustomIndicatorDemo",
-    routeName: "CustomIndicator",
+    name: 'fluttercandies://CustomIndicatorDemo',
+    routeName: 'CustomIndicator',
     description:
-        "Show how to build loading more list with custom indicator quickly")
+        'Show how to build loading more list with custom indicator quickly')
 class CustomIndicatorDemo extends StatefulWidget {
   @override
   _CustomIndicatorDemoState createState() => _CustomIndicatorDemoState();
@@ -19,7 +19,7 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
 
   @override
   void initState() {
-    listSourceRepository = new TuChongRepository();
+    listSourceRepository = TuChongRepository();
     super.initState();
   }
 
@@ -35,15 +35,15 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text("CustomIndicatorDemo"),
+            title: const Text('CustomIndicatorDemo'),
           ),
           Expanded(
-            child: LoadingMoreList(
+            child: LoadingMoreList<TuChongItem>(
               ListConfig<TuChongItem>(
                 itemBuilder: itemBuilder,
                 sourceList: listSourceRepository,
                 indicatorBuilder: _buildIndicator,
-                padding: EdgeInsets.all(0.0),
+                padding: const EdgeInsets.all(0.0),
               ),
             ),
           )
@@ -57,7 +57,7 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
   Widget _buildIndicator(BuildContext context, IndicatorStatus status) {
     //if your list is sliver list ,you should build sliver indicator for it
     //isSliver=true, when use it in sliver list
-    bool isSliver = false;
+    const bool isSliver = false;
 
     Widget widget;
     switch (status) {
@@ -70,12 +70,12 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(right: 5.0),
+              margin: const EdgeInsets.only(right: 5.0),
               height: 15.0,
               width: 15.0,
               child: getIndicator(context),
             ),
-            Text("正在加载...不要着急")
+            const Text('正在加载...不要着急')
           ],
         );
         widget = _setbackground(false, widget, 35.0);
@@ -86,12 +86,12 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(right: 0.0),
+              margin: const EdgeInsets.only(right: 0.0),
               height: 30.0,
               width: 30.0,
               child: getIndicator(context),
             ),
-            Text("正在加载...不要着急")
+            const Text('正在加载...不要着急')
           ],
         );
         widget = _setbackground(true, widget, double.infinity);
@@ -110,8 +110,8 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
         }
         break;
       case IndicatorStatus.error:
-        widget = Text(
-          "好像出现了问题呢？",
+        widget = const Text(
+          '好像出现了问题呢？',
         );
         widget = _setbackground(false, widget, 35.0);
 
@@ -124,8 +124,8 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
 
         break;
       case IndicatorStatus.fullScreenError:
-        widget = Text(
-          "好像出现了问题呢？",
+        widget = const Text(
+          '好像出现了问题呢？',
         );
         widget = _setbackground(true, widget, double.infinity);
         widget = GestureDetector(
@@ -149,12 +149,12 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
         }
         break;
       case IndicatorStatus.noMoreLoad:
-        widget = Text("没有更多的了。。不要拖了");
+        widget = const Text('没有更多的了。。不要拖了');
         widget = _setbackground(false, widget, 35.0);
         break;
       case IndicatorStatus.empty:
-        widget = EmptyWidget(
-          "这里是空气！",
+        widget = const EmptyWidget(
+          '这里是空气！',
         );
         widget = _setbackground(true, widget, double.infinity);
         if (isSliver) {
@@ -186,15 +186,15 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
   }
 
   Widget getIndicator(BuildContext context) {
-    final platform = Theme.of(context).platform;
+    final TargetPlatform platform = Theme.of(context).platform;
     return platform == TargetPlatform.iOS
-        ? CupertinoActivityIndicator(
+        ? const CupertinoActivityIndicator(
             animating: true,
             radius: 16.0,
           )
         : CircularProgressIndicator(
             strokeWidth: 2.0,
-            valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
           );
   }
 }

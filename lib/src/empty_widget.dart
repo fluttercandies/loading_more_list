@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 class EmptyWidget extends StatelessWidget {
+  const EmptyWidget(this.msg, {this.emptyWidget});
   final String msg;
   final Widget emptyWidget;
-  EmptyWidget(this.msg, {this.emptyWidget});
   @override
   Widget build(BuildContext context) {
-    if (emptyWidget != null) return emptyWidget;
+    if (emptyWidget != null) {
+      return emptyWidget;
+    }
     return Container(
       color: Colors.grey[200],
-      margin: EdgeInsets.only(top: 30.0, bottom: 30.0),
+      margin: const EdgeInsets.only(top: 30.0, bottom: 30.0),
       child: Center(
         child: Column(
           children: <Widget>[
@@ -18,11 +20,11 @@ class EmptyWidget extends StatelessWidget {
                 width: 180.0,
                 child: Image.asset(
                   //https://flutter.io/docs/development/ui/assets-and-images
-                  "assets/empty.jpeg",
+                  'assets/empty.jpeg',
 //                  theme.brightness == Brightness.dark
-//                      ? "assets/empty_dark.png"
-//                      : "assets/empty_light.png",
-                  package: "loading_more_list",
+//                      ? 'assets/empty_dark.png'
+//                      : 'assets/empty_light.png',
+                  package: 'loading_more_list',
                 )),
             Text(
               msg,

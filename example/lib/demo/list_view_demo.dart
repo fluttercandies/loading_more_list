@@ -4,9 +4,9 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
 @FFRoute(
-    name: "fluttercandies://ListViewDemo",
-    routeName: "ListView",
-    description: "Show how to build loading more ListView quickly")
+    name: 'fluttercandies://ListViewDemo',
+    routeName: 'ListView',
+    description: 'Show how to build loading more ListView quickly')
 class ListViewDemo extends StatefulWidget {
   @override
   _ListViewDemoState createState() => _ListViewDemoState();
@@ -16,7 +16,7 @@ class _ListViewDemoState extends State<ListViewDemo> {
   TuChongRepository listSourceRepository;
   @override
   void initState() {
-    listSourceRepository = new TuChongRepository();
+    listSourceRepository = TuChongRepository();
     super.initState();
   }
 
@@ -32,30 +32,22 @@ class _ListViewDemoState extends State<ListViewDemo> {
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text("ListViewDemo"),
+            title: const Text('ListViewDemo'),
           ),
           Expanded(
-            child: LoadingMoreList(
+            child: LoadingMoreList<TuChongItem>(
               ListConfig<TuChongItem>(
                 itemBuilder: itemBuilder,
                 sourceList: listSourceRepository,
 //                    showGlowLeading: false,
 //                    showGlowTrailing: false,
-                padding: EdgeInsets.all(0.0),
+                padding: const EdgeInsets.all(0.0),
                 collectGarbage: (List<int> indexes) {
                   ///collectGarbage
-                  indexes.forEach((index) {
-                    final item = listSourceRepository[index];
-                    if (item.hasImage) {
-                      final provider = ExtendedNetworkImageProvider(
-                        item.imageUrl,
-                      );
-                      provider.evict();
-                    }
-                  });
+                
                 },
                 viewportBuilder: (int firstIndex, int lastIndex) {
-                  print("viewport : [$firstIndex,$lastIndex]");
+                  print('viewport : [$firstIndex,$lastIndex]');
                 },
               ),
             ),

@@ -6,9 +6,9 @@ import 'package:loading_more_list/loading_more_list.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 
 @FFRoute(
-    name: "fluttercandies://SliverGridDemo",
-    routeName: "SliverGrid",
-    description: "Show how to build loading more SilverGird quickly")
+    name: 'fluttercandies://SliverGridDemo',
+    routeName: 'SliverGrid',
+    description: 'Show how to build loading more SilverGird quickly')
 class SliverGridDemo extends StatefulWidget {
   @override
   _SliverGridDemoState createState() => _SliverGridDemoState();
@@ -18,7 +18,7 @@ class _SliverGridDemoState extends State<SliverGridDemo> {
   TuChongRepository listSourceRepository;
   @override
   void initState() {
-    listSourceRepository = new TuChongRepository();
+    listSourceRepository = TuChongRepository();
     super.initState();
   }
 
@@ -31,17 +31,17 @@ class _SliverGridDemoState extends State<SliverGridDemo> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: LayoutBuilder(builder: (c, data) {
-        final crossAxisCount =
+      child: LayoutBuilder(builder: (BuildContext c, BoxConstraints data) {
+        final int crossAxisCount =
             max(data.maxWidth ~/ (ScreenUtil.instance.screenWidthDp / 2.0), 2);
         return LoadingMoreCustomScrollView(
           showGlowLeading: false,
           slivers: <Widget>[
-            SliverAppBar(
+            const SliverAppBar(
               pinned: true,
-              title: Text("SliverGridDemo"),
+              title: Text('SliverGridDemo'),
             ),
-            LoadingMoreSliverList(SliverListConfig<TuChongItem>(
+            LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
               itemBuilder: itemBuilder,
               sourceList: listSourceRepository,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -4,6 +4,15 @@ import 'package:loading_more_list/src/empty_widget.dart';
 import 'package:loading_more_list_library/loading_more_list_library.dart';
 
 class IndicatorWidget extends StatelessWidget {
+  const IndicatorWidget(
+    this.status, {
+    this.tryAgain,
+    this.text,
+    this.backgroundColor,
+    this.isSliver = false,
+    this.emptyWidget,
+  });
+
   ///Status of indicator
   final IndicatorStatus status;
 
@@ -21,12 +30,6 @@ class IndicatorWidget extends StatelessWidget {
 
   ///emppty widget
   final Widget emptyWidget;
-  IndicatorWidget(this.status,
-      {this.tryAgain,
-      this.text,
-      this.backgroundColor,
-      this.isSliver: false,
-      this.emptyWidget});
   @override
   @override
   Widget build(BuildContext context) {
@@ -41,12 +44,12 @@ class IndicatorWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(right: 5.0),
+              margin: const EdgeInsets.only(right: 5.0),
               height: 15.0,
               width: 15.0,
               child: getIndicator(context),
             ),
-            Text(text ?? "loading...")
+            Text(text ?? 'loading...')
           ],
         );
         widget = _setbackground(false, widget, 35.0);
@@ -57,12 +60,12 @@ class IndicatorWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(right: 0.0),
+              margin: const EdgeInsets.only(right: 0.0),
               height: 30.0,
               width: 30.0,
               child: getIndicator(context),
             ),
-            Text(text ?? "loading...")
+            Text(text ?? 'loading...')
           ],
         );
         widget = _setbackground(true, widget, double.infinity);
@@ -82,7 +85,7 @@ class IndicatorWidget extends StatelessWidget {
         break;
       case IndicatorStatus.error:
         widget = Text(
-          text ?? "load failed,try again.",
+          text ?? 'load failed,try again.',
         );
         widget = _setbackground(false, widget, 35.0);
         if (tryAgain != null) {
@@ -96,7 +99,7 @@ class IndicatorWidget extends StatelessWidget {
         break;
       case IndicatorStatus.fullScreenError:
         widget = Text(
-          text ?? "load failed,try again.",
+          text ?? 'load failed,try again.',
         );
         widget = _setbackground(true, widget, double.infinity);
         if (tryAgain != null) {
@@ -122,12 +125,12 @@ class IndicatorWidget extends StatelessWidget {
         }
         break;
       case IndicatorStatus.noMoreLoad:
-        widget = Text(text ?? "No more items.");
+        widget = Text(text ?? 'No more items.');
         widget = _setbackground(false, widget, 35.0);
         break;
       case IndicatorStatus.empty:
         widget = EmptyWidget(
-          text ?? "nothing here",
+          text ?? 'nothing here',
           emptyWidget: emptyWidget,
         );
         widget = _setbackground(true, widget, double.infinity);
@@ -160,15 +163,15 @@ class IndicatorWidget extends StatelessWidget {
   }
 
   Widget getIndicator(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return theme.platform == TargetPlatform.iOS
-        ? CupertinoActivityIndicator(
+        ? const CupertinoActivityIndicator(
             animating: true,
             radius: 16.0,
           )
         : CircularProgressIndicator(
             strokeWidth: 2.0,
-            valueColor: AlwaysStoppedAnimation(theme.primaryColor),
+            valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
           );
   }
 }
