@@ -42,13 +42,14 @@ class _ListViewDemoState extends State<ListViewDemo> {
 //                    showGlowLeading: false,
 //                    showGlowTrailing: false,
                 padding: const EdgeInsets.all(0.0),
-                collectGarbage: (List<int> indexes) {
-                  ///collectGarbage
-                
-                },
-                viewportBuilder: (int firstIndex, int lastIndex) {
-                  print('viewport : [$firstIndex,$lastIndex]');
-                },
+                extendedListDelegate: ExtendedListDelegate(
+                  collectGarbage: (List<int> indexes) {
+                    ///collectGarbage
+                  },
+                  viewportBuilder: (int firstIndex, int lastIndex) {
+                    print('viewport : [$firstIndex,$lastIndex]');
+                  },
+                ),
               ),
             ),
           )

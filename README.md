@@ -8,7 +8,7 @@ Language: English | [中文简体](README-ZH.md)
 
 [Web demo for LoadingMoreList](https://fluttercandies.github.io/loading_more_list/)
 
-- [loading_more_list](#loadingmorelist)
+- [loading_more_list](#loading_more_list)
   - [Use](#use)
   - [Prepare Data Collection](#prepare-data-collection)
   - [Argument](#argument)
@@ -26,19 +26,19 @@ Language: English | [中文简体](README-ZH.md)
 ## Use
 
 * add library to your pubspec.yaml
-  
+
 ```yaml
 
 dependencies:
   loading_more_list: any
 
-```  
+```
 * import library in dart file
-  
+
 ```dart
 
   import 'package:loading_more_list/loading_more_list.dart';
-  
+
 ```
 
 ## Prepare Data Collection
@@ -112,29 +112,17 @@ following arguments are made for loading more.
 
 ListConfig<T> and SliverListConfig<T>
 
-| argument              | description                                                                    | default                  |
-| --------------------- | ------------------------------------------------------------------------------ | ------------------------ |
-| itemBuilder           | The item builder of list.                                                      | required                 |
-| sourceList            | The source list of data which extends LoadingMoreBase<T>.                      | required                 |
-| showGlowLeading       | Whether to show the overscroll glow on the side with negative scroll offsets.  | 0.0                      |
-| showGlowTrailing      | Whether to show the overscroll glow on the side with positive scroll offsets.  | -                        |
-| lastChildLayoutType   | Layout type of last child(loadmore/no more item).                              | LastChildLayoutType.foot |
-| viewportBuilder       | The builder to get indexs in viewport.                                         | -                        |
-| closeToTrailing       | Whether make layout close to trailing.                                         | false                    |
-| collectGarbage        | Call when collect garbage and return indexs to collect.                        | -                        |
-| gridDelegate          | The delegate for GridView.                                                     | -                        |
-| waterfallFlowDelegate | The delegate for WaterfallFlow.                                                | -                        |
-| indicatorBuilder      | widget builder for different loading state.                                    | IndicatorWidget          |
-| padding               | The amount of space by which to inset the child sliver for SliverListConfig<T> | -                        |
-
-
-WaterfallFlowDelegate
-
-| argument         | description                                                           | default  |
-| ---------------- | --------------------------------------------------------------------- | -------- |
-| crossAxisCount   | The number of children in the cross axis.                             | required |
-| mainAxisSpacing  | The number of logical pixels between each child along the main axis.  | 0        |
-| crossAxisSpacing | The number of logical pixels between each child along the cross axis. | 0        |
+| argument             | description                                                                    | default                  |
+| -------------------- | ------------------------------------------------------------------------------ | ------------------------ |
+| itemBuilder          | The item builder of list.                                                      | required                 |
+| sourceList           | The source list of data which extends LoadingMoreBase<T>.                      | required                 |
+| showGlowLeading      | Whether to show the overscroll glow on the side with negative scroll offsets.  | 0.0                      |
+| showGlowTrailing     | Whether to show the overscroll glow on the side with positive scroll offsets.  | -                        |
+| lastChildLayoutType  | Layout type of last child(loadmore/no more item).                              | LastChildLayoutType.foot |
+| extendedListDelegate | The delegate for WaterfallFlow or ExtendedList.                                | -                        |
+| gridDelegate         | The delegate for GridView.                                                     | -                        |
+| indicatorBuilder     | widget builder for different loading state.                                    | IndicatorWidget          |
+| padding              | The amount of space by which to inset the child sliver for SliverListConfig<T> | -                        |
 
 
 ## Widget
@@ -202,7 +190,7 @@ define WaterfallFlow with waterfallFlowDelegate argument.
 ```dart
             LoadingMoreList(
               ListConfig<TuChongItem>(
-                waterfallFlowDelegate: WaterfallFlowDelegate(
+                extendedListDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
@@ -269,7 +257,7 @@ following codes are show how to build loading more list within CustomScrollView.
               itemBuilder: buildWaterfallFlowItem,
               sourceList: listSourceRepository2,
               padding: EdgeInsets.symmetric(horizontal: 5.0),
-              waterfallFlowDelegate: WaterfallFlowDelegate(
+              extendedListDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,
@@ -297,7 +285,7 @@ define loading status with indicatorBuilder argument.
           NoMoreLoad,
           Empty
         }
-``` 
+```
 ``` dart
       LoadingMoreList(
         ListConfig<TuChongItem>(
@@ -442,18 +430,11 @@ track the indexes are collect, you can collect garbage at that monment(for examp
 ```dart
         LoadingMoreList(
           ListConfig<TuChongItem>(
-                collectGarbage: (List<int> indexes) {
-                  ///collectGarbage
-                  indexes.forEach((index) {
-                    final item = listSourceRepository[index];
-                    if (item.hasImage) {
-                      final provider = ExtendedNetworkImageProvider(
-                        item.imageUrl,
-                      );
-                      provider.evict();
-                    }
-                  });
-                },
+            extendedListDelegate: ExtendedListDelegate(
+              collectGarbage: (List<int> indexes) {
+                ///collectGarbage
+              },
+            ),
           ),
         ),
 ```
@@ -465,10 +446,11 @@ track the indexes go into the viewport, it's not include cache extent.
 ```dart
         LoadingMoreList(
           ListConfig<TuChongItem>(
-            viewportBuilder: (int firstIndex, int lastIndex) {
-              print("viewport : [$firstIndex,$lastIndex]");
-            },
-            closeToTrailing: true
+            extendedListDelegate: ExtendedListDelegate(
+              viewportBuilder: (int firstIndex, int lastIndex) {
+                print('viewport : [$firstIndex,$lastIndex]');
+              },
+            ),
           ),
         ),
 ```
@@ -481,14 +463,14 @@ build lastChild as special child in the case that it is loadmore/no more item.
         /// as default child
         none,
 
-        /// follow max child trailing layout offset and layout with full cross axis extend
+        /// follow max child trailing layout offset and layout with full cross axis extent
         /// last child as loadmore item/no more item in [ExtendedGridView] and [WaterfallFlow]
         /// with full cross axis extend
-        fullCrossAxisExtend,
+        fullCrossAxisExtent,
 
         /// as foot at trailing and layout with full cross axis extend
         /// show no more item at trailing when children are not full of viewport
-        /// if children is full of viewport, it's the same as fullCrossAxisExtend
+        /// if children is full of viewport, it's the same as fullCrossAxisExtent
         foot,
         }
 ```
@@ -510,7 +492,7 @@ but it's not right when items are not full of viewport.
 |     item0     |
 -----------------
      leading
-```     
+```
 
 to solve it, you could set closeToTrailing to true, layout is as following.
 support [ExtendedGridView],[ExtendedList],[WaterfallFlow].
@@ -526,12 +508,14 @@ and it also works when reverse is flase, layout will close to trailing.
 |               |
 -----------------
      leading
-```     
+```
 
 ```dart
       LoadingMoreList(
         ListConfig<TuChongItem>(
-          closeToTrailing: true
+          extendedListDelegate: ExtendedListDelegate(
+            closeToTrailing: true
+          ),
         ),
       ),
 ```

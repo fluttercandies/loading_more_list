@@ -10,37 +10,37 @@
 
 [Web demo for LoadingMoreList](https://fluttercandies.github.io/loading_more_list/)
 
-- [loading_more_list](#loadingmorelist)
-  - [使用](#%e4%bd%bf%e7%94%a8)
-  - [准备数据源](#%e5%87%86%e5%a4%87%e6%95%b0%e6%8d%ae%e6%ba%90)
-  - [参数](#%e5%8f%82%e6%95%b0)
+- [loading_more_list](#loading_more_list)
+  - [使用](#使用)
+  - [准备数据源](#准备数据源)
+  - [参数](#参数)
   - [Widget](#widget)
   - [ListView](#listview)
   - [GridView](#gridview)
-  - [瀑布流](#%e7%80%91%e5%b8%83%e6%b5%81)
+  - [瀑布流](#瀑布流)
   - [Sliver/CustomScrollView](#slivercustomscrollview)
-  - [状态效果](#%e7%8a%b6%e6%80%81%e6%95%88%e6%9e%9c)
-  - [内存回收](#%e5%86%85%e5%ad%98%e5%9b%9e%e6%94%b6)
-  - [可视区域追踪](#%e5%8f%af%e8%a7%86%e5%8c%ba%e5%9f%9f%e8%bf%bd%e8%b8%aa)
+  - [状态效果](#状态效果)
+  - [内存回收](#内存回收)
+  - [可视区域追踪](#可视区域追踪)
   - [LastChildLayoutType](#lastchildlayouttype)
   - [CloseToTrailing](#closetotrailing)
 
 ## 使用
 
 * 添加库到 pubspec.yaml
-  
+
 ```yaml
 
 dependencies:
   loading_more_list: any
 
-```  
+```
 * 导入库
-  
+
 ```dart
 
   import 'package:loading_more_list/loading_more_list.dart';
-  
+
 ```
 
 ## 准备数据源
@@ -114,29 +114,17 @@ class TuChongRepository extends LoadingMoreBase<TuChongItem> {
 
 ListConfig<T> 和 SliverListConfig<T>
 
-| 参数                  | 描述                                          | 默认                     |
-| --------------------- | --------------------------------------------- | ------------------------ |
-| itemBuilder           | 列表元素构建器.                               | 必填                     |
-| sourceList            | 数据源继承于LoadingMoreBase<T>.               | 必填                     |
-| showGlowLeading       | 是否显示过度拖拽上部波纹.                     | 0.0                      |
-| showGlowTrailing      | 是否显示过度拖拽下部波纹.                     | -                        |
-| lastChildLayoutType   | 最后一个元素的布局样式(loadmore/no more元素). | LastChildLayoutType.foot |
-| viewportBuilder       | 可视区域中元素indexes变化时的回调.            | -                        |
-| closeToTrailing       | 可否让布局紧贴trailing.                       | false                    |
-| collectGarbage        | 元素回收时候的回调.                           | -                        |
-| gridDelegate          | GridView定义委托.                             | -                        |
-| waterfallFlowDelegate | 瀑布流定义委托.                               | -                        |
-| indicatorBuilder      | 状态指示构建器.                               | IndicatorWidget          |
-| padding               | 边距，SliverListConfig<T>的参数               | -                        |
-
-
-WaterfallFlowDelegate
-
-| 参数             | 描述                 | 默认 |
-| ---------------- | -------------------- | ---- |
-| crossAxisCount   | 横轴的等长度元素数量 | 必填 |
-| mainAxisSpacing  | 主轴元素之间的距离   | 0.0  |
-| crossAxisSpacing | 横轴元素之间的距离   | 0.0  |
+| 参数                 | 描述                                          | 默认                     |
+| -------------------- | --------------------------------------------- | ------------------------ |
+| itemBuilder          | 列表元素构建器.                               | 必填                     |
+| sourceList           | 数据源继承于LoadingMoreBase<T>.               | 必填                     |
+| showGlowLeading      | 是否显示过度拖拽上部波纹.                     | 0.0                      |
+| showGlowTrailing     | 是否显示过度拖拽下部波纹.                     | -                        |
+| lastChildLayoutType  | 最后一个元素的布局样式(loadmore/no more元素). | LastChildLayoutType.foot |
+| extendedListDelegate | WaterfallFlow 或者 ExtendedList的委托         | -                        |
+| gridDelegate         | GridView定义委托.                             | -                        |
+| indicatorBuilder     | 状态指示构建器.                               | IndicatorWidget          |
+| padding              | 边距，SliverListConfig<T>的参数               | -                        |
 
 
 ## Widget
@@ -148,7 +136,7 @@ LoadingMoreList<T>
 | listConfig           | ListConfig<T> 构建参数 | required |
 | onScrollNotification | 获取滚动冒泡通知.      | -        |
 
-LoadingMoreSliverList<T> 
+LoadingMoreSliverList<T>
 
 | 参数             | 描述                         | 默认     |
 | ---------------- | ---------------------------- | -------- |
@@ -204,7 +192,7 @@ LoadingMoreCustomScrollView
 ```dart
             LoadingMoreList(
               ListConfig<TuChongItem>(
-                waterfallFlowDelegate: WaterfallFlowDelegate(
+                extendedListDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
@@ -271,7 +259,7 @@ LoadingMoreCustomScrollView
               itemBuilder: buildWaterfallFlowItem,
               sourceList: listSourceRepository2,
               padding: EdgeInsets.symmetric(horizontal: 5.0),
-              waterfallFlowDelegate: WaterfallFlowDelegate(
+              extendedListDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,
@@ -299,7 +287,7 @@ LoadingMoreCustomScrollView
           NoMoreLoad,
           Empty
         }
-``` 
+```
 ``` dart
       LoadingMoreList(
         ListConfig<TuChongItem>(
@@ -444,18 +432,11 @@ LoadingMoreCustomScrollView
 ```dart
         LoadingMoreList(
           ListConfig<TuChongItem>(
-                collectGarbage: (List<int> indexes) {
-                  ///collectGarbage
-                  indexes.forEach((index) {
-                    final item = listSourceRepository[index];
-                    if (item.hasImage) {
-                      final provider = ExtendedNetworkImageProvider(
-                        item.imageUrl,
-                      );
-                      provider.evict();
-                    }
-                  });
-                },
+            extendedListDelegate: ExtendedListDelegate(
+              collectGarbage: (List<int> indexes) {
+                ///collectGarbage
+              },
+            )
           ),
         ),
 ```
@@ -467,10 +448,11 @@ LoadingMoreCustomScrollView
 ```dart
         LoadingMoreList(
           ListConfig<TuChongItem>(
-            viewportBuilder: (int firstIndex, int lastIndex) {
-              print("viewport : [$firstIndex,$lastIndex]");
-            },
-            closeToTrailing: true
+            extendedListDelegate: ExtendedListDelegate(
+              viewportBuilder: (int firstIndex, int lastIndex) {
+                print('viewport : [$firstIndex,$lastIndex]');
+              },
+            ),
           ),
         ),
 ```
@@ -485,11 +467,11 @@ LoadingMoreCustomScrollView
 
         /// 将最后一个元素绘制在最大主轴Item之后，并且使用横轴大小最为layout size
         /// 主要使用在[ExtendedGridView] and [WaterfallFlow]中，最后一个元素作为loadmore/no more元素的时候。
-        fullCrossAxisExtend,
+        fullCrossAxisExtent,
 
         /// 将最后一个child绘制在trailing of viewport，并且使用横轴大小最为layout size
         /// 这种常用于最后一个元素作为loadmore/no more元素，并且列表元素没有充满整个viewport的时候
-        /// 如果列表元素充满viewport，那么效果跟fullCrossAxisExtend一样
+        /// 如果列表元素充满viewport，那么效果跟fullCrossAxisExtent一样
         foot,
         }
 ```
@@ -509,7 +491,7 @@ LoadingMoreCustomScrollView
 |     item0     |
 -----------------
      leading
-```     
+```
 
 为了解决这个问题，你可以设置 closeToTrailing 为true, 布局将变成如下
 该属性同时支持[ExtendedGridView],[ExtendedList],[WaterfallFlow]。
@@ -525,12 +507,14 @@ LoadingMoreCustomScrollView
 |               |
 -----------------
      leading
-```     
+```
 
 ```dart
       LoadingMoreList(
         ListConfig<TuChongItem>(
-          closeToTrailing: true
+          extendedListDelegate: ExtendedListDelegate(
+            closeToTrailing: true
+          ),
         ),
       ),
 ```
