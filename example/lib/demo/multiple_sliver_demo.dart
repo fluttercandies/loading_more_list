@@ -18,9 +18,9 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
   TuChongRepository listSourceRepository2;
   @override
   void initState() {
-    listSourceRepository = new TuChongRepository();
-    listSourceRepository1 = new TuChongRepository();
-    listSourceRepository2 = new TuChongRepository();
+    listSourceRepository = TuChongRepository(maxLength: 15);
+    listSourceRepository1 = TuChongRepository(maxLength: 30);
+    listSourceRepository2 = TuChongRepository(maxLength: 30);
     super.initState();
   }
 
@@ -84,8 +84,8 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
             SliverListConfig<TuChongItem>(
               itemBuilder: buildWaterfallFlowItem,
               sourceList: listSourceRepository2,
-              padding: EdgeInsets.symmetric(horizontal: 5.0),
-              waterfallFlowDelegate: WaterfallFlowDelegate(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              extendedListDelegate: const SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,

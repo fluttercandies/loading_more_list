@@ -1,3 +1,8 @@
+## [3.0.0]
+
+* breaking change: fix typo(fullCrossAxisExtend => fullCrossAxisExtent)
+* breaking change: use [extendedListDelegate] replace [viewportBuilder], [collectGarbage], [closeToTrailing] and [waterfallFlowDelegate]. You can use WaterfallFlow layout by set [extendedListDelegate] to [SliverWaterfallFlowDelegateWithFixedCrossAxisCount] or [SliverWaterfallFlowDelegateWithMaxCrossAxisExtent].
+
 ## [1.0.5]
 
 * Web support
@@ -5,20 +10,20 @@
 ## [1.0.4]
 
 * Issues:
-  Fix issue about setState throw exception 
+  Fix issue about setState throw exception
 
 * Improve:
-  Remove io.platform to support web 
+  Remove io.platform to support web
 
 ## [1.0.3]
 
 * Issues:
-  Fix issue about empty sliver list throw exception 
+  Fix issue about empty sliver list throw exception
 
 ## [1.0.2]
 
 * Issues:
-  Fix issue about LoadingMoreCustomScrollView miss slivers 
+  Fix issue about LoadingMoreCustomScrollView miss slivers
 
 ## [1.0.1]
 

@@ -41,22 +41,15 @@ class _ListViewDemoState extends State<ListViewDemo> {
                 sourceList: listSourceRepository,
 //                    showGlowLeading: false,
 //                    showGlowTrailing: false,
-                padding: EdgeInsets.all(0.0),
-                collectGarbage: (List<int> indexes) {
-                  ///collectGarbage
-                  indexes.forEach((index) {
-                    final item = listSourceRepository[index];
-                    if (item.hasImage) {
-                      final provider = ExtendedNetworkImageProvider(
-                        item.imageUrl,
-                      );
-                      provider.evict();
-                    }
-                  });
-                },
-                viewportBuilder: (int firstIndex, int lastIndex) {
-                  print("viewport : [$firstIndex,$lastIndex]");
-                },
+                padding: const EdgeInsets.all(0.0),
+                extendedListDelegate: ExtendedListDelegate(
+                  collectGarbage: (List<int> indexes) {
+                    ///collectGarbage
+                  },
+                  viewportBuilder: (int firstIndex, int lastIndex) {
+                    print('viewport : [$firstIndex,$lastIndex]');
+                  },
+                ),
               ),
             ),
           )

@@ -43,7 +43,7 @@ class _WaterfallFlowDemoState extends State<WaterfallFlowDemo> {
                   2);
               return LoadingMoreList(
                 ListConfig<TuChongItem>(
-                  waterfallFlowDelegate: WaterfallFlowDelegate(
+                  extendedListDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 5,
                     mainAxisSpacing: 5,

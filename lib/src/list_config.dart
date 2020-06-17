@@ -1,4 +1,5 @@
 import 'package:extended_list/extended_list.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide ViewportBuilder;
 import 'package:loading_more_list/src/indicator_widget.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
@@ -10,6 +11,41 @@ int _kDefaultSemanticIndexCallback(Widget _, int localIndex) {
 
 //config for ListView and GridView
 class ListConfig<T> extends LoadingMoreListConfig<T> {
+  ListConfig({
+    Widget Function(BuildContext context, T item, int index) itemBuilder,
+    LoadingMoreBase<T> sourceList,
+    this.showGlowLeading = true,
+    this.showGlowTrailing = true,
+    LoadingMoreIndicatorBuilder indicatorBuilder,
+    SliverGridDelegate gridDelegate,
+    this.scrollDirection = Axis.vertical,
+    this.reverse = false,
+    this.controller,
+    this.primary,
+    this.physics,
+    this.shrinkWrap = false,
+    this.padding = const EdgeInsets.all(0.0),
+    this.itemExtent,
+    this.itemCount,
+    this.addAutomaticKeepAlives = true,
+    this.addRepaintBoundaries = true,
+    this.addSemanticIndexes = true,
+    this.cacheExtent,
+    this.semanticChildCount,
+    bool autoLoadMore = true,
+    ExtendedListDelegate extendedListDelegate,
+    LastChildLayoutType lastChildLayoutType = LastChildLayoutType.foot,
+    DragStartBehavior  dragStartBehavior = DragStartBehavior.start,
+  }) : super(
+          itemBuilder,
+          sourceList,
+          indicatorBuilder: indicatorBuilder,
+          gridDelegate: gridDelegate,
+          autoLoadMore: autoLoadMore,
+          lastChildLayoutType: lastChildLayoutType,
+          extendedListDelegate: extendedListDelegate,
+        );
+
   /// The axis along which the scroll view scrolls.
   ///
   /// Defaults to [Axis.vertical].
@@ -193,55 +229,17 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   ///    provide semantic indexes.
   final bool addSemanticIndexes;
 
-  ListConfig({
-    Widget Function(BuildContext context, T item, int index) itemBuilder,
-    LoadingMoreBase<T> sourceList,
-    this.showGlowLeading = true,
-    this.showGlowTrailing = true,
-    LoadingMoreIndicatorBuilder indicatorBuilder,
-    SliverGridDelegate gridDelegate,
-    this.scrollDirection = Axis.vertical,
-    this.reverse = false,
-    this.controller,
-    this.primary,
-    this.physics,
-    this.shrinkWrap = false,
-    this.padding = const EdgeInsets.all(0.0),
-    this.itemExtent,
-    this.itemCount,
-    this.addAutomaticKeepAlives = true,
-    this.addRepaintBoundaries = true,
-    this.addSemanticIndexes = true,
-    this.cacheExtent,
-    this.semanticChildCount,
-    bool autoLoadMore = true,
-    WaterfallFlowDelegate waterfallFlowDelegate,
-    ViewportBuilder viewportBuilder,
-    LastChildLayoutType lastChildLayoutType = LastChildLayoutType.foot,
-    CollectGarbage collectGarbage,
-    bool closeToTrailing = false,
-  }) : super(
-          itemBuilder,
-          sourceList,
-          indicatorBuilder: indicatorBuilder,
-          gridDelegate: gridDelegate,
-          autoLoadMore: autoLoadMore,
-          waterfallFlowDelegate: waterfallFlowDelegate,
-          viewportBuilder: viewportBuilder,
-          lastChildLayoutType: lastChildLayoutType,
-          collectGarbage: collectGarbage,
-          closeToTrailing: closeToTrailing,
-        );
-
   @override
   Widget buildContent(BuildContext context, LoadingMoreBase<T> source) {
     Widget widget = super.buildContent(context, source);
 
     if (widget == null) {
-      var count = itemCount ?? source.length;
-      if (waterfallFlowDelegate != null) {
+      final int count = itemCount ?? source.length;
+      final ExtendedListDelegate delegate = _getExtendedListDelegate();
+
+      if (delegate != null && delegate is SliverWaterfallFlowDelegate) {
         widget = WaterfallFlow.builder(
-          gridDelegate: _getExtendedListDelegate(),
+          gridDelegate: delegate,
           scrollDirection: scrollDirection,
           reverse: reverse,
           controller: controller,
@@ -256,6 +254,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           semanticChildCount: semanticChildCount,
           itemBuilder: buildItem,
           itemCount: count + 1,
+          dragStartBehavior: dragStartBehavior,
         );
       } else if (gridDelegate != null) {
         widget = ExtendedGridView.builder(
@@ -273,7 +272,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
           itemBuilder: buildItem,
-          extendedListDelegate: _getExtendedListDelegate(),
+          extendedListDelegate: delegate,
           itemCount: count + 1,
         );
       } else {
@@ -292,8 +291,9 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
           itemBuilder: buildItem,
-          extendedListDelegate: _getExtendedListDelegate(),
+          extendedListDelegate: delegate,
           itemCount: count + 1,
+          dragStartBehavior: dragStartBehavior,
         );
       }
     }
@@ -339,11 +339,8 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     this.semanticIndexOffset = 0,
     this.childCount,
     bool autoLoadMore = true,
-    WaterfallFlowDelegate waterfallFlowDelegate,
-    ViewportBuilder viewportBuilder,
+    ExtendedListDelegate extendedListDelegate,
     LastChildLayoutType lastChildLayoutType = LastChildLayoutType.foot,
-    CollectGarbage collectGarbage,
-    bool closeToTrailing = false,
     this.padding,
     this.itemExtent,
   }) : super(
@@ -352,11 +349,8 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           indicatorBuilder: indicatorBuilder,
           gridDelegate: gridDelegate,
           autoLoadMore: autoLoadMore,
-          waterfallFlowDelegate: waterfallFlowDelegate,
-          viewportBuilder: viewportBuilder,
+          extendedListDelegate: extendedListDelegate,
           lastChildLayoutType: lastChildLayoutType,
-          collectGarbage: collectGarbage,
-          closeToTrailing: closeToTrailing,
         );
 
   @override
@@ -403,11 +397,13 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   Widget _innerBuilderList(
       BuildContext context, LoadingMoreBase<T> source, int lastOne) {
     Widget widget;
-    var count = childCount ?? source.length;
-    if (waterfallFlowDelegate != null) {
+    final int count = childCount ?? source.length;
+    final ExtendedListDelegate delegate = _getExtendedListDelegate();
+
+    if (delegate != null && delegate is SliverWaterfallFlowDelegate) {
       widget = SliverWaterfallFlow(
-        gridDelegate: _getExtendedListDelegate(showNoMore: showNoMore),
-        delegate: new SliverChildBuilderDelegate(
+        gridDelegate: delegate,
+        delegate: SliverChildBuilderDelegate(
           buildItem,
           addAutomaticKeepAlives: addAutomaticKeepAlives,
           addRepaintBoundaries: addRepaintBoundaries,
@@ -419,9 +415,8 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
       );
     } else if (gridDelegate != null) {
       widget = ExtendedSliverGrid(
-          extendedListDelegate:
-              _getExtendedListDelegate(showNoMore: showNoMore),
-          delegate: new SliverChildBuilderDelegate(
+          extendedListDelegate: delegate,
+          delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
             addRepaintBoundaries: addRepaintBoundaries,
@@ -435,9 +430,8 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
       if (itemExtent != null) {
         widget = ExtendedSliverFixedExtentList(
           itemExtent: itemExtent,
-          extendedListDelegate:
-              _getExtendedListDelegate(showNoMore: showNoMore),
-          delegate: new SliverChildBuilderDelegate(
+          extendedListDelegate: delegate,
+          delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
             addRepaintBoundaries: addRepaintBoundaries,
@@ -449,9 +443,8 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
         );
       } else {
         widget = ExtendedSliverList(
-          extendedListDelegate:
-              _getExtendedListDelegate(showNoMore: showNoMore),
-          delegate: new SliverChildBuilderDelegate(
+          extendedListDelegate: delegate,
+          delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
             addRepaintBoundaries: addRepaintBoundaries,
@@ -474,6 +467,18 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
 }
 
 class LoadingMoreListConfig<T> {
+  LoadingMoreListConfig(
+    this.itemBuilder,
+    this.sourceList, {
+    this.indicatorBuilder,
+    this.gridDelegate,
+    this.autoLoadMore = true,
+    this.extendedListDelegate,
+    this.lastChildLayoutType = LastChildLayoutType.foot,
+    this.dragStartBehavior,
+  })  : assert(itemBuilder != null),
+        assert(sourceList != null),
+        assert(autoLoadMore != null);
   //Item builder
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
 
@@ -490,66 +495,18 @@ class LoadingMoreListConfig<T> {
   //whether auto call sourceList.loadmore when meet the condition
   final bool autoLoadMore;
 
-  /// Creates waterfall flow layouts with a fixed number of tiles in the cross axis.
-  final WaterfallFlowDelegate waterfallFlowDelegate;
+  /// The delegate for WaterfallFlow or ExtendedList.
+  final ExtendedListDelegate extendedListDelegate;
 
   /// Layout type of last child
   final LastChildLayoutType lastChildLayoutType;
 
-  /// Call when collect garbage, return garbage indexs to collect
-  final CollectGarbage collectGarbage;
-
-  /// The builder to get indexs in viewport
-  final ViewportBuilder viewportBuilder;
-
-  /// when reverse property of List is true, layout is as following.
-  /// it likes chat list, and new session will insert to zero index
-  /// but it's not right when items are not full of viewport.
-  ///
-  ///      trailing
-  /// -----------------
-  /// |               |
-  /// |               |
-  /// |     item2     |
-  /// |     item1     |
-  /// |     item0     |
-  /// -----------------
-  ///      leading
-  ///
-  /// to solve it, you could set closeToTrailing to true, layout is as following.
-  /// support [ExtendedGridView],[ExtendedList],[WaterfallFlow]
-  /// it works not only reverse is true.
-  ///
-  ///      trailing
-  /// -----------------
-  /// |     item2     |
-  /// |     item1     |
-  /// |     item0     |
-  /// |               |
-  /// |               |
-  /// -----------------
-  ///      leading
-  ///
-  final bool closeToTrailing;
+  final  DragStartBehavior  dragStartBehavior;
 
   bool get isSliver {
     return this is SliverListConfig<T>;
   }
 
-  LoadingMoreListConfig(
-    this.itemBuilder,
-    this.sourceList, {
-    this.indicatorBuilder,
-    this.gridDelegate,
-    this.autoLoadMore = true,
-    this.waterfallFlowDelegate,
-    this.lastChildLayoutType = LastChildLayoutType.foot,
-    this.closeToTrailing = false,
-    this.collectGarbage,
-    this.viewportBuilder,
-  })  : assert(itemBuilder != null),
-        assert(sourceList != null),
-        assert(autoLoadMore != null);
 
   Widget buildContent(BuildContext context, LoadingMoreBase<T> source) {
     //from stream builder or from refresh
@@ -643,59 +600,60 @@ class LoadingMoreListConfig<T> {
   bool get isLoading => sourceList.isLoading;
 
   ExtendedListDelegate _getExtendedListDelegate({bool showNoMore = true}) {
-    if (waterfallFlowDelegate != null) {
-      return SliverWaterfallFlowDelegate(
-        crossAxisCount: waterfallFlowDelegate.crossAxisCount,
-        mainAxisSpacing: waterfallFlowDelegate.mainAxisSpacing,
-        crossAxisSpacing: waterfallFlowDelegate.crossAxisSpacing,
-        lastChildLayoutTypeBuilder: showNoMore
-            ? ((index) => sourceList.length == index
-                ? lastChildLayoutType
-                : LastChildLayoutType.none)
-            : null,
-        closeToTrailing: closeToTrailing,
-        collectGarbage: collectGarbage,
-        viewportBuilder: viewportBuilder,
-      );
-    } else {
-      return ExtendedListDelegate(
-        lastChildLayoutTypeBuilder: showNoMore
-            ? ((index) => sourceList.length == index
-                ? lastChildLayoutType
-                : LastChildLayoutType.none)
-            : null,
-        closeToTrailing: closeToTrailing,
-        collectGarbage: collectGarbage,
-        viewportBuilder: viewportBuilder,
-      );
+    if (extendedListDelegate != null) {
+      if (extendedListDelegate
+          is SliverWaterfallFlowDelegateWithFixedCrossAxisCount) {
+        final SliverWaterfallFlowDelegateWithFixedCrossAxisCount delegate =
+            extendedListDelegate
+                as SliverWaterfallFlowDelegateWithFixedCrossAxisCount;
+        return SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+          crossAxisCount: delegate.crossAxisCount,
+          mainAxisSpacing: delegate.mainAxisSpacing,
+          crossAxisSpacing: delegate.crossAxisSpacing,
+          lastChildLayoutTypeBuilder: showNoMore
+              ? ((int index) => sourceList.length == index
+                  ? lastChildLayoutType
+                  : LastChildLayoutType.none)
+              : null,
+          closeToTrailing: delegate.closeToTrailing,
+          collectGarbage: delegate.collectGarbage,
+          viewportBuilder: delegate.viewportBuilder,
+        );
+      } else if (extendedListDelegate
+          is SliverWaterfallFlowDelegateWithMaxCrossAxisExtent) {
+        final SliverWaterfallFlowDelegateWithMaxCrossAxisExtent delegate =
+            extendedListDelegate
+                as SliverWaterfallFlowDelegateWithMaxCrossAxisExtent;
+        return SliverWaterfallFlowDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: delegate.maxCrossAxisExtent,
+          mainAxisSpacing: delegate.mainAxisSpacing,
+          crossAxisSpacing: delegate.crossAxisSpacing,
+          lastChildLayoutTypeBuilder: showNoMore
+              ? ((int index) => sourceList.length == index
+                  ? lastChildLayoutType
+                  : LastChildLayoutType.none)
+              : null,
+          closeToTrailing: delegate.closeToTrailing,
+          collectGarbage: delegate.collectGarbage,
+          viewportBuilder: delegate.viewportBuilder,
+        );
+      } else {
+        return ExtendedListDelegate(
+          lastChildLayoutTypeBuilder: showNoMore
+              ? ((int index) => sourceList.length == index
+                  ? lastChildLayoutType
+                  : LastChildLayoutType.none)
+              : null,
+          closeToTrailing: extendedListDelegate.closeToTrailing,
+          collectGarbage: extendedListDelegate.collectGarbage,
+          viewportBuilder: extendedListDelegate.viewportBuilder,
+        );
+      }
     }
+
+    return null;
   }
 }
 
 typedef LoadingMoreIndicatorBuilder = Widget Function(
     BuildContext context, IndicatorStatus status);
-
-class WaterfallFlowDelegate {
-  /// Creates a delegate that makes grid layouts with a fixed number of tiles in
-  /// the cross axis.
-  ///
-  /// All of the arguments must not be null. The `mainAxisSpacing` and
-  /// `crossAxisSpacing` arguments must not be negative. The `crossAxisCount`
-  ///  argument must be greater than zero.
-  const WaterfallFlowDelegate({
-    @required this.crossAxisCount,
-    this.mainAxisSpacing = 0.0,
-    this.crossAxisSpacing = 0.0,
-  })  : assert(crossAxisCount != null && crossAxisCount > 0),
-        assert(mainAxisSpacing != null && mainAxisSpacing >= 0),
-        assert(crossAxisSpacing != null && crossAxisSpacing >= 0);
-
-  /// The number of children in the cross axis.
-  final int crossAxisCount;
-
-  /// The number of logical pixels between each child along the main axis.
-  final double mainAxisSpacing;
-
-  /// The number of logical pixels between each child along the cross axis.
-  final double crossAxisSpacing;
-}
