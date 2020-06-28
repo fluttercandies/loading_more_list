@@ -35,7 +35,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
     bool autoLoadMore = true,
     ExtendedListDelegate extendedListDelegate,
     LastChildLayoutType lastChildLayoutType = LastChildLayoutType.foot,
-    DragStartBehavior  dragStartBehavior = DragStartBehavior.start,
+    this.dragStartBehavior = DragStartBehavior.start,
   }) : super(
           itemBuilder,
           sourceList,
@@ -46,6 +46,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           extendedListDelegate: extendedListDelegate,
         );
 
+  final  DragStartBehavior  dragStartBehavior;
   /// The axis along which the scroll view scrolls.
   ///
   /// Defaults to [Axis.vertical].
@@ -475,7 +476,6 @@ class LoadingMoreListConfig<T> {
     this.autoLoadMore = true,
     this.extendedListDelegate,
     this.lastChildLayoutType = LastChildLayoutType.foot,
-    this.dragStartBehavior,
   })  : assert(itemBuilder != null),
         assert(sourceList != null),
         assert(autoLoadMore != null);
@@ -501,12 +501,9 @@ class LoadingMoreListConfig<T> {
   /// Layout type of last child
   final LastChildLayoutType lastChildLayoutType;
 
-  final  DragStartBehavior  dragStartBehavior;
-
   bool get isSliver {
     return this is SliverListConfig<T>;
   }
-
 
   Widget buildContent(BuildContext context, LoadingMoreBase<T> source) {
     //from stream builder or from refresh
