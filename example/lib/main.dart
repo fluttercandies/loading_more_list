@@ -1,10 +1,11 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_candies_demo_library/flutter_candies_demo_library.dart';
+
 import 'example_route.dart';
 import 'example_route_helper.dart';
+import 'example_routes.dart';
+import 'utils/screen_util.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,79 +14,60 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        builder: (c, w) {
-          ScreenUtil.init(width: 750, height: 1334, allowFontScaling: true);
-          // ScreenUtil.instance =
-          //     ScreenUtil(width: 750, height: 1334, allowFontScaling: true)
-          //       ..init(c);
-          if (!kIsWeb) {
-            final data = MediaQuery.of(c);
-            return MediaQuery(
-              data: data.copyWith(textScaleFactor: 1.0),
-              child: w,
-            );
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      builder: (BuildContext c, Widget w) {
+        ScreenUtil.init(width: 750, height: 1334, allowFontScaling: true);
+        // ScreenUtil.instance =
+        //     ScreenUtil(width: 750, height: 1334, allowFontScaling: true)
+        //       ..init(c);
+        if (!kIsWeb) {
+          final MediaQueryData data = MediaQuery.of(c);
+          return MediaQuery(
+            data: data.copyWith(textScaleFactor: 1.0),
+            child: w,
+          );
+        }
+        return w;
+      },
+      initialRoute: Routes.fluttercandiesMainpage,
+      onGenerateRoute: (RouteSettings settings) {
+        return onGenerateRouteHelper(settings,
+            builder: (Widget child, RouteResult result) {
+          if (settings.name == Routes.fluttercandiesMainpage ||
+              settings.name == Routes.fluttercandiesDemogrouppage ||
+              settings.name == Routes.fluttercandiesNestedScrollViewDemo) {
+            return child;
           }
-          return w;
-        },
-        initialRoute: "fluttercandies://mainpage",
-        onGenerateRoute: (RouteSettings settings) {
-          var routeName = settings.name;
-          //when refresh web, route will as following
-          //   /
-          //   /fluttercandies:
-          //   /fluttercandies:/
-          //   /fluttercandies://mainpage
-
-          if (kIsWeb && routeName.startsWith('/')) {
-            routeName = routeName.replaceFirst('/', '');
-          }
-
-          var routeResult =
-              getRouteResult(name: routeName, arguments: settings.arguments);
-
-          if (routeResult.showStatusBar != null ||
-              routeResult.routeName != null) {
-            settings = FFRouteSettings(
-                arguments: settings.arguments,
-                name: routeName,
-                routeName: routeResult.routeName,
-                showStatusBar: routeResult.showStatusBar);
-          }
-
-          var page = routeResult.widget ??
-              getRouteResult(
-                      name: 'fluttercandies://mainpage',
-                      arguments: settings.arguments)
-                  .widget;
-
-          final platform = Theme.of(context).platform;
-          switch (routeResult.pageRouteType) {
-            case PageRouteType.material:
-              return MaterialPageRoute(
-                  settings: settings, builder: (c) => page);
-            case PageRouteType.cupertino:
-              return CupertinoPageRoute(
-                  settings: settings, builder: (c) => page);
-            case PageRouteType.transparent:
-              return platform == TargetPlatform.iOS
-                  ? TransparentCupertinoPageRoute(
-                      settings: settings, builder: (c) => page)
-                  : TransparentMaterialPageRoute(
-                      settings: settings, builder: (c) => page);
-//            return FFTransparentPageRoute(
-//                settings: settings,
-//                pageBuilder: (BuildContext context, Animation<double> animation,
-//                        Animation<double> secondaryAnimation) =>
-//                    page);
-            default:
-              return platform == TargetPlatform.iOS
-                  ? CupertinoPageRoute(settings: settings, builder: (c) => page)
-                  : MaterialPageRoute(settings: settings, builder: (c) => page);
-          }
+          return CommonWidget(
+            child: child,
+            result: result,
+          );
         });
+      },
+    );
+  }
+}
+
+class CommonWidget extends StatelessWidget {
+  const CommonWidget({
+    this.child,
+    this.result,
+  });
+  final Widget child;
+  final RouteResult result;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          result.routeName,
+        ),
+      ),
+      body: child,
+    );
   }
 }

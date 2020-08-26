@@ -4,15 +4,16 @@
 // **************************************************************************
 
 import 'package:flutter/widgets.dart';
-import 'demo/custom_indicator_demo.dart';
-import 'demo/grid_view_demo.dart';
-import 'demo/list_view_demo.dart';
+
+import 'demo/complex/nested_scroll_view_demo.dart';
+import 'demo/complex/waterfall_flow_demo.dart';
 import 'demo/main_page.dart';
-import 'demo/multiple_sliver_demo.dart';
-import 'demo/nested_scroll_view_demo.dart';
-import 'demo/sliver_grid_demo.dart';
-import 'demo/sliver_list_demo.dart';
-import 'demo/waterfall_flow_demo.dart';
+import 'demo/simple/custom_indicator_demo.dart';
+import 'demo/simple/grid_view_demo.dart';
+import 'demo/simple/list_view_demo.dart';
+import 'demo/simple/multiple_sliver_demo.dart';
+import 'demo/simple/sliver_grid_demo.dart';
+import 'demo/simple/sliver_list_demo.dart';
 
 RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
   switch (name) {
@@ -21,56 +22,73 @@ RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
         widget: CustomIndicatorDemo(),
         routeName: "CustomIndicator",
         description:
-            "Show how to build loading more list with custom indicator quickly",
+            'Show how to build loading more list with custom indicator quickly',
+        exts: <String, dynamic>{'group': 'Simple', 'order': 2},
       );
     case "fluttercandies://GridViewDemo":
       return RouteResult(
         widget: GridViewDemo(),
-        routeName: "GridView",
-        description: "Show how to build loading more GridView quickly",
+        routeName: 'GridView',
+        description: 'Show how to build loading more GridView quickly',
+        exts: <String, dynamic>{'group': 'Simple', 'order': 1},
       );
     case "fluttercandies://ListViewDemo":
       return RouteResult(
         widget: ListViewDemo(),
-        routeName: "ListView",
-        description: "Show how to build loading more ListView quickly",
-      );
-    case "fluttercandies://mainpage":
-      return RouteResult(
-        widget: MainPage(),
-        routeName: "MainPage",
+        routeName: 'ListView',
+        description: 'Show how to build loading more ListView quickly',
+        exts: <String, dynamic>{'group': 'Simple', 'order': 0},
       );
     case "fluttercandies://MultipleSliverDemo":
       return RouteResult(
         widget: MultipleSliverDemo(),
         routeName: "MultipleSliver",
         description:
-            "Show how to build loading more multiple sliver list quickly",
+            'Show how to build loading more multiple sliver list quickly',
+        exts: <String, dynamic>{'group': 'Simple', 'order': 5},
       );
     case "fluttercandies://NestedScrollViewDemo":
       return RouteResult(
         widget: NestedScrollViewDemo(),
         routeName: "NestedScrollView",
         description:
-            "Show how to build loading more list in NestedScrollView quickly",
+            'Show how to build loading more list in NestedScrollView quickly',
+        exts: <String, dynamic>{'group': 'Complex', 'order': 1},
       );
     case "fluttercandies://SliverGridDemo":
       return RouteResult(
         widget: SliverGridDemo(),
-        routeName: "SliverGrid",
-        description: "Show how to build loading more SilverGird quickly",
+        routeName: 'SliverGrid',
+        description: 'Show how to build loading more SilverGird quickly',
+        exts: <String, dynamic>{'group': 'Simple', 'order': 4},
       );
     case "fluttercandies://SliverListDemo":
       return RouteResult(
         widget: SliverListDemo(),
-        routeName: "SliverList",
-        description: "Show how to build loading more SliverList quickly",
+        routeName: 'SliverList',
+        description: 'Show how to build loading more SliverList quickly',
+        exts: <String, dynamic>{'group': 'Simple', 'order': 3},
       );
     case "fluttercandies://WaterfallFlowDemo":
       return RouteResult(
         widget: WaterfallFlowDemo(),
-        routeName: "WaterfallFlow",
-        description: "Show how to build loading more WaterfallFlow quickly",
+        routeName: 'WaterfallFlow',
+        description: 'Show how to build loading more WaterfallFlow quickly',
+        exts: <String, dynamic>{'group': 'Complex', 'order': 0},
+      );
+    case 'fluttercandies://demogrouppage':
+      return RouteResult(
+        name: name,
+        widget: DemoGroupPage(
+          keyValue: arguments['keyValue'],
+        ),
+        routeName: 'DemoGroupPage',
+      );
+    case 'fluttercandies://mainpage':
+      return RouteResult(
+        name: name,
+        widget: MainPage(),
+        routeName: 'MainPage',
       );
     default:
       return RouteResult();

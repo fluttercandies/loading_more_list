@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class GlowNotificationWidget extends StatelessWidget {
+  const GlowNotificationWidget(this.child,
+      {this.showGlowLeading = false, this.showGlowTrailing = false});
+
   /// Whether to show the overscroll glow on the side with negative scroll
   /// offsets.
   final bool showGlowLeading;
@@ -11,8 +14,6 @@ class GlowNotificationWidget extends StatelessWidget {
 
   //scrollable child
   final Widget child;
-  GlowNotificationWidget(this.child,
-      {this.showGlowLeading: false, this.showGlowTrailing: false});
   @override
   Widget build(BuildContext context) {
     return NotificationListener<OverscrollIndicatorNotification>(

@@ -648,6 +648,17 @@ class LoadingMoreListConfig<T> {
       }
     }
 
+    if (lastChildLayoutType != null &&
+        lastChildLayoutType != LastChildLayoutType.none) {
+      return ExtendedListDelegate(
+        lastChildLayoutTypeBuilder: showNoMore
+            ? ((int index) => sourceList.length == index
+                ? lastChildLayoutType
+                : LastChildLayoutType.none)
+            : null,
+      );
+    }
+
     return null;
   }
 }
