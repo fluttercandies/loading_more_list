@@ -11,6 +11,7 @@ const List<String> routeNames = <String>[
   'fluttercandies://SliverGridDemo',
   'fluttercandies://SliverListDemo',
   'fluttercandies://WaterfallFlowDemo',
+  'fluttercandies://demogrouppage',
   'fluttercandies://mainpage',
 ];
 
@@ -24,6 +25,8 @@ class Routes {
   /// [routeName] : 'CustomIndicator'
   ///
   /// [description] : 'Show how to build loading more list with custom indicator quickly'
+  ///
+  /// [exts] : {group: Simple, order: 2}
   static const String fluttercandiesCustomIndicatorDemo =
       'fluttercandies://CustomIndicatorDemo';
 
@@ -34,6 +37,8 @@ class Routes {
   /// [routeName] : 'GridView'
   ///
   /// [description] : 'Show how to build loading more GridView quickly'
+  ///
+  /// [exts] : {group: Simple, order: 1}
   static const String fluttercandiesGridViewDemo =
       'fluttercandies://GridViewDemo';
 
@@ -44,6 +49,8 @@ class Routes {
   /// [routeName] : 'ListView'
   ///
   /// [description] : 'Show how to build loading more ListView quickly'
+  ///
+  /// [exts] : {group: Simple, order: 0}
   static const String fluttercandiesListViewDemo =
       'fluttercandies://ListViewDemo';
 
@@ -54,6 +61,8 @@ class Routes {
   /// [routeName] : 'MultipleSliver'
   ///
   /// [description] : 'Show how to build loading more multiple sliver list quickly'
+  ///
+  /// [exts] : {group: Simple, order: 5}
   static const String fluttercandiesMultipleSliverDemo =
       'fluttercandies://MultipleSliverDemo';
 
@@ -64,6 +73,8 @@ class Routes {
   /// [routeName] : 'NestedScrollView'
   ///
   /// [description] : 'Show how to build loading more list in NestedScrollView quickly'
+  ///
+  /// [exts] : {group: Complex, order: 1}
   static const String fluttercandiesNestedScrollViewDemo =
       'fluttercandies://NestedScrollViewDemo';
 
@@ -74,6 +85,8 @@ class Routes {
   /// [routeName] : 'SliverGrid'
   ///
   /// [description] : 'Show how to build loading more SilverGird quickly'
+  ///
+  /// [exts] : {group: Simple, order: 4}
   static const String fluttercandiesSliverGridDemo =
       'fluttercandies://SliverGridDemo';
 
@@ -84,6 +97,8 @@ class Routes {
   /// [routeName] : 'SliverList'
   ///
   /// [description] : 'Show how to build loading more SliverList quickly'
+  ///
+  /// [exts] : {group: Simple, order: 3}
   static const String fluttercandiesSliverListDemo =
       'fluttercandies://SliverListDemo';
 
@@ -94,8 +109,22 @@ class Routes {
   /// [routeName] : 'WaterfallFlow'
   ///
   /// [description] : 'Show how to build loading more WaterfallFlow quickly'
+  ///
+  /// [exts] : {group: Complex, order: 0}
   static const String fluttercandiesWaterfallFlowDemo =
       'fluttercandies://WaterfallFlowDemo';
+
+  /// 'DemoGroupPage'
+  ///
+  /// [name] : 'fluttercandies://demogrouppage'
+  ///
+  /// [routeName] : 'DemoGroupPage'
+  ///
+  /// [arguments] : [keyValue]
+  ///
+  /// [argumentTypes] : [List<DemoRouteResult>]
+  static const String fluttercandiesDemogrouppage =
+      'fluttercandies://demogrouppage';
 
   /// 'MainPage'
   ///

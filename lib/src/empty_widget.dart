@@ -28,7 +28,7 @@ class EmptyWidget extends StatelessWidget {
                 )),
             Text(
               msg,
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
               textAlign: TextAlign.center,
             )
           ],

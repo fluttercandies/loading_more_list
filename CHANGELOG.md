@@ -1,3 +1,7 @@
+## [3.0.1]
+
+* Fix issue that lastChildLayoutType is not work for Sliver.
+
 ## [3.0.0]
 
 * breaking change: fix typo(fullCrossAxisExtend => fullCrossAxisExtent)
