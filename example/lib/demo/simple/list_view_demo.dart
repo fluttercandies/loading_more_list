@@ -52,6 +52,7 @@ class _ListViewDemoState extends State<ListViewDemo> {
             print('viewport : [$firstIndex,$lastIndex]');
           },
         ),
+        //autoRefresh: false,
       ),
     );
   }

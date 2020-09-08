@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_more_list/src/glow_notification_widget.dart';
-import 'package:loading_more_list/src/list_config.dart';
 import 'package:loading_more_list_library/loading_more_list_library.dart';
+import 'package:loading_more_list/src/list_config/list_config.dart';
 
 //loading more for listview and gridview
 class LoadingMoreList<T> extends StatelessWidget {
@@ -10,7 +10,7 @@ class LoadingMoreList<T> extends StatelessWidget {
   /// Called when a ScrollNotification of the appropriate type arrives at this
   /// location in the tree.
   final NotificationListenerCallback<ScrollNotification> onScrollNotification;
-  
+
   LoadingMoreList(this.listConfig, {Key key, this.onScrollNotification})
       : super(key: key);
   @override
@@ -39,8 +39,10 @@ class LoadingMoreList<T> extends StatelessWidget {
     if (notification.metrics.axisDirection == AxisDirection.down &&
         notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
       if (listConfig.hasMore && !listConfig.hasError && !listConfig.isLoading) {
-        if (listConfig.sourceList.length == 0) {
-          listConfig.sourceList.refresh();
+        if (listConfig.sourceList.isEmpty) {
+          if (listConfig.autoRefresh) {
+            listConfig.sourceList.refresh();
+          }
         } else if (listConfig.autoLoadMore) {
           listConfig.sourceList.loadMore();
         }

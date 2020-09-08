@@ -44,7 +44,7 @@ class _GridViewDemoState extends State<GridViewDemo> {
         padding: const EdgeInsets.all(0.0),
         lastChildLayoutType: LastChildLayoutType.foot,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 300,
+          maxCrossAxisExtent: 300.0,
           crossAxisSpacing: 3.0,
           mainAxisSpacing: 3.0,
         ),
