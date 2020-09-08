@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_more_list/src/glow_notification_widget.dart';
-import 'package:loading_more_list/src/list_config.dart';
 import 'package:loading_more_list_library/loading_more_list_library.dart';
+import 'package:loading_more_list/src/list_config/list_config.dart';
 
 //loading more for listview and gridview
 class LoadingMoreList<T> extends StatelessWidget {
@@ -44,7 +44,9 @@ class LoadingMoreList<T> extends StatelessWidget {
         notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
       if (listConfig.hasMore && !listConfig.hasError && !listConfig.isLoading) {
         if (listConfig.sourceList.isEmpty) {
-          listConfig.sourceList.refresh();
+          if (listConfig.autoRefresh) {
+            listConfig.sourceList.refresh();
+          }
         } else if (listConfig.autoLoadMore) {
           listConfig.sourceList.loadMore();
         }

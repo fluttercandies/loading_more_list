@@ -45,7 +45,7 @@ class _SliverGridDemoState extends State<SliverGridDemo> {
           itemBuilder: itemBuilder,
           sourceList: listSourceRepository,
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 300,
+            maxCrossAxisExtent: 300.0,
             crossAxisSpacing: 3.0,
             mainAxisSpacing: 3.0,
           ),

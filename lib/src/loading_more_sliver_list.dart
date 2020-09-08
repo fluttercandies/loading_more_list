@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_more_list/src/glow_notification_widget.dart';
-import 'package:loading_more_list/src/list_config.dart';
+import 'package:loading_more_list/src/list_config/sliver_list_config.dart';
 import 'package:loading_more_list_library/loading_more_list_library.dart';
 
 //loading more for sliverlist and sliverGrid
@@ -300,7 +300,9 @@ class _LoadingMoreCustomScrollViewState
                 final LoadingMoreBase<dynamic> sourceList =
                     item.sliverListConfig.sourceList;
                 if (sourceList.isEmpty) {
-                  sourceList.refresh();
+                  if (item.sliverListConfig.autoRefresh) {
+                    sourceList.refresh();
+                  }
                 } else if (item.sliverListConfig.autoLoadMore) {
                   sourceList.loadMore();
                 }
@@ -309,7 +311,9 @@ class _LoadingMoreCustomScrollViewState
               final LoadingMoreBase<dynamic> sourceList =
                   item.sliverListConfig.sourceList;
               if (sourceList.isEmpty) {
-                sourceList.refresh();
+                if (item.sliverListConfig.autoRefresh) {
+                  sourceList.refresh();
+                }
               } else if (item.sliverListConfig.autoLoadMore) {
                 sourceList.loadMore();
               }

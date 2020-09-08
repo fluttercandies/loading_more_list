@@ -45,6 +45,7 @@ class _SliverListDemoState extends State<SliverListDemo> {
           itemBuilder: itemBuilder,
           sourceList: listSourceRepository,
           //isLastOne: false
+          //autoRefresh: false,
         ))
       ],
     );
