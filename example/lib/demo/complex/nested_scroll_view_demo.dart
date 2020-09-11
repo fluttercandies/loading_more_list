@@ -120,7 +120,7 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
 
   Widget builderAppbar(PullToRefreshScrollNotificationInfo info) {
     Widget action = Padding(
-      child: info?.refreshWiget ?? const Icon(Icons.more_horiz),
+      child: info?.refreshWidget ?? const Icon(Icons.more_horiz),
       padding: const EdgeInsets.all(15.0),
     );
     final double offset = info?.dragOffset ?? 0.0;

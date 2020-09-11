@@ -1,3 +1,7 @@
+## 3.1.1
+
+* fix closeToTrailing issue. extended_list#6.
+
 ## 3.1.0
 
 * add autoRefresh (whether auto call sourceList.refresh when first load).
