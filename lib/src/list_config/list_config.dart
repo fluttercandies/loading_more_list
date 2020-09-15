@@ -1,4 +1,3 @@
-//config for ListView,GridView,WaterfallFlow,ExtendedList
 import 'package:extended_list/extended_list.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:waterfall_flow/waterfall_flow.dart';
 
 import 'loading_more_list_config.dart';
 
+//config for ListView,GridView,WaterfallFlow,ExtendedList
 class ListConfig<T> extends LoadingMoreListConfig<T> {
   ListConfig({
     Widget Function(BuildContext context, T item, int index) itemBuilder,
@@ -32,7 +32,6 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
     bool autoLoadMore = true,
     ExtendedListDelegate extendedListDelegate,
     LastChildLayoutType lastChildLayoutType = LastChildLayoutType.foot,
-    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.dragStartBehavior = DragStartBehavior.start,
     bool autoRefresh = true,
   }) : super(
@@ -229,10 +228,6 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   ///    provide semantic indexes.
   final bool addSemanticIndexes;
 
-  /// A representation of how a [ScrollView] should dismiss the on-screen
-  /// keyboard.
-  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
-
   /// Configuration of offset passed to [DragStartDetails].
   ///
   /// The settings determines when a drag formally starts when the user
@@ -268,7 +263,6 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           itemBuilder: buildItem,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
-          keyboardDismissBehavior: keyboardDismissBehavior,
         );
       } else if (gridDelegate != null) {
         widget = ExtendedGridView.builder(
@@ -289,7 +283,6 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           extendedListDelegate: delegate,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
-          keyboardDismissBehavior: keyboardDismissBehavior,
         );
       } else {
         widget = ExtendedListView.builder(
@@ -310,7 +303,6 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           extendedListDelegate: delegate,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
-          keyboardDismissBehavior: keyboardDismissBehavior,
         );
       }
     }
