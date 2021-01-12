@@ -48,7 +48,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   final bool addSemanticIndexes;
   final SemanticIndexCallback semanticIndexCallback;
   final int semanticIndexOffset;
-  final int childCount;
+  final int Function(int length) childCount;
 
   /// The amount of space by which to inset the child sliver.
   final EdgeInsetsGeometry padding;
@@ -85,7 +85,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   Widget _innerBuilderList(
       BuildContext context, LoadingMoreBase<T> source, int lastOne) {
     Widget widget;
-    final int count = childCount ?? source.length;
+    final int count = childCount?.call(source.length) ?? source.length;
     final ExtendedListDelegate delegate = getExtendedListDelegate();
 
     if (delegate != null && delegate is SliverWaterfallFlowDelegate) {
