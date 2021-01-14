@@ -35,6 +35,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.dragStartBehavior = DragStartBehavior.start,
     bool autoRefresh = true,
+    int Function(int count) itemCountBuilder,
   }) : super(
           itemBuilder,
           sourceList,
@@ -45,6 +46,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           extendedListDelegate: extendedListDelegate,
           autoRefresh: autoRefresh,
           childCount: itemCount,
+          childCountBuilder: itemCountBuilder,
         );
 
   /// The axis along which the scroll view scrolls.
@@ -242,7 +244,8 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
     Widget widget = super.buildContent(context, source);
 
     if (widget == null) {
-      final int count = childCount ?? source.length;
+      final int count =
+          childCount ?? childCountBuilder?.call(source.length) ?? source.length;
       final ExtendedListDelegate delegate = getExtendedListDelegate(count);
 
       if (delegate != null && delegate is SliverWaterfallFlowDelegate) {

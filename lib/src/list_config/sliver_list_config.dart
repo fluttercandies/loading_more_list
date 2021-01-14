@@ -28,6 +28,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     this.padding,
     this.itemExtent,
     bool autoRefresh = true,
+    int Function(int count) childCountBuilder,
   }) : super(
           itemBuilder,
           sourceList,
@@ -38,6 +39,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           lastChildLayoutType: lastChildLayoutType,
           autoRefresh: autoRefresh,
           childCount: childCount,
+          childCountBuilder: childCountBuilder,
         );
 //whether show no more  .
   bool showNoMore = true;
@@ -85,7 +87,8 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   Widget _innerBuilderList(
       BuildContext context, LoadingMoreBase<T> source, int lastOne) {
     Widget widget;
-    final int count = childCount ?? source.length;
+    final int count =
+        childCount ?? childCountBuilder?.call(source.length) ?? source.length;
     final ExtendedListDelegate delegate = getExtendedListDelegate(count);
 
     if (delegate != null && delegate is SliverWaterfallFlowDelegate) {

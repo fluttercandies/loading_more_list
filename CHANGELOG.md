@@ -1,3 +1,7 @@
+## 3.2.0
+
+* add childCountBuilder.
+  
 ## 3.1.2
 
 * fix itemCount/childCount are not working.

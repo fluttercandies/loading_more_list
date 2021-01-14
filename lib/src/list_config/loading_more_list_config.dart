@@ -17,6 +17,7 @@ class LoadingMoreListConfig<T> {
     this.lastChildLayoutType = LastChildLayoutType.foot,
     this.autoRefresh = true,
     this.childCount,
+    this.childCountBuilder,
   })  : assert(itemBuilder != null),
         assert(sourceList != null),
         assert(autoLoadMore != null),
@@ -53,6 +54,9 @@ class LoadingMoreListConfig<T> {
   /// If null, the number of children is determined by the least index for which
   /// [builder] returns null.
   final int childCount;
+
+  /// The builder to get child count
+  final int Function(int count) childCountBuilder;
 
   bool get isSliver {
     return this is SliverListConfig<T>;
@@ -107,7 +111,10 @@ class LoadingMoreListConfig<T> {
   }
 
   Widget buildItem(BuildContext context, int index) {
-    if (index == (childCount ?? sourceList?.length)) {
+    if (index ==
+        (childCount ??
+            childCountBuilder?.call(sourceList?.length) ??
+            sourceList?.length)) {
       final Widget widget = buildErrorItem(context);
       if (widget != null) {
         return widget;
