@@ -24,6 +24,7 @@
   - [可视区域追踪](#可视区域追踪)
   - [LastChildLayoutType](#lastchildlayouttype)
   - [CloseToTrailing](#closetotrailing)
+  - [☕️Buy me a coffee](#️buy-me-a-coffee)
 
 ## 使用
 
@@ -125,7 +126,7 @@ ListConfig<T> 和 SliverListConfig<T>
 | gridDelegate         | GridView定义委托.                             | -                        |
 | indicatorBuilder     | 状态指示构建器.                               | IndicatorWidget          |
 | padding              | 边距，SliverListConfig<T>的参数               | -                        |
-
+| childCountBuilder    | 动态获取 child count的回调,入参为列表的长度   | -                        |
 
 ## Widget
 

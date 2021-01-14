@@ -123,7 +123,7 @@ ListConfig<T> and SliverListConfig<T>
 | gridDelegate         | The delegate for GridView.                                                     | -                        |
 | indicatorBuilder     | widget builder for different loading state.                                    | IndicatorWidget          |
 | padding              | The amount of space by which to inset the child sliver for SliverListConfig<T> | -                        |
-
+| childCountBuilder    | The builder to get child count, the input is sourceList.length                                                 | -                        |
 
 ## Widget
 

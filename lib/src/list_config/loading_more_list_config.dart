@@ -55,7 +55,7 @@ class LoadingMoreListConfig<T> {
   /// [builder] returns null.
   final int childCount;
 
-  /// The builder to get child count
+  /// The builder to get child count,the input is sourceList.length
   final int Function(int count) childCountBuilder;
 
   bool get isSliver {
