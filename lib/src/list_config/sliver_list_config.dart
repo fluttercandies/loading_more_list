@@ -21,7 +21,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     this.addSemanticIndexes = true,
     this.semanticIndexCallback = _kDefaultSemanticIndexCallback,
     this.semanticIndexOffset = 0,
-    this.childCount,
+    int childCount,
     bool autoLoadMore = true,
     ExtendedListDelegate extendedListDelegate,
     LastChildLayoutType lastChildLayoutType = LastChildLayoutType.foot,
@@ -37,6 +37,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           extendedListDelegate: extendedListDelegate,
           lastChildLayoutType: lastChildLayoutType,
           autoRefresh: autoRefresh,
+          childCount: childCount,
         );
 //whether show no more  .
   bool showNoMore = true;
@@ -48,7 +49,6 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   final bool addSemanticIndexes;
   final SemanticIndexCallback semanticIndexCallback;
   final int semanticIndexOffset;
-  final int childCount;
 
   /// The amount of space by which to inset the child sliver.
   final EdgeInsetsGeometry padding;
@@ -86,7 +86,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
       BuildContext context, LoadingMoreBase<T> source, int lastOne) {
     Widget widget;
     final int count = childCount ?? source.length;
-    final ExtendedListDelegate delegate = getExtendedListDelegate();
+    final ExtendedListDelegate delegate = getExtendedListDelegate(count);
 
     if (delegate != null && delegate is SliverWaterfallFlowDelegate) {
       widget = SliverWaterfallFlow(

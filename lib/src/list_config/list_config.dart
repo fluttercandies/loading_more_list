@@ -23,7 +23,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
     this.shrinkWrap = false,
     this.padding = const EdgeInsets.all(0.0),
     this.itemExtent,
-    this.itemCount,
+    int itemCount,
     this.addAutomaticKeepAlives = true,
     this.addRepaintBoundaries = true,
     this.addSemanticIndexes = true,
@@ -44,6 +44,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           lastChildLayoutType: lastChildLayoutType,
           extendedListDelegate: extendedListDelegate,
           autoRefresh: autoRefresh,
+          childCount: itemCount,
         );
 
   /// The axis along which the scroll view scrolls.
@@ -183,12 +184,6 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   /// the scroll position changes drastically.
   final double itemExtent;
 
-  /// The total number of children this delegate can provide.
-  ///
-  /// If null, the number of children is determined by the least index for which
-  /// [builder] returns null.
-  final int itemCount;
-
   /// Whether to wrap each child in an [AutomaticKeepAlive].
   ///
   /// Typically, children in lazy list are wrapped in [AutomaticKeepAlive]
@@ -247,8 +242,8 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
     Widget widget = super.buildContent(context, source);
 
     if (widget == null) {
-      final int count = itemCount ?? source.length;
-      final ExtendedListDelegate delegate = getExtendedListDelegate();
+      final int count = childCount ?? source.length;
+      final ExtendedListDelegate delegate = getExtendedListDelegate(count);
 
       if (delegate != null && delegate is SliverWaterfallFlowDelegate) {
         widget = WaterfallFlow.builder(

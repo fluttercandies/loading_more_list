@@ -1,3 +1,7 @@
+## 3.1.2
+
+* fix itemCount/childCount are not working.
+  
 ## 3.1.1
 
 * fix closeToTrailing issue. extended_list#6.

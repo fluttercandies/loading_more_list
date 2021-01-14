@@ -16,6 +16,7 @@ class LoadingMoreListConfig<T> {
     this.extendedListDelegate,
     this.lastChildLayoutType = LastChildLayoutType.foot,
     this.autoRefresh = true,
+    this.childCount,
   })  : assert(itemBuilder != null),
         assert(sourceList != null),
         assert(autoLoadMore != null),
@@ -46,6 +47,12 @@ class LoadingMoreListConfig<T> {
   //whether auto call sourceList.refresh when first load
   //if false, you must call sourceList.refresh by yourself.
   final bool autoRefresh;
+
+  /// The total number of children this delegate can provide.
+  ///
+  /// If null, the number of children is determined by the least index for which
+  /// [builder] returns null.
+  final int childCount;
 
   bool get isSliver {
     return this is SliverListConfig<T>;
@@ -100,7 +107,7 @@ class LoadingMoreListConfig<T> {
   }
 
   Widget buildItem(BuildContext context, int index) {
-    if (index == sourceList.length) {
+    if (index == (childCount ?? sourceList?.length)) {
       final Widget widget = buildErrorItem(context);
       if (widget != null) {
         return widget;
@@ -148,7 +155,8 @@ class LoadingMoreListConfig<T> {
   bool get hasError => sourceList.hasError;
   bool get isLoading => sourceList.isLoading;
 
-  ExtendedListDelegate getExtendedListDelegate({bool showNoMore = true}) {
+  ExtendedListDelegate getExtendedListDelegate(int childCount,
+      {bool showNoMore = true}) {
     if (extendedListDelegate != null) {
       if (extendedListDelegate
           is SliverWaterfallFlowDelegateWithFixedCrossAxisCount) {
@@ -160,7 +168,7 @@ class LoadingMoreListConfig<T> {
           mainAxisSpacing: delegate.mainAxisSpacing,
           crossAxisSpacing: delegate.crossAxisSpacing,
           lastChildLayoutTypeBuilder: showNoMore
-              ? ((int index) => sourceList.length == index
+              ? ((int index) => childCount == index
                   ? lastChildLayoutType
                   : LastChildLayoutType.none)
               : null,
@@ -178,7 +186,7 @@ class LoadingMoreListConfig<T> {
           mainAxisSpacing: delegate.mainAxisSpacing,
           crossAxisSpacing: delegate.crossAxisSpacing,
           lastChildLayoutTypeBuilder: showNoMore
-              ? ((int index) => sourceList.length == index
+              ? ((int index) => childCount == index
                   ? lastChildLayoutType
                   : LastChildLayoutType.none)
               : null,
@@ -189,7 +197,7 @@ class LoadingMoreListConfig<T> {
       } else {
         return ExtendedListDelegate(
           lastChildLayoutTypeBuilder: showNoMore
-              ? ((int index) => sourceList.length == index
+              ? ((int index) => childCount == index
                   ? lastChildLayoutType
                   : LastChildLayoutType.none)
               : null,
@@ -204,7 +212,7 @@ class LoadingMoreListConfig<T> {
         lastChildLayoutType != LastChildLayoutType.none) {
       return ExtendedListDelegate(
         lastChildLayoutTypeBuilder: showNoMore
-            ? ((int index) => sourceList.length == index
+            ? ((int index) => childCount == index
                 ? lastChildLayoutType
                 : LastChildLayoutType.none)
             : null,
