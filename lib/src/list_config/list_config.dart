@@ -9,12 +9,13 @@ import 'loading_more_list_config.dart';
 
 class ListConfig<T> extends LoadingMoreListConfig<T> {
   ListConfig({
-    Widget Function(BuildContext context, T item, int index) itemBuilder,
-    LoadingMoreBase<T> sourceList,
+    required Widget Function(BuildContext context, T item, int index)
+        itemBuilder,
+    required LoadingMoreBase<T> sourceList,
     this.showGlowLeading = true,
     this.showGlowTrailing = true,
-    LoadingMoreIndicatorBuilder indicatorBuilder,
-    SliverGridDelegate gridDelegate,
+    LoadingMoreIndicatorBuilder? indicatorBuilder,
+    SliverGridDelegate? gridDelegate,
     this.scrollDirection = Axis.vertical,
     this.reverse = false,
     this.controller,
@@ -23,19 +24,21 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
     this.shrinkWrap = false,
     this.padding = const EdgeInsets.all(0.0),
     this.itemExtent,
-    int itemCount,
+    int? itemCount,
     this.addAutomaticKeepAlives = true,
     this.addRepaintBoundaries = true,
     this.addSemanticIndexes = true,
     this.cacheExtent,
     this.semanticChildCount,
     bool autoLoadMore = true,
-    ExtendedListDelegate extendedListDelegate,
+    ExtendedListDelegate? extendedListDelegate,
     LastChildLayoutType lastChildLayoutType = LastChildLayoutType.foot,
-    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-    this.dragStartBehavior = DragStartBehavior.start,
     bool autoRefresh = true,
-    int Function(int count) itemCountBuilder,
+    int Function(int count)? itemCountBuilder,
+    this.dragStartBehavior = DragStartBehavior.start,
+    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    this.restorationId,
+    this.clipBehavior = Clip.hardEdge,
   }) : super(
           itemBuilder,
           sourceList,
@@ -80,7 +83,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   /// [ScrollController.keepScrollOffset]). It can be used to read the current
   /// scroll position (see [ScrollController.offset]), or change it (see
   /// [ScrollController.animateTo]).
-  final ScrollController controller;
+  final ScrollController? controller;
 
   /// Whether this is the primary scroll view associated with the parent
   /// [PrimaryScrollController].
@@ -94,7 +97,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   ///
   /// Defaults to true when [scrollDirection] is [Axis.vertical] and
   /// [controller] is null.
-  final bool primary;
+  final bool? primary;
 
   /// How the scroll view should respond to user input.
   ///
@@ -130,7 +133,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   /// dynamically, which can be relatively expensive, and it would be
   /// inefficient to speculatively create this object each frame to see if the
   /// physics should be updated.)
-  final ScrollPhysics physics;
+  final ScrollPhysics? physics;
 
   /// Whether the extent of the scroll view in the [scrollDirection] should be
   /// determined by the contents being viewed.
@@ -149,7 +152,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   final bool shrinkWrap;
 
   /// {@macro flutter.rendering.viewport.cacheExtent}
-  final double cacheExtent;
+  final double? cacheExtent;
 
   /// The number of children that will contribute semantic information.
   ///
@@ -164,7 +167,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   /// See also:
   ///
   ///  * [SemanticsConfiguration.scrollChildCount], the corresponding semantics property.
-  final int semanticChildCount;
+  final int? semanticChildCount;
 
   /// Whether to show the overscroll glow on the side with negative scroll
   /// offsets.
@@ -184,7 +187,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   /// determine their own extent because the scrolling machinery can make use of
   /// the foreknowledge of the children's extent to save work, for example when
   /// the scroll position changes drastically.
-  final double itemExtent;
+  final double? itemExtent;
 
   /// Whether to wrap each child in an [AutomaticKeepAlive].
   ///
@@ -226,10 +229,6 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   ///    provide semantic indexes.
   final bool addSemanticIndexes;
 
-  /// A representation of how a [ScrollView] should dismiss the on-screen
-  /// keyboard.
-  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
-
   /// Configuration of offset passed to [DragStartDetails].
   ///
   /// The settings determines when a drag formally starts when the user
@@ -239,14 +238,29 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   ///
   ///  * [DragGestureRecognizer.dragStartBehavior], which gives an example for the different behaviors.
   final DragStartBehavior dragStartBehavior;
+
+  /// {@template flutter.widgets.scroll_view.keyboardDismissBehavior}
+  /// [ScrollViewKeyboardDismissBehavior] the defines how this [ScrollView] will
+  /// dismiss the keyboard automatically.
+  /// {@endtemplate}
+  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
+
+  /// {@macro flutter.widgets.scrollable.restorationId}
+  final String? restorationId;
+
+  /// {@macro flutter.material.Material.clipBehavior}
+  ///
+  /// Defaults to [Clip.hardEdge].
+  final Clip clipBehavior;
   @override
-  Widget buildContent(BuildContext context, LoadingMoreBase<T> source) {
-    Widget widget = super.buildContent(context, source);
+  Widget buildContent(BuildContext context, LoadingMoreBase<T>? source) {
+    Widget? widget = super.buildContent(context, source);
 
     if (widget == null) {
-      final int count =
-          childCount ?? childCountBuilder?.call(source.length) ?? source.length;
-      final ExtendedListDelegate delegate = getExtendedListDelegate(count);
+      final int count = childCount ??
+          childCountBuilder?.call(source!.length) ??
+          source!.length;
+      final ExtendedListDelegate? delegate = getExtendedListDelegate(count);
 
       if (delegate != null && delegate is SliverWaterfallFlowDelegate) {
         widget = WaterfallFlow.builder(
@@ -267,10 +281,12 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
           keyboardDismissBehavior: keyboardDismissBehavior,
+          restorationId: restorationId,
+          clipBehavior:clipBehavior,
         );
       } else if (gridDelegate != null) {
         widget = ExtendedGridView.builder(
-          gridDelegate: gridDelegate,
+          gridDelegate: gridDelegate!,
           scrollDirection: scrollDirection,
           reverse: reverse,
           controller: controller,
@@ -284,10 +300,12 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
           itemBuilder: buildItem,
-          extendedListDelegate: delegate,
+          extendedListDelegate: delegate!,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
           keyboardDismissBehavior: keyboardDismissBehavior,
+          restorationId: restorationId,
+          clipBehavior:clipBehavior,
         );
       } else {
         widget = ExtendedListView.builder(
@@ -305,10 +323,12 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
           itemBuilder: buildItem,
-          extendedListDelegate: delegate,
+          extendedListDelegate: delegate!,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
           keyboardDismissBehavior: keyboardDismissBehavior,
+          restorationId: restorationId,
+          clipBehavior:clipBehavior,
         );
       }
     }

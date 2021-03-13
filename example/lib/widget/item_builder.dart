@@ -9,7 +9,7 @@ import '../utils/screen_util.dart';
 
 Widget itemBuilder(BuildContext context, TuChongItem item, int index) {
   return Container(
-    height: ScreenUtil.instance.setWidth(kIsWeb ? 400.0 : 200.0),
+    height: ScreenUtil.instance!.setWidth(kIsWeb ? 400.0 : 200.0),
     child: Stack(
       children: <Widget>[
         Positioned(
@@ -17,17 +17,17 @@ Widget itemBuilder(BuildContext context, TuChongItem item, int index) {
               ? ListView.builder(
                   itemBuilder: (BuildContext c, int index) {
                     return ExtendedImage.network(
-                      item.images[index].imageUrl,
+                      item.images![index].imageUrl,
                       fit: BoxFit.cover,
-                      width: ScreenUtil.instance
+                      width: ScreenUtil.instance!
                           .setWidth(kIsWeb ? 400.0 : double.infinity),
                       height:
-                          ScreenUtil.instance.setWidth(kIsWeb ? 400.0 : 200.0),
-                      clearMemoryCacheWhenDispose: true,
+                          ScreenUtil.instance!.setWidth(kIsWeb ? 400.0 : 200.0),
+                      clearMemoryCacheWhenDispose: false,
                     );
                   },
                   scrollDirection: Axis.horizontal,
-                  itemCount: item.images.length,
+                  itemCount: item.images!.length,
                 )
               : ExtendedImage.network(
                   item.imageUrl,
@@ -35,7 +35,7 @@ Widget itemBuilder(BuildContext context, TuChongItem item, int index) {
                   width: double.infinity,
                   //height: 200.0,
                   height: double.infinity,
-                  clearMemoryCacheWhenDispose: true,
+                  clearMemoryCacheWhenDispose: false,
                 ),
         ),
         Positioned(
@@ -67,7 +67,7 @@ Widget itemBuilder(BuildContext context, TuChongItem item, int index) {
                   size: 20.0,
                   isLiked: item.isFavorite,
                   likeCount: item.favorites,
-                  countBuilder: (int count, bool isLiked, String text) {
+                  countBuilder: (int? count, bool isLiked, String text) {
                     final ColorSwatch<int> color =
                         isLiked ? Colors.pinkAccent : Colors.grey;
                     Widget result;
@@ -78,7 +78,7 @@ Widget itemBuilder(BuildContext context, TuChongItem item, int index) {
                       );
                     } else {
                       result = Text(
-                        count >= 1000
+                        count! >= 1000
                             ? (count / 1000.0).toStringAsFixed(1) + 'k'
                             : text,
                         style: TextStyle(color: color),
@@ -86,7 +86,7 @@ Widget itemBuilder(BuildContext context, TuChongItem item, int index) {
                     }
                     return result;
                   },
-                  likeCountAnimationType: item.favorites < 1000
+                  likeCountAnimationType: item.favorites! < 1000
                       ? LikeCountAnimationType.part
                       : LikeCountAnimationType.none,
                   onTap: (bool isLiked) {
@@ -111,7 +111,7 @@ Widget buildWaterfallFlowItem(BuildContext c, TuChongItem item, int index,
       ExtendedImage.network(
         item.imageUrl,
         shape: BoxShape.rectangle,
-        clearMemoryCacheWhenDispose: true,
+        clearMemoryCacheWhenDispose: false,
         border: Border.all(color: Colors.grey.withOpacity(0.4), width: 1.0),
         borderRadius: const BorderRadius.all(
           Radius.circular(10.0),
@@ -137,8 +137,8 @@ Widget buildWaterfallFlowItem(BuildContext c, TuChongItem item, int index,
             return loadingWidget;
           } else if (value.extendedImageLoadState == LoadState.completed) {
             item.imageRawSize = Size(
-                value.extendedImageInfo.image.width.toDouble(),
-                value.extendedImageInfo.image.height.toDouble());
+                value.extendedImageInfo!.image.width.toDouble(),
+                value.extendedImageInfo!.image.height.toDouble());
           }
           return null;
         },
@@ -171,7 +171,7 @@ Widget buildWaterfallFlowItem(BuildContext c, TuChongItem item, int index,
     );
   } else if (item.imageRawSize != null) {
     image = AspectRatio(
-      aspectRatio: item.imageRawSize.width / item.imageRawSize.height,
+      aspectRatio: item.imageRawSize!.width / item.imageRawSize!.height,
       child: image,
     );
   }
@@ -200,8 +200,8 @@ Widget buildTagsWidget(
   return Wrap(
       runSpacing: 5.0,
       spacing: 5.0,
-      children: item.tags.take(maxNum).map<Widget>((String tag) {
-        final Color color = item.tagColors[item.tags.indexOf(tag)];
+      children: item.tags!.take(maxNum).map<Widget>((String? tag) {
+        final Color color = item.tagColors![item.tags!.indexOf(tag)];
         return Container(
           padding: const EdgeInsets.all(3.0),
           decoration: BoxDecoration(
@@ -212,7 +212,7 @@ Widget buildTagsWidget(
             ),
           ),
           child: Text(
-            tag,
+            tag!,
             textAlign: TextAlign.start,
             style: TextStyle(
                 fontSize: fontSize,
@@ -230,7 +230,7 @@ Widget buildBottomWidget(TuChongItem item, {bool showAvatar = true}) {
     children: <Widget>[
       if (showAvatar)
         ExtendedImage.network(
-          item.avatarUrl,
+          item.avatarUrl!,
           width: 25.0,
           height: 25.0,
           shape: BoxShape.circle,
@@ -271,7 +271,7 @@ Widget buildBottomWidget(TuChongItem item, {bool showAvatar = true}) {
         size: 18.0,
         isLiked: item.isFavorite,
         likeCount: item.favorites,
-        countBuilder: (int count, bool isLiked, String text) {
+        countBuilder: (int? count, bool isLiked, String text) {
           final ColorSwatch<int> color =
               isLiked ? Colors.pinkAccent : Colors.grey;
           Widget result;
@@ -282,13 +282,13 @@ Widget buildBottomWidget(TuChongItem item, {bool showAvatar = true}) {
             );
           } else {
             result = Text(
-              count >= 1000 ? (count / 1000.0).toStringAsFixed(1) + 'k' : text,
+              count! >= 1000 ? (count / 1000.0).toStringAsFixed(1) + 'k' : text,
               style: TextStyle(color: color, fontSize: fontSize),
             );
           }
           return result;
         },
-        likeCountAnimationType: item.favorites < 1000
+        likeCountAnimationType: item.favorites! < 1000
             ? LikeCountAnimationType.part
             : LikeCountAnimationType.none,
         onTap: (bool isLiked) {

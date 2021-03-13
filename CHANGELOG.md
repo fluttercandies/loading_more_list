@@ -1,11 +1,15 @@
+## 4.0.0
+
+* support null-safety
+
 ## 3.2.0
 
 * add childCountBuilder.
-  
+
 ## 3.1.2
 
 * fix itemCount/childCount are not working.
-  
+
 ## 3.1.1
 
 * fix closeToTrailing issue. extended_list#6.
@@ -13,7 +17,7 @@
 ## 3.1.0
 
 * add autoRefresh (whether auto call sourceList.refresh when first load).
-  
+
 ## 3.0.1
 
 * Fix issue that lastChildLayoutType is not work for Sliver.

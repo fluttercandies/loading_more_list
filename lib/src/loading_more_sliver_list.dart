@@ -6,7 +6,7 @@ import 'package:loading_more_list_library/loading_more_list_library.dart';
 
 //loading more for sliverlist and sliverGrid
 class LoadingMoreSliverList<T> extends StatelessWidget {
-  const LoadingMoreSliverList(this.sliverListConfig, {Key key})
+  const LoadingMoreSliverList(this.sliverListConfig, {Key? key})
       : super(key: key);
   final SliverListConfig<T> sliverListConfig;
 
@@ -16,7 +16,7 @@ class LoadingMoreSliverList<T> extends StatelessWidget {
       builder: (BuildContext b, AsyncSnapshot<LoadingMoreBase<T>> s) {
         return sliverListConfig.buildContent(context, s.data);
       },
-      stream: sliverListConfig.sourceList?.rebuild,
+      stream: sliverListConfig.sourceList.rebuild,
       initialData: sliverListConfig.sourceList,
     );
   }
@@ -25,7 +25,7 @@ class LoadingMoreSliverList<T> extends StatelessWidget {
 //support for LoadingMoreSliverList
 class LoadingMoreCustomScrollView extends StatefulWidget {
   const LoadingMoreCustomScrollView({
-    Key key,
+    Key? key,
     this.scrollDirection = Axis.vertical,
     this.reverse = false,
     this.controller,
@@ -40,7 +40,10 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
     this.rebuildCustomScrollView = false,
     this.onScrollNotification,
     this.dragStartBehavior = DragStartBehavior.start,
-  })  : assert(slivers != null),
+    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    this.restorationId,
+    this.clipBehavior = Clip.hardEdge,
+  })  :
         super(
           key: key,
         );
@@ -79,7 +82,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   /// [ScrollController.keepScrollOffset]). It can be used to read the current
   /// scroll position (see [ScrollController.offset]), or change it (see
   /// [ScrollController.animateTo]).
-  final ScrollController controller;
+  final ScrollController? controller;
 
   /// Whether this is the primary scroll view associated with the parent
   /// [PrimaryScrollController].
@@ -93,7 +96,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   ///
   /// Defaults to true when [scrollDirection] is [Axis.vertical] and
   /// [controller] is null.
-  final bool primary;
+  final bool? primary;
 
   /// How the scroll view should respond to user input.
   ///
@@ -129,7 +132,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   /// dynamically, which can be relatively expensive, and it would be
   /// inefficient to speculatively create this object each frame to see if the
   /// physics should be updated.)
-  final ScrollPhysics physics;
+  final ScrollPhysics? physics;
 
   /// Whether the extent of the scroll view in the [scrollDirection] should be
   /// determined by the contents being viewed.
@@ -148,7 +151,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   final bool shrinkWrap;
 
   /// {@macro flutter.rendering.viewport.cacheExtent}
-  final double cacheExtent;
+  final double? cacheExtent;
 
   /// The number of children that will contribute semantic information.
   ///
@@ -163,7 +166,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   /// See also:
   ///
   ///  * [SemanticsConfiguration.scrollChildCount], the corresponding semantics property.
-  final int semanticChildCount;
+  final int? semanticChildCount;
 
   /// Whether to show the overscroll glow on the side with negative scroll
   /// offsets.
@@ -179,7 +182,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
 
   /// Called when a ScrollNotification of the appropriate type arrives at this
   /// location in the tree.
-  final NotificationListenerCallback<ScrollNotification> onScrollNotification;
+  final NotificationListenerCallback<ScrollNotification>? onScrollNotification;
 
   /// Configuration of offset passed to [DragStartDetails].
   ///
@@ -190,6 +193,20 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   ///
   ///  * [DragGestureRecognizer.dragStartBehavior], which gives an example for the different behaviors.
   final DragStartBehavior dragStartBehavior;
+
+    /// {@template flutter.widgets.scroll_view.keyboardDismissBehavior}
+  /// [ScrollViewKeyboardDismissBehavior] the defines how this [ScrollView] will
+  /// dismiss the keyboard automatically.
+  /// {@endtemplate}
+  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
+
+  /// {@macro flutter.widgets.scrollable.restorationId}
+  final String? restorationId;
+
+  /// {@macro flutter.material.Material.clipBehavior}
+  ///
+  /// Defaults to [Clip.hardEdge].
+  final Clip clipBehavior;
   @override
   _LoadingMoreCustomScrollViewState createState() =>
       _LoadingMoreCustomScrollViewState();
@@ -198,7 +215,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
 class _LoadingMoreCustomScrollViewState
     extends State<LoadingMoreCustomScrollView> {
   ///LoadingMoreSliverList collection
-  List<LoadingMoreSliverList<dynamic>> _loadingMoreWidgets;
+  late List<LoadingMoreSliverList<dynamic>> _loadingMoreWidgets;
   @override
   void initState() {
     _loadingMoreWidgets =
@@ -260,15 +277,18 @@ class _LoadingMoreCustomScrollViewState
               slivers: widgets,
               reverse: widget.reverse,
               dragStartBehavior: widget.dragStartBehavior,
+              keyboardDismissBehavior: widget.keyboardDismissBehavior,
+              restorationId: widget.restorationId,
+              clipBehavior: widget.clipBehavior,
             ),
             showGlowLeading: widget.showGlowLeading,
-            showGlowTrailing: widget.showGlowTrailing));
+            showGlowTrailing: widget.showGlowTrailing,));
     // }
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
     if (widget.onScrollNotification != null)
-      widget.onScrollNotification(notification);
+      widget.onScrollNotification!(notification);
 
     if (notification.depth != 0) {
       return false;
@@ -280,12 +300,12 @@ class _LoadingMoreCustomScrollViewState
           _loadingMoreWidgets;
 
       if (loadingMoreWidgets.isNotEmpty) {
-        LoadingMoreSliverList<dynamic> preList;
+        LoadingMoreSliverList<dynamic>? preList;
         for (int i = 0; i < loadingMoreWidgets.length; i++) {
           final LoadingMoreSliverList<dynamic> item = loadingMoreWidgets[i];
 
           final bool preListIsloading =
-              preList?.sliverListConfig?.sourceList?.isLoading ?? false;
+              preList?.sliverListConfig.sourceList.isLoading ?? false;
 
           if (!preListIsloading &&
               item.sliverListConfig.hasMore &&

@@ -34,8 +34,8 @@ class ScreenUtil {
     );
   }
 
-  static ScreenUtil get instance => _instance;
-  static ScreenUtil _instance;
+  static ScreenUtil? get instance => _instance;
+  static ScreenUtil? _instance;
 
   //设计稿的设备尺寸修改
   double width;
@@ -82,9 +82,9 @@ class ScreenUtil {
   double get bottomBarHeight => _bottomBarHeight;
 
   ///实际的dp与设计稿px的比例
-  double get scaleWidth => _screenWidth / instance.width;
+  double get scaleWidth => _screenWidth / instance!.width;
 
-  double get scaleHeight => _screenHeight / instance.height;
+  double get scaleHeight => _screenHeight / instance!.height;
 
   ///根据设计稿的设备宽度适配
   ///高度也根据这个来做适配可以保证不变形

@@ -1,10 +1,10 @@
 import 'package:extended_sliver/extended_sliver.dart';
+import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 import 'package:flutter/material.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart'
     as extended;
 
 import 'package:loading_more_list/loading_more_list.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
 import 'package:pull_to_refresh_notification/pull_to_refresh_notification.dart';
 
 import '../../data/tu_chong_repository.dart';
@@ -28,11 +28,11 @@ class NestedScrollViewDemo extends StatefulWidget {
 
 class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
     with TickerProviderStateMixin {
-  TuChongRepository listSourceRepository;
-  TuChongRepository listSourceRepository1;
-  TuChongRepository listSourceRepository2;
-  TuChongRepository listSourceRepository3;
-  TabController primaryTC;
+  late TuChongRepository listSourceRepository;
+  late TuChongRepository listSourceRepository1;
+  late TuChongRepository listSourceRepository2;
+  late TuChongRepository listSourceRepository3;
+  late TabController primaryTC;
   @override
   void initState() {
     listSourceRepository = TuChongRepository();
@@ -49,6 +49,7 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
     listSourceRepository1.dispose();
     listSourceRepository2.dispose();
     listSourceRepository3.dispose();
+    primaryTC.dispose();
     super.dispose();
   }
 
@@ -93,7 +94,7 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
             const String index = 'Tab';
             return Key(index + primaryTC.index.toString());
           },
-          headerSliverBuilder: (BuildContext c, bool f) {
+          headerSliverBuilder: (BuildContext c, bool? f) {
             final List<Widget> widgets = <Widget>[];
             widgets.add(PullToRefreshContainer(builderAppbar));
             widgets.add(SliverPersistentHeader(
@@ -118,7 +119,7 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
     );
   }
 
-  Widget builderAppbar(PullToRefreshScrollNotificationInfo info) {
+  Widget builderAppbar(PullToRefreshScrollNotificationInfo? info) {
     Widget action = Padding(
       child: info?.refreshWidget ?? const Icon(Icons.more_horiz),
       padding: const EdgeInsets.all(15.0),
@@ -130,17 +131,17 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
         child = GestureDetector(
           onTap: () {
             // refreshNotification;
-            info?.pullToRefreshNotificationState?.show();
+            info.pullToRefreshNotificationState.show();
           },
           child: Text(
-            (info.mode?.toString() ?? '') + '  click to retry' ?? '',
+            (info.mode?.toString() ?? '') + '  click to retry',
             style: const TextStyle(fontSize: 10.0),
           ),
         );
         action = Container();
       } else {
         child = Text(
-          info?.mode?.toString() ?? '',
+          info.mode.toString(),
           style: const TextStyle(fontSize: 10.0),
         );
       }
@@ -204,7 +205,7 @@ class CommonSliverPersistentHeaderDelegate
 
 class Tab0 extends StatefulWidget {
   const Tab0(this.listSourceRepository);
-  final TuChongRepository listSourceRepository;
+  final TuChongRepository? listSourceRepository;
   @override
   _Tab0State createState() => _Tab0State();
 }
@@ -232,7 +233,7 @@ class _Tab0State extends State<Tab0> with AutomaticKeepAliveClientMixin {
             ),
             LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
               itemBuilder: itemBuilder,
-              sourceList: widget.listSourceRepository,
+              sourceList: widget.listSourceRepository!,
               //isLastOne: false
             ))
           ],
@@ -245,8 +246,8 @@ class _Tab0State extends State<Tab0> with AutomaticKeepAliveClientMixin {
 
 class Tab1 extends StatefulWidget {
   const Tab1(this.listSourceRepository1, this.listSourceRepository2);
-  final TuChongRepository listSourceRepository1;
-  final TuChongRepository listSourceRepository2;
+  final TuChongRepository? listSourceRepository1;
+  final TuChongRepository? listSourceRepository2;
   @override
   _Tab1State createState() => _Tab1State();
 }
@@ -274,7 +275,7 @@ class _Tab1State extends State<Tab1> with AutomaticKeepAliveClientMixin {
             ),
             LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
               itemBuilder: itemBuilder,
-              sourceList: widget.listSourceRepository1,
+              sourceList: widget.listSourceRepository1!,
               //isLastOne: false
             )),
             SliverToBoxAdapter(
@@ -287,7 +288,7 @@ class _Tab1State extends State<Tab1> with AutomaticKeepAliveClientMixin {
             ),
             LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
               itemBuilder: itemBuilder,
-              sourceList: widget.listSourceRepository2,
+              sourceList: widget.listSourceRepository2!,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 3.0,
@@ -305,7 +306,7 @@ class _Tab1State extends State<Tab1> with AutomaticKeepAliveClientMixin {
 
 class Tab2 extends StatefulWidget {
   const Tab2(this.listSourceRepository3);
-  final TuChongRepository listSourceRepository3;
+  final TuChongRepository? listSourceRepository3;
   @override
   _Tab2State createState() => _Tab2State();
 }
@@ -328,7 +329,7 @@ class _Tab2State extends State<Tab2> with AutomaticKeepAliveClientMixin {
               child: LoadingMoreList<TuChongItem>(
                 ListConfig<TuChongItem>(
                     itemBuilder: itemBuilder,
-                    sourceList: widget.listSourceRepository3,
+                    sourceList: widget.listSourceRepository3!,
                     showGlowLeading: false,
                     physics: const ClampingScrollPhysics(),
 //                    showGlowTrailing: false,

@@ -12,23 +12,23 @@ int _kDefaultSemanticIndexCallback(Widget _, int localIndex) {
 //config for SliverList, SliverGrid, SliverWaterfallFlow and ExtendedSliver
 class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   SliverListConfig({
-    Widget Function(BuildContext context, T item, int index) itemBuilder,
-    LoadingMoreBase<T> sourceList,
-    LoadingMoreIndicatorBuilder indicatorBuilder,
-    SliverGridDelegate gridDelegate,
+    required Widget Function(BuildContext context, T item, int index) itemBuilder,
+    required LoadingMoreBase<T> sourceList,
+    LoadingMoreIndicatorBuilder? indicatorBuilder,
+    SliverGridDelegate? gridDelegate,
     this.addAutomaticKeepAlives = true,
     this.addRepaintBoundaries = true,
     this.addSemanticIndexes = true,
     this.semanticIndexCallback = _kDefaultSemanticIndexCallback,
     this.semanticIndexOffset = 0,
-    int childCount,
+    int? childCount,
     bool autoLoadMore = true,
-    ExtendedListDelegate extendedListDelegate,
+    ExtendedListDelegate? extendedListDelegate,
     LastChildLayoutType lastChildLayoutType = LastChildLayoutType.foot,
     this.padding,
     this.itemExtent,
     bool autoRefresh = true,
-    int Function(int count) childCountBuilder,
+    int Function(int count)? childCountBuilder,
   }) : super(
           itemBuilder,
           sourceList,
@@ -53,7 +53,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   final int semanticIndexOffset;
 
   /// The amount of space by which to inset the child sliver.
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? padding;
 
   /// If non-null, forces the children to have the given extent in the scroll
   /// direction.
@@ -62,21 +62,21 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   /// determine their own extent because the scrolling machinery can make use of
   /// the foreknowledge of the children's extent to save work, for example when
   /// the scroll position changes drastically.
-  final double itemExtent;
+  final double? itemExtent;
 
   @override
-  Widget buildContent(BuildContext context, LoadingMoreBase<T> source) {
+  Widget buildContent(BuildContext context, LoadingMoreBase<T>? source) {
     return _innerBuilderContent(context, source);
   }
 
   Widget _innerBuilderContent(
     BuildContext context,
-    LoadingMoreBase<T> source,
+    LoadingMoreBase<T>? source,
   ) {
-    Widget widget = super.buildContent(context, source);
+    Widget? widget = super.buildContent(context, source);
     if (widget == null) {
       int lastOne = 1;
-      if (!showNoMore && !source.hasMore) {
+      if (!showNoMore && !source!.hasMore) {
         lastOne = 0;
       }
       widget = _innerBuilderList(context, source, lastOne);
@@ -85,11 +85,11 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   }
 
   Widget _innerBuilderList(
-      BuildContext context, LoadingMoreBase<T> source, int lastOne) {
+      BuildContext context, LoadingMoreBase<T>? source, int lastOne) {
     Widget widget;
     final int count =
-        childCount ?? childCountBuilder?.call(source.length) ?? source.length;
-    final ExtendedListDelegate delegate = getExtendedListDelegate(count);
+        childCount ?? childCountBuilder?.call(source!.length) ?? source!.length;
+    final ExtendedListDelegate? delegate = getExtendedListDelegate(count);
 
     if (delegate != null && delegate is SliverWaterfallFlowDelegate) {
       widget = SliverWaterfallFlow(
@@ -106,7 +106,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
       );
     } else if (gridDelegate != null) {
       widget = ExtendedSliverGrid(
-          extendedListDelegate: delegate,
+          extendedListDelegate: delegate!,
           delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
@@ -116,12 +116,12 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
             semanticIndexOffset: semanticIndexOffset,
             childCount: count + lastOne,
           ),
-          gridDelegate: gridDelegate);
+          gridDelegate: gridDelegate!);
     } else {
       if (itemExtent != null) {
         widget = ExtendedSliverFixedExtentList(
-          itemExtent: itemExtent,
-          extendedListDelegate: delegate,
+          itemExtent: itemExtent!,
+          extendedListDelegate: delegate!,
           delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
@@ -134,7 +134,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
         );
       } else {
         widget = ExtendedSliverList(
-          extendedListDelegate: delegate,
+          extendedListDelegate: delegate!,
           delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
@@ -147,9 +147,9 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
         );
       }
     }
-    if (padding != null && widget != null) {
+    if (padding != null) {
       widget = SliverPadding(
-        padding: padding,
+        padding: padding!,
         sliver: widget,
       );
     }

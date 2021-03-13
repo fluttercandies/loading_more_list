@@ -5,13 +5,13 @@ import 'package:loading_more_list/src/list_config/list_config.dart';
 
 //loading more for listview and gridview
 class LoadingMoreList<T> extends StatelessWidget {
-  const LoadingMoreList(this.listConfig, {Key key, this.onScrollNotification})
+  const LoadingMoreList(this.listConfig, {Key? key, this.onScrollNotification})
       : super(key: key);
   final ListConfig<T> listConfig;
 
   /// Called when a ScrollNotification of the appropriate type arrives at this
   /// location in the tree.
-  final NotificationListenerCallback<ScrollNotification> onScrollNotification;
+  final NotificationListenerCallback<ScrollNotification>? onScrollNotification;
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +25,14 @@ class LoadingMoreList<T> extends StatelessWidget {
               showGlowTrailing: listConfig.showGlowTrailing,
             ));
       },
-      stream: listConfig.sourceList?.rebuild,
+      stream: listConfig.sourceList.rebuild,
       initialData: listConfig.sourceList,
     );
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
     if (onScrollNotification != null) {
-      onScrollNotification(notification);
+      onScrollNotification!(notification);
     }
 
     if (notification.depth != 0) {

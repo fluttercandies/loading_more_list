@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class EmptyWidget extends StatelessWidget {
   const EmptyWidget(this.msg, {this.emptyWidget});
   final String msg;
-  final Widget emptyWidget;
+  final Widget? emptyWidget;
   @override
   Widget build(BuildContext context) {
     if (emptyWidget != null) {
-      return emptyWidget;
+      return emptyWidget!;
     }
     return Container(
       color: Colors.grey[200],

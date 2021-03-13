@@ -17,23 +17,23 @@ class IndicatorWidget extends StatelessWidget {
   final IndicatorStatus status;
 
   ///call back of loading failed
-  final Function tryAgain;
+  final Function? tryAgain;
 
   ///text to show
-  final String text;
+  final String? text;
 
   ///background color
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   ///whether it need sliver as container
   final bool isSliver;
 
   ///emppty widget
-  final Widget emptyWidget;
+  final Widget? emptyWidget;
   @override
   @override
   Widget build(BuildContext context) {
-    Widget widget;
+    Widget? widget;
     switch (status) {
       case IndicatorStatus.none:
         widget = Container(height: 0.0);
@@ -91,7 +91,7 @@ class IndicatorWidget extends StatelessWidget {
         if (tryAgain != null) {
           widget = GestureDetector(
             onTap: () {
-              tryAgain();
+              tryAgain!();
             },
             child: widget,
           );
@@ -105,7 +105,7 @@ class IndicatorWidget extends StatelessWidget {
         if (tryAgain != null) {
           widget = GestureDetector(
             onTap: () {
-              tryAgain();
+              tryAgain!();
             },
             child: widget,
           );

@@ -1,8 +1,9 @@
+import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:loading_more_list/loading_more_list.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
+
 
 import '../../data/tu_chong_repository.dart';
 import '../../data/tu_chong_source.dart';
@@ -24,7 +25,7 @@ class CustomIndicatorDemo extends StatefulWidget {
 }
 
 class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
-  TuChongRepository listSourceRepository;
+  late TuChongRepository listSourceRepository;
 
   @override
   void initState() {
@@ -34,7 +35,7 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
 
   @override
   void dispose() {
-    listSourceRepository?.dispose();
+    listSourceRepository.dispose();
     super.dispose();
   }
 
@@ -50,6 +51,7 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
     );
   }
 
+  // ignore_for_file: dead_code
   //you can use IndicatorWidget or build yourself widget
   //in this demo, we define all status.
   Widget _buildIndicator(BuildContext context, IndicatorStatus status) {
@@ -57,7 +59,7 @@ class _CustomIndicatorDemoState extends State<CustomIndicatorDemo> {
     //isSliver=true, when use it in sliver list
     const bool isSliver = false;
 
-    Widget widget;
+    Widget? widget;
     switch (status) {
       case IndicatorStatus.none:
         widget = Container(height: 0.0);

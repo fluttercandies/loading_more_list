@@ -1,7 +1,8 @@
+import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 import 'package:flutter/material.dart';
 
 import 'package:loading_more_list/loading_more_list.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
+
 
 import '../../data/tu_chong_repository.dart';
 import '../../data/tu_chong_source.dart';
@@ -22,7 +23,7 @@ class SliverListDemo extends StatefulWidget {
 }
 
 class _SliverListDemoState extends State<SliverListDemo> {
-  TuChongRepository listSourceRepository;
+ late TuChongRepository listSourceRepository;
   @override
   void initState() {
     listSourceRepository = TuChongRepository();
@@ -31,7 +32,7 @@ class _SliverListDemoState extends State<SliverListDemo> {
 
   @override
   void dispose() {
-    listSourceRepository?.dispose();
+    listSourceRepository.dispose();
     super.dispose();
   }
 
