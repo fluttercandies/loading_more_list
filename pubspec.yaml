@@ -1,18 +1,18 @@
 name: loading_more_list
 description: A loading more list which supports ListView,GridView,WaterfallFlow and Slivers.
-version: 3.2.0
+version: 4.0.0-non-null-safety
 homepage: https://github.com/fluttercandies/loading_more_list
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=2.6.0 <2.12.0"
+  flutter: ">=1.22.0"
 dependencies:
   flutter:
     sdk: flutter
-  extended_list: ^2.0.2
-  waterfall_flow: ^2.0.3
-  extended_list_library: ^2.0.0
-  loading_more_list_library: ^1.0.2
+  extended_list: ^3.0.0-non-null-safety
+  waterfall_flow: ^3.0.1-non-null-safety
+  extended_list_library: ^3.0.0-non-null-safety
+  loading_more_list_library: ^2.0.0-non-null-safety
 
 dev_dependencies:
   flutter_test:
