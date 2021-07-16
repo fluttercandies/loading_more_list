@@ -1,3 +1,6 @@
+## 4.0.1-non-null-safety
+
+* fix drag overscroll list jump in iOS [FixedOverscrollBouncingScrollPhysics]
 ## 4.0.0-non-null-safety
 
 * non-null-safety

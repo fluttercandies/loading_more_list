@@ -41,6 +41,7 @@ class _ListViewDemoState extends State<ListViewDemo> {
       ListConfig<TuChongItem>(
         itemBuilder: itemBuilder,
         sourceList: listSourceRepository,
+        physics: const FixedOverscrollBouncingScrollPhysics(),
 //                    showGlowLeading: false,
 //                    showGlowTrailing: false,
         padding: const EdgeInsets.all(0.0),
@@ -48,9 +49,9 @@ class _ListViewDemoState extends State<ListViewDemo> {
           collectGarbage: (List<int> indexes) {
             ///collectGarbage
           },
-          viewportBuilder: (int firstIndex, int lastIndex) {
-            print('viewport : [$firstIndex,$lastIndex]');
-          },
+          // viewportBuilder: (int firstIndex, int lastIndex) {
+          //   print('viewport : [$firstIndex,$lastIndex]');
+          // },
         ),
         //autoRefresh: false,
       ),
