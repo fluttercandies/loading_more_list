@@ -53,7 +53,7 @@ class TuChongRepository extends LoadingMoreBase<TuChongItem> {
     bool isSuccess = false;
     try {
       //to show loading more clearly, in your app,remove this
-      //await Future.delayed(const Duration(milliseconds: 500));
+      //await Future<void>.delayed(const Duration(seconds: 5));
       List<TuChongItem>? feedList;
       if (!kIsWeb) {
         final Response result =
