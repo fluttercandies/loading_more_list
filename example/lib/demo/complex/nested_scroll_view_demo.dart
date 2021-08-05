@@ -1,8 +1,7 @@
 import 'package:extended_sliver/extended_sliver.dart';
 import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 import 'package:flutter/material.dart';
-import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart'
-    as extended;
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:pull_to_refresh_notification/pull_to_refresh_notification.dart';
@@ -85,15 +84,12 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
         pullBackOnRefresh: true,
         onRefresh: onRefresh,
         maxDragOffset: 100.0,
-        child: extended.NestedScrollView(
+        child: ExtendedNestedScrollView(
           physics: const ClampingScrollPhysics(),
           pinnedHeaderSliverHeightBuilder: () {
             return pinnedHeaderHeight;
           },
-          innerScrollPositionKeyBuilder: () {
-            const String index = 'Tab';
-            return Key(index + primaryTC.index.toString());
-          },
+          onlyOneScrollInBody: true,
           headerSliverBuilder: (BuildContext c, bool? f) {
             final List<Widget> widgets = <Widget>[];
             widgets.add(PullToRefreshContainer(builderAppbar));
@@ -214,30 +210,28 @@ class _Tab0State extends State<Tab0> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return extended.NestedScrollViewInnerScrollPositionKeyWidget(
-        const Key('Tab0'),
-        LoadingMoreCustomScrollView(
-          showGlowLeading: false,
-          rebuildCustomScrollView: true,
-          physics: const ClampingScrollPhysics(),
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: Container(
-                alignment: Alignment.center,
-                height: 50.0,
-                color: Colors.red,
-                child: const Text(
-                    'This is a single sliver List with no pinned header'),
-                //color: Colors.white,
-              ),
-            ),
-            LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
-              itemBuilder: itemBuilder,
-              sourceList: widget.listSourceRepository!,
-              //isLastOne: false
-            ))
-          ],
-        ));
+    return LoadingMoreCustomScrollView(
+      showGlowLeading: false,
+      rebuildCustomScrollView: true,
+      physics: const ClampingScrollPhysics(),
+      slivers: <Widget>[
+        SliverToBoxAdapter(
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            color: Colors.red,
+            child: const Text(
+                'This is a single sliver List with no pinned header'),
+            //color: Colors.white,
+          ),
+        ),
+        LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
+          itemBuilder: itemBuilder,
+          sourceList: widget.listSourceRepository!,
+          //isLastOne: false
+        ))
+      ],
+    );
   }
 
   @override
@@ -256,48 +250,46 @@ class _Tab1State extends State<Tab1> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return extended.NestedScrollViewInnerScrollPositionKeyWidget(
-        const Key('Tab1'),
-        LoadingMoreCustomScrollView(
-          rebuildCustomScrollView: true,
-          showGlowLeading: false,
-          physics: const ClampingScrollPhysics(),
-          slivers: <Widget>[
-            SliverPinnedToBoxAdapter(
-              child: Container(
-                alignment: Alignment.center,
-                height: 50.0,
-                color: Colors.red,
-                child: const Text(
-                    'This is a multiple loading sliver List with pinned header'),
-                //color: Colors.white,
-              ),
-            ),
-            LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
-              itemBuilder: itemBuilder,
-              sourceList: widget.listSourceRepository1!,
-              //isLastOne: false
-            )),
-            SliverToBoxAdapter(
-              child: Container(
-                alignment: Alignment.center,
-                child: const Text('Next list'),
-                color: Colors.blue,
-                height: 100.0,
-              ),
-            ),
-            LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
-              itemBuilder: itemBuilder,
-              sourceList: widget.listSourceRepository2!,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 3.0,
-                mainAxisSpacing: 3.0,
+    return LoadingMoreCustomScrollView(
+      rebuildCustomScrollView: true,
+      showGlowLeading: false,
+      physics: const ClampingScrollPhysics(),
+      slivers: <Widget>[
+        SliverPinnedToBoxAdapter(
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            color: Colors.red,
+            child: const Text(
+                'This is a multiple loading sliver List with pinned header'),
+            //color: Colors.white,
+          ),
+        ),
+        LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
+          itemBuilder: itemBuilder,
+          sourceList: widget.listSourceRepository1!,
+          //isLastOne: false
+        )),
+        SliverToBoxAdapter(
+          child: Container(
+            alignment: Alignment.center,
+            child: const Text('Next list'),
+            color: Colors.blue,
+            height: 100.0,
+          ),
+        ),
+        LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
+          itemBuilder: itemBuilder,
+          sourceList: widget.listSourceRepository2!,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 3.0,
+            mainAxisSpacing: 3.0,
 //                    childAspectRatio: 0.5
-              ),
-            ))
-          ],
-        ));
+          ),
+        ))
+      ],
+    );
   }
 
   @override
@@ -315,29 +307,27 @@ class _Tab2State extends State<Tab2> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return extended.NestedScrollViewInnerScrollPositionKeyWidget(
-        const Key('Tab2'),
-        Column(
-          children: <Widget>[
-            Container(
-              height: 50.0,
-              child: const Text('This is a single ListView with pinned header'),
-              color: Colors.red,
-              alignment: Alignment.center,
-            ),
-            Expanded(
-              child: LoadingMoreList<TuChongItem>(
-                ListConfig<TuChongItem>(
-                    itemBuilder: itemBuilder,
-                    sourceList: widget.listSourceRepository3!,
-                    showGlowLeading: false,
-                    physics: const ClampingScrollPhysics(),
+    return Column(
+      children: <Widget>[
+        Container(
+          height: 50.0,
+          child: const Text('This is a single ListView with pinned header'),
+          color: Colors.red,
+          alignment: Alignment.center,
+        ),
+        Expanded(
+          child: LoadingMoreList<TuChongItem>(
+            ListConfig<TuChongItem>(
+                itemBuilder: itemBuilder,
+                sourceList: widget.listSourceRepository3!,
+                showGlowLeading: false,
+                physics: const ClampingScrollPhysics(),
 //                    showGlowTrailing: false,
-                    padding: const EdgeInsets.all(0.0)),
-              ),
-            )
-          ],
-        ));
+                padding: const EdgeInsets.all(0.0)),
+          ),
+        )
+      ],
+    );
   }
 
   @override

@@ -12,7 +12,8 @@ int _kDefaultSemanticIndexCallback(Widget _, int localIndex) {
 //config for SliverList, SliverGrid, SliverWaterfallFlow and ExtendedSliver
 class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   SliverListConfig({
-    required Widget Function(BuildContext context, T item, int index) itemBuilder,
+    required Widget Function(BuildContext context, T item, int index)
+        itemBuilder,
     required LoadingMoreBase<T> sourceList,
     LoadingMoreIndicatorBuilder? indicatorBuilder,
     SliverGridDelegate? gridDelegate,
@@ -29,6 +30,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     this.itemExtent,
     bool autoRefresh = true,
     int Function(int count)? childCountBuilder,
+    int Function(int int)? getActualIndex,
   }) : super(
           itemBuilder,
           sourceList,
@@ -40,6 +42,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           autoRefresh: autoRefresh,
           childCount: childCount,
           childCountBuilder: childCountBuilder,
+          getActualIndex: getActualIndex,
         );
 //whether show no more  .
   bool showNoMore = true;

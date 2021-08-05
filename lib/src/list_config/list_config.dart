@@ -39,6 +39,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.restorationId,
     this.clipBehavior = Clip.hardEdge,
+    int Function(int int)? getActualIndex,
   }) : super(
           itemBuilder,
           sourceList,
@@ -50,6 +51,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           autoRefresh: autoRefresh,
           childCount: itemCount,
           childCountBuilder: itemCountBuilder,
+          getActualIndex: getActualIndex,
         );
 
   /// The axis along which the scroll view scrolls.
@@ -282,7 +284,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           dragStartBehavior: dragStartBehavior,
           keyboardDismissBehavior: keyboardDismissBehavior,
           restorationId: restorationId,
-          clipBehavior:clipBehavior,
+          clipBehavior: clipBehavior,
         );
       } else if (gridDelegate != null) {
         widget = ExtendedGridView.builder(
@@ -305,7 +307,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           dragStartBehavior: dragStartBehavior,
           keyboardDismissBehavior: keyboardDismissBehavior,
           restorationId: restorationId,
-          clipBehavior:clipBehavior,
+          clipBehavior: clipBehavior,
         );
       } else {
         widget = ExtendedListView.builder(
@@ -328,7 +330,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           dragStartBehavior: dragStartBehavior,
           keyboardDismissBehavior: keyboardDismissBehavior,
           restorationId: restorationId,
-          clipBehavior:clipBehavior,
+          clipBehavior: clipBehavior,
         );
       }
     }

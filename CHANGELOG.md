@@ -1,3 +1,7 @@
+## 4.1.0
+
+* add getActualIndex in case child count != source.length
+
 ## 4.0.1
 
 * fix drag overscroll list jump in iOS [FixedOverscrollBouncingScrollPhysics]
