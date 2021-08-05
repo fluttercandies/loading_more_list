@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:loading_more_list/loading_more_list.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
+import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 
 import '../../data/tu_chong_repository.dart';
 import '../../data/tu_chong_source.dart';

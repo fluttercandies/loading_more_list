@@ -36,6 +36,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
     this.dragStartBehavior = DragStartBehavior.start,
     bool autoRefresh = true,
     int Function(int count) itemCountBuilder,
+    int Function(int int) getActualIndex,
   }) : super(
           itemBuilder,
           sourceList,
@@ -47,6 +48,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           autoRefresh: autoRefresh,
           childCount: itemCount,
           childCountBuilder: itemCountBuilder,
+          getActualIndex: getActualIndex,
         );
 
   /// The axis along which the scroll view scrolls.

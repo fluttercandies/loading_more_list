@@ -18,6 +18,7 @@ class LoadingMoreListConfig<T> {
     this.autoRefresh = true,
     this.childCount,
     this.childCountBuilder,
+    this.getActualIndex,
   })  : assert(itemBuilder != null),
         assert(sourceList != null),
         assert(autoLoadMore != null),
@@ -57,6 +58,8 @@ class LoadingMoreListConfig<T> {
 
   /// The builder to get child count,the input is sourceList.length
   final int Function(int count) childCountBuilder;
+
+  final int Function(int int) getActualIndex;
 
   bool get isSliver {
     return this is SliverListConfig<T>;
@@ -139,7 +142,11 @@ class LoadingMoreListConfig<T> {
           );
       return widget1;
     }
-    return itemBuilder(context, sourceList[index], index);
+    return itemBuilder(
+      context,
+      sourceList[getActualIndex?.call(index) ?? index],
+      index,
+    );
   }
 
   Widget buildErrorItem(BuildContext context) {

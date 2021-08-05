@@ -29,6 +29,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     this.itemExtent,
     bool autoRefresh = true,
     int Function(int count) childCountBuilder,
+    int Function(int int) getActualIndex,
   }) : super(
           itemBuilder,
           sourceList,
@@ -40,6 +41,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           autoRefresh: autoRefresh,
           childCount: childCount,
           childCountBuilder: childCountBuilder,
+          getActualIndex: getActualIndex,
         );
 //whether show no more  .
   bool showNoMore = true;
