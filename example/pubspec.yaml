@@ -21,7 +21,7 @@ dependencies:
   extended_image: any
   extended_nested_scroll_view: any
   extended_sliver: any
-  ff_annotation_route_library: any
+  ff_annotation_route_library: ^3.0.0
   flutter:
     sdk: flutter
   http_client_helper: any
