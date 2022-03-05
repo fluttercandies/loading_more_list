@@ -1,3 +1,7 @@
+## 4.1.2
+
+* fix lastChildLayoutTypeBuilder is not working
+
 ## 4.1.1
 
 * fix null exception when set lastChildLayoutType to LastChildLayoutType.none

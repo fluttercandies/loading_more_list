@@ -178,9 +178,10 @@ class LoadingMoreListConfig<T> {
           mainAxisSpacing: delegate.mainAxisSpacing,
           crossAxisSpacing: delegate.crossAxisSpacing,
           lastChildLayoutTypeBuilder: showNoMore
-              ? ((int index) => childCount == index
-                  ? lastChildLayoutType
-                  : LastChildLayoutType.none)
+              ? extendedListDelegate!.lastChildLayoutTypeBuilder ??
+                  ((int index) => childCount == index
+                      ? lastChildLayoutType
+                      : LastChildLayoutType.none)
               : null,
           closeToTrailing: delegate.closeToTrailing,
           collectGarbage: delegate.collectGarbage,
@@ -196,9 +197,10 @@ class LoadingMoreListConfig<T> {
           mainAxisSpacing: delegate.mainAxisSpacing,
           crossAxisSpacing: delegate.crossAxisSpacing,
           lastChildLayoutTypeBuilder: showNoMore
-              ? ((int index) => childCount == index
-                  ? lastChildLayoutType
-                  : LastChildLayoutType.none)
+              ? extendedListDelegate!.lastChildLayoutTypeBuilder ??
+                  ((int index) => childCount == index
+                      ? lastChildLayoutType
+                      : LastChildLayoutType.none)
               : null,
           closeToTrailing: delegate.closeToTrailing,
           collectGarbage: delegate.collectGarbage,
@@ -207,9 +209,10 @@ class LoadingMoreListConfig<T> {
       } else {
         return ExtendedListDelegate(
           lastChildLayoutTypeBuilder: showNoMore
-              ? ((int index) => childCount == index
-                  ? lastChildLayoutType
-                  : LastChildLayoutType.none)
+              ? extendedListDelegate!.lastChildLayoutTypeBuilder ??
+                  ((int index) => childCount == index
+                      ? lastChildLayoutType
+                      : LastChildLayoutType.none)
               : null,
           closeToTrailing: extendedListDelegate!.closeToTrailing,
           collectGarbage: extendedListDelegate!.collectGarbage,
