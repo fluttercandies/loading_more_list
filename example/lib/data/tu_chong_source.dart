@@ -1,6 +1,5 @@
 import 'dart:convert' show json;
 import 'dart:math';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 void tryCatch(Function f) {
@@ -51,7 +50,8 @@ class TuChongSource {
       for (final dynamic item in jsonRes['feedList']) {
         if (item != null) {
           tryCatch(() {
-            feedList.add(TuChongItem.fromJson(asT<Map<String, dynamic>>(item)!));
+            feedList
+                .add(TuChongItem.fromJson(asT<Map<String, dynamic>>(item)!));
           });
         }
       }

@@ -1,4 +1,3 @@
-import 'package:extended_list/extended_list.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_more_list_library/loading_more_list_library.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
@@ -166,7 +165,7 @@ class LoadingMoreListConfig<T> {
   bool get hasError => sourceList.hasError;
   bool get isLoading => sourceList.isLoading;
 
-  ExtendedListDelegate? getExtendedListDelegate(int childCount,
+  ExtendedListDelegate getExtendedListDelegate(int childCount,
       {bool showNoMore = true}) {
     if (extendedListDelegate != null) {
       if (extendedListDelegate
@@ -219,17 +218,13 @@ class LoadingMoreListConfig<T> {
       }
     }
 
-    if (lastChildLayoutType != LastChildLayoutType.none) {
-      return ExtendedListDelegate(
-        lastChildLayoutTypeBuilder: showNoMore
-            ? ((int index) => childCount == index
-                ? lastChildLayoutType
-                : LastChildLayoutType.none)
-            : null,
-      );
-    }
-
-    return null;
+    return ExtendedListDelegate(
+      lastChildLayoutTypeBuilder: showNoMore
+          ? ((int index) => childCount == index
+              ? lastChildLayoutType
+              : LastChildLayoutType.none)
+          : null,
+    );
   }
 }
 

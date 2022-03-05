@@ -1,3 +1,7 @@
+## 4.1.1
+
+* fix null exception when set lastChildLayoutType to LastChildLayoutType.none
+
 ## 4.1.0
 
 * add getActualIndex in case child count != source.length

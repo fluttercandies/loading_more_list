@@ -92,9 +92,9 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     Widget widget;
     final int count =
         childCount ?? childCountBuilder?.call(source!.length) ?? source!.length;
-    final ExtendedListDelegate? delegate = getExtendedListDelegate(count);
+    final ExtendedListDelegate delegate = getExtendedListDelegate(count);
 
-    if (delegate != null && delegate is SliverWaterfallFlowDelegate) {
+    if (delegate is SliverWaterfallFlowDelegate) {
       widget = SliverWaterfallFlow(
         gridDelegate: delegate,
         delegate: SliverChildBuilderDelegate(
@@ -109,7 +109,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
       );
     } else if (gridDelegate != null) {
       widget = ExtendedSliverGrid(
-          extendedListDelegate: delegate!,
+          extendedListDelegate: delegate,
           delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
@@ -124,7 +124,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
       if (itemExtent != null) {
         widget = ExtendedSliverFixedExtentList(
           itemExtent: itemExtent!,
-          extendedListDelegate: delegate!,
+          extendedListDelegate: delegate,
           delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,
@@ -137,7 +137,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
         );
       } else {
         widget = ExtendedSliverList(
-          extendedListDelegate: delegate!,
+          extendedListDelegate: delegate,
           delegate: SliverChildBuilderDelegate(
             buildItem,
             addAutomaticKeepAlives: addAutomaticKeepAlives,

@@ -262,9 +262,9 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
       final int count = childCount ??
           childCountBuilder?.call(source!.length) ??
           source!.length;
-      final ExtendedListDelegate? delegate = getExtendedListDelegate(count);
+      final ExtendedListDelegate delegate = getExtendedListDelegate(count);
 
-      if (delegate != null && delegate is SliverWaterfallFlowDelegate) {
+      if (delegate is SliverWaterfallFlowDelegate) {
         widget = WaterfallFlow.builder(
           gridDelegate: delegate,
           scrollDirection: scrollDirection,
@@ -302,7 +302,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
           itemBuilder: buildItem,
-          extendedListDelegate: delegate!,
+          extendedListDelegate: delegate,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
           keyboardDismissBehavior: keyboardDismissBehavior,
@@ -325,7 +325,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
           itemBuilder: buildItem,
-          extendedListDelegate: delegate!,
+          extendedListDelegate: delegate,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
           keyboardDismissBehavior: keyboardDismissBehavior,
