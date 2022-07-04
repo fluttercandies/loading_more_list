@@ -43,8 +43,8 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.restorationId,
     this.clipBehavior = Clip.hardEdge,
-  })  :
-        super(
+    this.preloadExtent = 0,
+  }) : super(
           key: key,
         );
 
@@ -194,7 +194,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   ///  * [DragGestureRecognizer.dragStartBehavior], which gives an example for the different behaviors.
   final DragStartBehavior dragStartBehavior;
 
-    /// {@template flutter.widgets.scroll_view.keyboardDismissBehavior}
+  /// {@template flutter.widgets.scroll_view.keyboardDismissBehavior}
   /// [ScrollViewKeyboardDismissBehavior] the defines how this [ScrollView] will
   /// dismiss the keyboard automatically.
   /// {@endtemplate}
@@ -207,6 +207,15 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   ///
   /// Defaults to [Clip.hardEdge].
   final Clip clipBehavior;
+
+  /// When the sliding distance reaches the bottom of the preload Extent,
+  /// the data can be preloaded in advance to improve the user's visual experience
+  ///
+  /// need [preloadExtent] > 0 and [autoLoadMore]==true
+  ///
+  /// setting rules：itemExtent * (pageSize-preLoadIndex)
+  /// eg：preloadExtent= 120* (10-3)
+  final double preloadExtent;
   @override
   _LoadingMoreCustomScrollViewState createState() =>
       _LoadingMoreCustomScrollViewState();
@@ -216,6 +225,10 @@ class _LoadingMoreCustomScrollViewState
     extends State<LoadingMoreCustomScrollView> {
   ///LoadingMoreSliverList collection
   late List<LoadingMoreSliverList<dynamic>> _loadingMoreWidgets;
+
+  /// record the current maxScrollExtent  value,
+  /// Update this value when a load is triggered
+  double _loadedMaxScrollExtent = 0.0;
   @override
   void initState() {
     _loadingMoreWidgets =
@@ -266,23 +279,24 @@ class _LoadingMoreCustomScrollViewState
     return NotificationListener<ScrollNotification>(
         onNotification: _handleScrollNotification,
         child: GlowNotificationWidget(
-            CustomScrollView(
-              semanticChildCount: widget.semanticChildCount,
-              shrinkWrap: widget.shrinkWrap,
-              scrollDirection: widget.scrollDirection,
-              physics: widget.physics,
-              primary: widget.primary,
-              cacheExtent: widget.cacheExtent,
-              controller: widget.controller,
-              slivers: widgets,
-              reverse: widget.reverse,
-              dragStartBehavior: widget.dragStartBehavior,
-              keyboardDismissBehavior: widget.keyboardDismissBehavior,
-              restorationId: widget.restorationId,
-              clipBehavior: widget.clipBehavior,
-            ),
-            showGlowLeading: widget.showGlowLeading,
-            showGlowTrailing: widget.showGlowTrailing,));
+          CustomScrollView(
+            semanticChildCount: widget.semanticChildCount,
+            shrinkWrap: widget.shrinkWrap,
+            scrollDirection: widget.scrollDirection,
+            physics: widget.physics,
+            primary: widget.primary,
+            cacheExtent: widget.cacheExtent,
+            controller: widget.controller,
+            slivers: widgets,
+            reverse: widget.reverse,
+            dragStartBehavior: widget.dragStartBehavior,
+            keyboardDismissBehavior: widget.keyboardDismissBehavior,
+            restorationId: widget.restorationId,
+            clipBehavior: widget.clipBehavior,
+          ),
+          showGlowLeading: widget.showGlowLeading,
+          showGlowTrailing: widget.showGlowTrailing,
+        ));
     // }
   }
 
@@ -294,8 +308,14 @@ class _LoadingMoreCustomScrollViewState
       return false;
     }
 
-    //reach the pixels to loading more
-    if (notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
+    // Sliding to the top needs to be set to 0, compatible with pull-down refresh logic
+    if (notification.metrics.pixels == 0) {
+      _loadedMaxScrollExtent = 0;
+    }
+
+    if ((notification.metrics.pixels >=
+            (notification.metrics.maxScrollExtent - widget.preloadExtent)) &&
+        _loadedMaxScrollExtent < (notification.metrics.maxScrollExtent)) {
       final List<LoadingMoreSliverList<dynamic>> loadingMoreWidgets =
           _loadingMoreWidgets;
 
@@ -324,6 +344,7 @@ class _LoadingMoreCustomScrollViewState
                     sourceList.refresh();
                   }
                 } else if (item.sliverListConfig.autoLoadMore) {
+                  _loadedMaxScrollExtent = notification.metrics.maxScrollExtent;
                   sourceList.loadMore();
                 }
               });
@@ -335,6 +356,7 @@ class _LoadingMoreCustomScrollViewState
                   sourceList.refresh();
                 }
               } else if (item.sliverListConfig.autoLoadMore) {
+                _loadedMaxScrollExtent = notification.metrics.maxScrollExtent;
                 sourceList.loadMore();
               }
             }
