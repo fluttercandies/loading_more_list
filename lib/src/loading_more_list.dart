@@ -4,15 +4,20 @@ import 'package:loading_more_list/src/glow_notification_widget.dart';
 import 'package:loading_more_list/src/list_config/list_config.dart';
 import 'package:loading_more_list_library/loading_more_list_library.dart';
 
-//loading more for listview and gridview
-class LoadingMoreList<T> extends StatelessWidget {
+class LoadingMoreList<T> extends StatefulWidget {
+  final ListConfig<T> listConfig;
+  final NotificationListenerCallback<ScrollNotification>? onScrollNotification;
   const LoadingMoreList(this.listConfig, {Key? key, this.onScrollNotification})
       : super(key: key);
-  final ListConfig<T> listConfig;
 
-  /// Called when a ScrollNotification of the appropriate type arrives at this
-  /// location in the tree.
-  final NotificationListenerCallback<ScrollNotification>? onScrollNotification;
+  @override
+  State<LoadingMoreList<T>> createState() => _LoadingMoreListState();
+}
+
+class _LoadingMoreListState<T> extends State<LoadingMoreList<T>> {
+
+  late final listConfig = widget.listConfig;
+  late final onScrollNotification = widget.onScrollNotification;
 
   @override
   Widget build(BuildContext context) {
