@@ -8,7 +8,7 @@ import 'package:loading_more_list_library/loading_more_list_library.dart';
 class LoadingMoreSliverList<T> extends StatefulWidget {
   final SliverListConfig<T> sliverListConfig;
 
-  const LoadingMoreSliverList({this.sliverListConfig, Key? key}) : super(key: key);
+  const LoadingMoreSliverList(this.sliverListConfig, {Key? key}) : super(key: key);
 
   @override
   State<LoadingMoreSliverList<T>> createState() => _LoadingMoreSliverListState();
