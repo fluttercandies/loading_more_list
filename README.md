@@ -145,7 +145,6 @@ LoadingMoreCustomScrollView
 | argument                | description                                                                                    | default |
 | ----------------------- | ---------------------------------------------------------------------------------------------- | ------- |
 | onScrollNotification    | Called when a ScrollNotification of the appropriate type arrives at this location in the tree. | -       |
-| rebuildCustomScrollView | in NestedScrollView, rebuild CustomScrollView, viewport can be computed again.                 | false   |
 
 
 ## ListView

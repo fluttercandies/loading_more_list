@@ -68,8 +68,19 @@ class LoadingMoreListConfig<T> {
             source.indicatorStatus == IndicatorStatus.fullScreenBusying)) {
       if (source == null || !source.isLoading) {
         if (autoRefresh) {
-          //first load
-          sourceList.refresh();
+          // first load
+          if (this is SliverListConfig) {
+            // prevent lock list load
+            if ((this as SliverListConfig<dynamic>).lock) {
+              return SliverToBoxAdapter(
+                child: Container(),
+              );
+            } else {
+              sourceList.refresh();
+            }
+          } else {
+            sourceList.refresh();
+          }
         }
       }
       Widget? widget;

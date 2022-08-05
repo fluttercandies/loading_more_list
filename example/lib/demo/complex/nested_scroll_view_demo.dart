@@ -211,7 +211,7 @@ class _Tab0State extends State<Tab0> with AutomaticKeepAliveClientMixin {
     super.build(context);
     return LoadingMoreCustomScrollView(
       showGlowLeading: false,
-      rebuildCustomScrollView: true,
+      //rebuildCustomScrollView: true,
       physics: const ClampingScrollPhysics(),
       slivers: <Widget>[
         SliverToBoxAdapter(
@@ -250,8 +250,8 @@ class _Tab1State extends State<Tab1> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return LoadingMoreCustomScrollView(
-      rebuildCustomScrollView: true,
       showGlowLeading: false,
+      cacheExtent: 1000,
       physics: const ClampingScrollPhysics(),
       slivers: <Widget>[
         SliverPinnedToBoxAdapter(

@@ -37,14 +37,13 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
     this.semanticChildCount,
     this.showGlowLeading = true,
     this.showGlowTrailing = true,
-    this.rebuildCustomScrollView = false,
     this.onScrollNotification,
     this.dragStartBehavior = DragStartBehavior.start,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.restorationId,
     this.clipBehavior = Clip.hardEdge,
-  })  :
-        super(
+    this.configs,
+  }) : super(
           key: key,
         );
 
@@ -178,7 +177,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
 
   //in case : in loadingmore sliverlist in NestedScrollView,you should rebuild CustomScrollView,
   //so that viewport can be computed again.
-  final bool rebuildCustomScrollView;
+  //final bool rebuildCustomScrollView;
 
   /// Called when a ScrollNotification of the appropriate type arrives at this
   /// location in the tree.
@@ -194,7 +193,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   ///  * [DragGestureRecognizer.dragStartBehavior], which gives an example for the different behaviors.
   final DragStartBehavior dragStartBehavior;
 
-    /// {@template flutter.widgets.scroll_view.keyboardDismissBehavior}
+  /// {@template flutter.widgets.scroll_view.keyboardDismissBehavior}
   /// [ScrollViewKeyboardDismissBehavior] the defines how this [ScrollView] will
   /// dismiss the keyboard automatically.
   /// {@endtemplate}
@@ -207,6 +206,21 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   ///
   /// Defaults to [Clip.hardEdge].
   final Clip clipBehavior;
+
+  /// maybe your sliver is not a LoadingMoreSliverList
+
+  /// class MyLoadingMoreSliverList extends StatelessWidget {
+  ///   const MyLoadingMoreSliverList({Key? key}) : super(key: key);
+  ///
+  ///   @override
+  ///   Widget build(BuildContext context) {
+  ///     return LoadingMoreSliverList();
+  ///   }
+  /// }
+  ///
+  /// then you can pass them with [LoadingMoreCustomScrollView.configs]
+
+  final List<SliverListConfig<dynamic>>? configs;
   @override
   _LoadingMoreCustomScrollViewState createState() =>
       _LoadingMoreCustomScrollViewState();
@@ -214,75 +228,59 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
 
 class _LoadingMoreCustomScrollViewState
     extends State<LoadingMoreCustomScrollView> {
-  ///LoadingMoreSliverList collection
-  late List<LoadingMoreSliverList<dynamic>> _loadingMoreWidgets;
+  /// LoadingMoreSliverList collection
+  late List<SliverListConfig<dynamic>> _loadingMoreConfigs;
   @override
   void initState() {
-    _loadingMoreWidgets =
-        widget.slivers.whereType<LoadingMoreSliverList<dynamic>>().toList();
+    _initConfigs();
     super.initState();
   }
 
   @override
   void didUpdateWidget(LoadingMoreCustomScrollView oldWidget) {
-    if (oldWidget.slivers != widget.slivers) {
-      _loadingMoreWidgets =
-          widget.slivers.whereType<LoadingMoreSliverList<dynamic>>().toList();
+    if (oldWidget.slivers != widget.slivers ||
+        oldWidget.configs != widget.configs) {
+      _initConfigs();
     }
     super.didUpdateWidget(oldWidget);
   }
 
+  void _initConfigs() {
+    _loadingMoreConfigs = widget.configs ??
+        widget.slivers
+            .whereType<LoadingMoreSliverList<dynamic>>()
+            .map((LoadingMoreSliverList<dynamic> e) => e.sliverListConfig)
+            .toList();
+
+    for (final SliverListConfig<dynamic> config in _loadingMoreConfigs) {
+      config.defaultShowNoMore = _loadingMoreConfigs.last == config;
+      config.lock = _loadingMoreConfigs.first != config;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = <Widget>[];
-    final List<LoadingMoreSliverList<dynamic>> loadingMoreWidgets =
-        _loadingMoreWidgets;
-    if (loadingMoreWidgets.isNotEmpty) {
-      final List<Widget> slivers = widget.slivers;
-      for (int i = 0; i < slivers.length; i++) {
-        final Widget item = slivers[i];
-        widgets.add(item);
-        if (item is LoadingMoreSliverList) {
-          if (loadingMoreWidgets.length > 1) {
-//            item.sliverListConfig.showFullScreenLoading = showFullScreenLoading;
-//            showFullScreenLoading = false;
-            item.sliverListConfig.showNoMore = loadingMoreWidgets.last == item;
-          }
-          if (widget.rebuildCustomScrollView) {
-            item.sliverListConfig.sourceList.rebuild.listen(onDataChanged);
-            widgets.remove(item);
-            widgets.add(item.sliverListConfig
-                .buildContent(context, item.sliverListConfig.sourceList));
-          }
-
-          if (item.sliverListConfig.sourceList.hasMore) {
-            break;
-          }
-        }
-      }
-    } else
-      widgets = widget.slivers;
-
     return NotificationListener<ScrollNotification>(
         onNotification: _handleScrollNotification,
         child: GlowNotificationWidget(
-            CustomScrollView(
-              semanticChildCount: widget.semanticChildCount,
-              shrinkWrap: widget.shrinkWrap,
-              scrollDirection: widget.scrollDirection,
-              physics: widget.physics,
-              primary: widget.primary,
-              cacheExtent: widget.cacheExtent,
-              controller: widget.controller,
-              slivers: widgets,
-              reverse: widget.reverse,
-              dragStartBehavior: widget.dragStartBehavior,
-              keyboardDismissBehavior: widget.keyboardDismissBehavior,
-              restorationId: widget.restorationId,
-              clipBehavior: widget.clipBehavior,
-            ),
-            showGlowLeading: widget.showGlowLeading,
-            showGlowTrailing: widget.showGlowTrailing,));
+          CustomScrollView(
+            semanticChildCount: widget.semanticChildCount,
+            shrinkWrap: widget.shrinkWrap,
+            scrollDirection: widget.scrollDirection,
+            physics: widget.physics,
+            primary: widget.primary,
+            cacheExtent: widget.cacheExtent,
+            controller: widget.controller,
+            slivers: widget.slivers,
+            reverse: widget.reverse,
+            dragStartBehavior: widget.dragStartBehavior,
+            keyboardDismissBehavior: widget.keyboardDismissBehavior,
+            restorationId: widget.restorationId,
+            clipBehavior: widget.clipBehavior,
+          ),
+          showGlowLeading: widget.showGlowLeading,
+          showGlowTrailing: widget.showGlowTrailing,
+        ));
     // }
   }
 
@@ -296,48 +294,27 @@ class _LoadingMoreCustomScrollViewState
 
     //reach the pixels to loading more
     if (notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
-      final List<LoadingMoreSliverList<dynamic>> loadingMoreWidgets =
-          _loadingMoreWidgets;
+      if (_loadingMoreConfigs.isNotEmpty) {
+        SliverListConfig<dynamic>? preList;
+        for (int i = 0; i < _loadingMoreConfigs.length; i++) {
+          final SliverListConfig<dynamic> item = _loadingMoreConfigs[i];
 
-      if (loadingMoreWidgets.isNotEmpty) {
-        LoadingMoreSliverList<dynamic>? preList;
-        for (int i = 0; i < loadingMoreWidgets.length; i++) {
-          final LoadingMoreSliverList<dynamic> item = loadingMoreWidgets[i];
-
-          final bool preListIsloading =
-              preList?.sliverListConfig.sourceList.isLoading ?? false;
+          final bool preListIsloading = preList?.sourceList.isLoading ?? false;
 
           if (!preListIsloading &&
-              item.sliverListConfig.hasMore &&
-              !item.sliverListConfig.isLoading &&
-              !item.sliverListConfig.hasError) {
-            //new one
-            //in case : loadingMoreWidgets.length>1
-            //setState to add next list into view
-            if (preList != item && loadingMoreWidgets.length > 1) {
-              //if(item.sliverListConfig.sourceList)
-              setState(() {
-                final LoadingMoreBase<dynamic> sourceList =
-                    item.sliverListConfig.sourceList;
-                if (sourceList.isEmpty) {
-                  if (item.sliverListConfig.autoRefresh) {
-                    sourceList.refresh();
-                  }
-                } else if (item.sliverListConfig.autoLoadMore) {
-                  sourceList.loadMore();
-                }
-              });
-            } else {
-              final LoadingMoreBase<dynamic> sourceList =
-                  item.sliverListConfig.sourceList;
-              if (sourceList.isEmpty) {
-                if (item.sliverListConfig.autoRefresh) {
-                  sourceList.refresh();
-                }
-              } else if (item.sliverListConfig.autoLoadMore) {
-                sourceList.loadMore();
+              item.hasMore &&
+              !item.isLoading &&
+              !item.hasError) {
+            final LoadingMoreBase<dynamic> sourceList = item.sourceList;
+            item.lock = false;
+            if (sourceList.isEmpty) {
+              if (item.autoRefresh) {
+                sourceList.refresh();
               }
+            } else if (item.autoLoadMore) {
+              sourceList.loadMore();
             }
+
             break;
           }
           preList = item;
@@ -347,11 +324,11 @@ class _LoadingMoreCustomScrollViewState
     return false;
   }
 
-  void onDataChanged(LoadingMoreBase<dynamic> data) {
-    //if (data != null) {
-    if (mounted) {
-      setState(() {});
-    }
-    //}
-  }
+  // void onDataChanged(LoadingMoreBase<dynamic> data) {
+  //   //if (data != null) {
+  //   if (mounted) {
+  //     setState(() {});
+  //   }
+  //   //}
+  // }
 }

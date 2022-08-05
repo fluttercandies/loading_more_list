@@ -1,3 +1,10 @@
+## 5.0.0
+
+* Fix Layout error in LoadingMoreCustomScrollView
+* BreakingChange: remove [LoadingMoreCustomScrollView.rebuildCustomScrollView]
+* Add [SliverListConfig.showNoMore] if null, it will true only for last SliverListConfig
+* Add [LoadingMoreCustomScrollView.configs] in case your sliver is not a LoadingMoreSliverList
+
 ## 4.1.2
 
 * fix lastChildLayoutTypeBuilder is not working

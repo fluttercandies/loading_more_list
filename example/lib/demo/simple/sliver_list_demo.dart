@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:loading_more_list/loading_more_list.dart';
 
-
 import '../../data/tu_chong_repository.dart';
 import '../../data/tu_chong_source.dart';
 import '../../widget/item_builder.dart';
@@ -23,7 +22,7 @@ class SliverListDemo extends StatefulWidget {
 }
 
 class _SliverListDemoState extends State<SliverListDemo> {
- late TuChongRepository listSourceRepository;
+  late TuChongRepository listSourceRepository;
   @override
   void initState() {
     listSourceRepository = TuChongRepository();
@@ -40,7 +39,6 @@ class _SliverListDemoState extends State<SliverListDemo> {
   Widget build(BuildContext context) {
     return LoadingMoreCustomScrollView(
       showGlowLeading: false,
-      rebuildCustomScrollView: true,
       slivers: <Widget>[
         LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
           itemBuilder: itemBuilder,

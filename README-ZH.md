@@ -148,7 +148,6 @@ LoadingMoreCustomScrollView
 | 参数                    | 描述                                                                      | 默认  |
 | ----------------------- | ------------------------------------------------------------------------- | ----- |
 | onScrollNotification    | 获取滚动冒泡通知.                                                         | -     |
-| rebuildCustomScrollView | 在NestedScrollView中, 需要重建CustomScrollView, 这样可视区域才会重新计算. | false |
 
 
 ## ListView

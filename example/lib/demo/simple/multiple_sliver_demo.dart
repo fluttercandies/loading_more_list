@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:loading_more_list/loading_more_list.dart';
 
-
 import '../../data/tu_chong_repository.dart';
 import '../../data/tu_chong_source.dart';
 import '../../widget/item_builder.dart';
@@ -46,9 +45,7 @@ class _MultipleSliverDemoState extends State<MultipleSliverDemo> {
   @override
   Widget build(BuildContext context) {
     return LoadingMoreCustomScrollView(
-      rebuildCustomScrollView: true,
       slivers: <Widget>[
-        ///SliverList
         LoadingMoreSliverList<TuChongItem>(SliverListConfig<TuChongItem>(
           itemBuilder: itemBuilder,
           sourceList: listSourceRepository,

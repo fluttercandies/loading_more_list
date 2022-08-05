@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:loading_more_list/loading_more_list.dart';
 
-
 import '../../data/tu_chong_repository.dart';
 import '../../data/tu_chong_source.dart';
 import '../../widget/item_builder.dart';

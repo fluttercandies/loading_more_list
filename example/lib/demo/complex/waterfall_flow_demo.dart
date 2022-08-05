@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:loading_more_list/loading_more_list.dart';
 
-
 import '../../data/tu_chong_repository.dart';
 import '../../data/tu_chong_source.dart';
 import '../../widget/item_builder.dart';
@@ -23,7 +22,7 @@ class WaterfallFlowDemo extends StatefulWidget {
 }
 
 class _WaterfallFlowDemoState extends State<WaterfallFlowDemo> {
- late TuChongRepository listSourceRepository;
+  late TuChongRepository listSourceRepository;
   @override
   void initState() {
     listSourceRepository = TuChongRepository();

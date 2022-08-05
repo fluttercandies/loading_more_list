@@ -31,6 +31,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     bool autoRefresh = true,
     int Function(int count)? childCountBuilder,
     int Function(int int)? getActualIndex,
+    this.showNoMore,
   }) : super(
           itemBuilder,
           sourceList,
@@ -44,11 +45,11 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           childCountBuilder: childCountBuilder,
           getActualIndex: getActualIndex,
         );
-//whether show no more  .
-  bool showNoMore = true;
+
   //whether show fullscreenLoading for multiple sliver
   //bool showFullScreenLoading = true;
 
+  final bool? showNoMore;
   final bool addAutomaticKeepAlives;
   final bool addRepaintBoundaries;
   final bool addSemanticIndexes;
@@ -67,6 +68,10 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   /// the scroll position changes drastically.
   final double? itemExtent;
 
+  bool defaultShowNoMore = true;
+
+  bool lock = true;
+
   @override
   Widget buildContent(BuildContext context, LoadingMoreBase<T>? source) {
     return _innerBuilderContent(context, source);
@@ -79,7 +84,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     Widget? widget = super.buildContent(context, source);
     if (widget == null) {
       int lastOne = 1;
-      if (!showNoMore && !source!.hasMore) {
+      if (!(showNoMore ?? defaultShowNoMore) && !source!.hasMore) {
         lastOne = 0;
       }
       widget = _innerBuilderList(context, source, lastOne);
