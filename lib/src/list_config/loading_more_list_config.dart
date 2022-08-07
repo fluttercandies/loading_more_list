@@ -70,8 +70,10 @@ class LoadingMoreListConfig<T> {
         if (autoRefresh) {
           // first load
           if (this is SliverListConfig) {
+            final SliverListConfig<dynamic> sliverListConfig =
+                this as SliverListConfig<dynamic>;
             // prevent lock list load
-            if ((this as SliverListConfig<dynamic>).lock) {
+            if (sliverListConfig.actualLock) {
               return SliverToBoxAdapter(
                 child: Container(),
               );

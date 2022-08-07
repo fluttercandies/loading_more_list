@@ -1,3 +1,8 @@
+## 5.0.1
+
+* Add [LoadingMoreCustomScrollView.preloadExtent] to support preload the LoadingMoreBase when user scroll the list
+* Add [SliverListConfig.lock] to support preload the LoadingMoreBase when user scroll the list
+  
 ## 5.0.0
 
 * Fix Layout error in LoadingMoreCustomScrollView

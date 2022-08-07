@@ -43,6 +43,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
     this.restorationId,
     this.clipBehavior = Clip.hardEdge,
     this.configs,
+    this.preloadExtent = 0,
   }) : super(
           key: key,
         );
@@ -221,6 +222,10 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   /// then you can pass them with [LoadingMoreCustomScrollView.configs]
 
   final List<SliverListConfig<dynamic>>? configs;
+
+  /// The extent to preload the LoadingMoreBase when user scroll the list
+  final double preloadExtent;
+
   @override
   _LoadingMoreCustomScrollViewState createState() =>
       _LoadingMoreCustomScrollViewState();
@@ -242,6 +247,7 @@ class _LoadingMoreCustomScrollViewState
         oldWidget.configs != widget.configs) {
       _initConfigs();
     }
+
     super.didUpdateWidget(oldWidget);
   }
 
@@ -254,7 +260,7 @@ class _LoadingMoreCustomScrollViewState
 
     for (final SliverListConfig<dynamic> config in _loadingMoreConfigs) {
       config.defaultShowNoMore = _loadingMoreConfigs.last == config;
-      config.lock = _loadingMoreConfigs.first != config;
+      config.defaultLock = _loadingMoreConfigs.first != config;
     }
   }
 
@@ -292,27 +298,32 @@ class _LoadingMoreCustomScrollViewState
       return false;
     }
 
-    //reach the pixels to loading more
-    if (notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
+    // reach the pixels to loading more
+    if (notification.metrics.pixels + widget.preloadExtent >=
+        notification.metrics.maxScrollExtent) {
       if (_loadingMoreConfigs.isNotEmpty) {
         SliverListConfig<dynamic>? preList;
         for (int i = 0; i < _loadingMoreConfigs.length; i++) {
           final SliverListConfig<dynamic> item = _loadingMoreConfigs[i];
 
-          final bool preListIsloading = preList?.sourceList.isLoading ?? false;
+          final bool preListIsloading = preList?.isLoading ?? false;
+          final bool preListhasMore = preList?.hasMore ?? false;
 
           if (!preListIsloading &&
+              !preListhasMore &&
               item.hasMore &&
               !item.isLoading &&
               !item.hasError) {
             final LoadingMoreBase<dynamic> sourceList = item.sourceList;
-            item.lock = false;
-            if (sourceList.isEmpty) {
-              if (item.autoRefresh) {
-                sourceList.refresh();
+            item.defaultLock = false;
+            if (!item.actualLock) {
+              if (sourceList.isEmpty) {
+                if (item.autoRefresh) {
+                  sourceList.refresh();
+                }
+              } else if (item.autoLoadMore) {
+                sourceList.loadMore();
               }
-            } else if (item.autoLoadMore) {
-              sourceList.loadMore();
             }
 
             break;

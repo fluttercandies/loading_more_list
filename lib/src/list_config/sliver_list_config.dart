@@ -32,6 +32,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     int Function(int count)? childCountBuilder,
     int Function(int int)? getActualIndex,
     this.showNoMore,
+    this.lock,
   }) : super(
           itemBuilder,
           sourceList,
@@ -49,7 +50,13 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   //whether show fullscreenLoading for multiple sliver
   //bool showFullScreenLoading = true;
 
+  /// if null, it will take from defaultShowNoMore. it will be true only for last SliverListConfig
   final bool? showNoMore;
+
+  /// lock list to load data
+  /// if null, it will take from defaultLock.
+  /// default is true and if will be false if it begin to load
+  final bool? lock;
   final bool addAutomaticKeepAlives;
   final bool addRepaintBoundaries;
   final bool addSemanticIndexes;
@@ -70,7 +77,11 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
 
   bool defaultShowNoMore = true;
 
-  bool lock = true;
+  bool get actualShowNoMore => showNoMore ?? defaultShowNoMore;
+
+  bool defaultLock = true;
+
+  bool get actualLock => lock ?? defaultLock;
 
   @override
   Widget buildContent(BuildContext context, LoadingMoreBase<T>? source) {
@@ -84,7 +95,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
     Widget? widget = super.buildContent(context, source);
     if (widget == null) {
       int lastOne = 1;
-      if (!(showNoMore ?? defaultShowNoMore) && !source!.hasMore) {
+      if (!actualShowNoMore && !source!.hasMore) {
         lastOne = 0;
       }
       widget = _innerBuilderList(context, source, lastOne);
