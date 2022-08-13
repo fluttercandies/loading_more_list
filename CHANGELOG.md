@@ -6,7 +6,7 @@
 ## 5.0.0
 
 * Fix Layout error in LoadingMoreCustomScrollView
-* BreakingChange: remove [LoadingMoreCustomScrollView.rebuildCustomScrollView]
+* BreakingChange: remove [LoadingMoreCustomScrollView.rebuildCustomScrollView] #45
 * Add [SliverListConfig.showNoMore] if null, it will true only for last SliverListConfig
 * Add [LoadingMoreCustomScrollView.configs] in case your sliver is not a LoadingMoreSliverList
 
