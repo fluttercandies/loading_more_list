@@ -5,6 +5,12 @@ import 'package:waterfall_flow/waterfall_flow.dart';
 import '../indicator_widget.dart';
 import 'sliver_list_config.dart';
 
+typedef LoadingMoreItemBuilder<T> = Widget Function(
+  BuildContext context,
+  T item,
+  int index,
+);
+
 typedef LoadingMoreIndicatorBuilder = Widget? Function(
   BuildContext context,
   IndicatorStatus status,
@@ -24,10 +30,11 @@ class LoadingMoreListConfig<T> {
     this.childCountBuilder,
     this.getActualIndex,
   });
-  //Item builder
-  final Widget Function(BuildContext context, T item, int index) itemBuilder;
 
-  //source list
+  /// Builds widget from [item] and [index].
+  final LoadingMoreItemBuilder<T> itemBuilder;
+
+  /// Source list based on the [LoadingMoreBase].
   final LoadingMoreBase<T> sourceList;
 
   //widget builder for different loading state
