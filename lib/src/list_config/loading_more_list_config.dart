@@ -17,7 +17,7 @@ typedef LoadingMoreIndicatorBuilder = Widget? Function(
 );
 
 class LoadingMoreListConfig<T> {
-  LoadingMoreListConfig(
+  const LoadingMoreListConfig(
     this.itemBuilder,
     this.sourceList, {
     this.indicatorBuilder,
@@ -37,25 +37,31 @@ class LoadingMoreListConfig<T> {
   /// Source list based on the [LoadingMoreBase].
   final LoadingMoreBase<T> sourceList;
 
-  //widget builder for different loading state
-  //the deafault is LoadingIndicatorWidget
+  /// The builder for each [IndicatorStatus].
+  ///
+  /// You can handle cases that you need to customize, and return null result
+  /// to fallback to the default indicator.
+  ///
+  /// Defaults to [IndicatorWidget].
   final LoadingMoreIndicatorBuilder? indicatorBuilder;
 
-  //whether is gird view
+  /// Set the [gridDelegate] if the config is for a grid view.
   final SliverGridDelegate? gridDelegate;
 
-  //whether auto call sourceList.loadmore when meet the condition
-  //if false, you must call sourceList.loadmore by yourself.
+  /// Whether to auto load more with the [sourceList].
+  ///
+  /// Set to false if you want to handle the load more action yourself.
   final bool autoLoadMore;
 
-  /// The delegate for WaterfallFlow or ExtendedList.
+  /// The delegate for [WaterfallFlow] or [ExtendedList].
   final ExtendedListDelegate? extendedListDelegate;
 
-  /// Layout type of last child
+  /// Layout type of last child.
   final LastChildLayoutType lastChildLayoutType;
 
-  //whether auto call sourceList.refresh when first load
-  //if false, you must call sourceList.refresh by yourself.
+  /// Whether to auto refresh with the [sourceList].
+  ///
+  /// Set to false if you want to handle the refresh action yourself.
   final bool autoRefresh;
 
   /// The total number of children this delegate can provide.
@@ -64,14 +70,18 @@ class LoadingMoreListConfig<T> {
   /// [builder] returns null.
   final int? childCount;
 
-  /// The builder to get child count,the input is sourceList.length
+  /// The builder to get child count,the input is [LoadingMoreBase.length].
   final int Function(int count)? childCountBuilder;
 
   final int Function(int int)? getActualIndex;
 
-  bool get isSliver {
-    return this is SliverListConfig<T>;
-  }
+  bool get isSliver => this is SliverListConfig<T>;
+
+  bool get hasMore => sourceList.hasMore;
+
+  bool get hasError => sourceList.hasError;
+
+  bool get isLoading => sourceList.isLoading;
 
   Widget? buildContent(BuildContext context, LoadingMoreBase<T>? source) {
     //from stream builder or from refresh
@@ -86,30 +96,23 @@ class LoadingMoreListConfig<T> {
                 this as SliverListConfig<dynamic>;
             // prevent lock list load
             if (sliverListConfig.actualLock) {
-              return SliverToBoxAdapter(
-                child: Container(),
-              );
-            } else {
-              sourceList.refresh();
+              return const SliverToBoxAdapter(child: SizedBox.shrink());
             }
-          } else {
-            sourceList.refresh();
           }
+          sourceList.refresh();
         }
       }
       Widget? widget;
-      if (indicatorBuilder != null)
+      if (indicatorBuilder != null) {
         widget = indicatorBuilder!(context, IndicatorStatus.fullScreenBusying);
+      }
       widget = widget ??
           IndicatorWidget(
             IndicatorStatus.fullScreenBusying,
             isSliver: isSliver,
           );
-
       return widget;
-    }
-    //empty
-    else if (source.isEmpty &&
+    } else if (source.isEmpty &&
         (source.indicatorStatus == IndicatorStatus.empty ||
             source.indicatorStatus == IndicatorStatus.fullScreenError)) {
       Widget? widget1;
@@ -120,17 +123,11 @@ class LoadingMoreListConfig<T> {
             sourceList.indicatorStatus,
             isSliver: isSliver,
             tryAgain: source.indicatorStatus == IndicatorStatus.fullScreenError
-                ? () {
-                    sourceList.errorRefresh();
-                  }
+                ? sourceList.errorRefresh
                 : null,
           );
       return widget1;
     }
-    //show list
-    //else if (source.length > 0) {
-
-    // }
     return null;
   }
 
@@ -156,11 +153,7 @@ class LoadingMoreListConfig<T> {
       if (indicatorBuilder != null) {
         widget1 = indicatorBuilder!(context, status);
       }
-      widget1 = widget1 ??
-          IndicatorWidget(
-            status,
-            isSliver: isSliver,
-          );
+      widget1 = widget1 ?? IndicatorWidget(status, isSliver: isSliver);
       return widget1;
     }
     return itemBuilder(
@@ -177,21 +170,20 @@ class LoadingMoreListConfig<T> {
       if (indicatorBuilder != null)
         widget = indicatorBuilder!(context, IndicatorStatus.error);
       widget = widget ??
-          IndicatorWidget(IndicatorStatus.error, isSliver: isSliver,
-              tryAgain: () {
-            sourceList.errorRefresh();
-          });
+          IndicatorWidget(
+            IndicatorStatus.error,
+            isSliver: isSliver,
+            tryAgain: sourceList.errorRefresh,
+          );
       return widget;
     }
     return null;
   }
 
-  bool get hasMore => sourceList.hasMore;
-  bool get hasError => sourceList.hasError;
-  bool get isLoading => sourceList.isLoading;
-
-  ExtendedListDelegate getExtendedListDelegate(int childCount,
-      {bool showNoMore = true}) {
+  ExtendedListDelegate getExtendedListDelegate(
+    int childCount, {
+    bool showNoMore = true,
+  }) {
     if (extendedListDelegate != null) {
       if (extendedListDelegate
           is SliverWaterfallFlowDelegateWithFixedCrossAxisCount) {
@@ -248,9 +240,9 @@ class LoadingMoreListConfig<T> {
 
     return ExtendedListDelegate(
       lastChildLayoutTypeBuilder: showNoMore
-          ? ((int index) => childCount == index
+          ? (int index) => childCount == index
               ? lastChildLayoutType
-              : LastChildLayoutType.none)
+              : LastChildLayoutType.none
           : null,
     );
   }

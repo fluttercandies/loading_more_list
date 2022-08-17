@@ -8,9 +8,8 @@ import 'package:waterfall_flow/waterfall_flow.dart';
 import 'loading_more_list_config.dart';
 
 class ListConfig<T> extends LoadingMoreListConfig<T> {
-  ListConfig({
-    required Widget Function(BuildContext context, T item, int index)
-        itemBuilder,
+  const ListConfig({
+    required LoadingMoreItemBuilder<T> itemBuilder,
     required LoadingMoreBase<T> sourceList,
     this.showGlowLeading = true,
     this.showGlowTrailing = true,
@@ -254,6 +253,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   ///
   /// Defaults to [Clip.hardEdge].
   final Clip clipBehavior;
+
   @override
   Widget buildContent(BuildContext context, LoadingMoreBase<T>? source) {
     Widget? widget = super.buildContent(context, source);
