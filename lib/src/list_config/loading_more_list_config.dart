@@ -5,6 +5,11 @@ import 'package:waterfall_flow/waterfall_flow.dart';
 import '../indicator_widget.dart';
 import 'sliver_list_config.dart';
 
+typedef LoadingMoreIndicatorBuilder = Widget? Function(
+  BuildContext context,
+  IndicatorStatus status,
+);
+
 class LoadingMoreListConfig<T> {
   LoadingMoreListConfig(
     this.itemBuilder,
@@ -243,6 +248,3 @@ class LoadingMoreListConfig<T> {
     );
   }
 }
-
-typedef LoadingMoreIndicatorBuilder = Widget Function(
-    BuildContext context, IndicatorStatus status);
