@@ -1,3 +1,8 @@
+## 5.0.2
+
+* Make `LoadingMoreIndicatorBuilder` returns nullable widget.
+* Make `LoadingMoreListConfig` and `ListConfig` constant.
+
 ## 5.0.1
 
 * Add [LoadingMoreCustomScrollView.preloadExtent] to support preload the LoadingMoreBase when user scroll the list

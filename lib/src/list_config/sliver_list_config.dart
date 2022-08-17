@@ -12,8 +12,7 @@ int _kDefaultSemanticIndexCallback(Widget _, int localIndex) {
 //config for SliverList, SliverGrid, SliverWaterfallFlow and ExtendedSliver
 class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   SliverListConfig({
-    required Widget Function(BuildContext context, T item, int index)
-        itemBuilder,
+    required LoadingMoreItemBuilder<T> itemBuilder,
     required LoadingMoreBase<T> sourceList,
     LoadingMoreIndicatorBuilder? indicatorBuilder,
     SliverGridDelegate? gridDelegate,
