@@ -1,3 +1,7 @@
+## 5.0.3
+
+* Fix StreamBuilder not return latest list.
+
 ## 5.0.2
 
 * Make `LoadingMoreIndicatorBuilder` returns nullable widget.

@@ -13,8 +13,14 @@ class LoadingMoreSliverList<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<LoadingMoreBase<T>>(
-      builder: (BuildContext b, AsyncSnapshot<LoadingMoreBase<T>> s) {
-        return sliverListConfig.buildContent(context, s.data);
+      builder: (
+        BuildContext buildContext,
+        AsyncSnapshot<LoadingMoreBase<T>> s,
+      ) {
+        return sliverListConfig.buildContent(
+          buildContext,
+          sliverListConfig.sourceList,
+        );
       },
       stream: sliverListConfig.sourceList.rebuild,
       initialData: sliverListConfig.sourceList,

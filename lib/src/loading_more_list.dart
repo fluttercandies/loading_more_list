@@ -16,18 +16,25 @@ class LoadingMoreList<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<LoadingMoreBase<T>>(
-      builder: (BuildContext d, AsyncSnapshot<LoadingMoreBase<T>> s) {
-        return NotificationListener<ScrollNotification>(
-            onNotification: _handleScrollNotification,
-            child: GlowNotificationWidget(
-              listConfig.buildContent(context, s.data),
-              showGlowLeading: listConfig.showGlowLeading,
-              showGlowTrailing: listConfig.showGlowTrailing,
-            ));
-      },
-      stream: listConfig.sourceList.rebuild,
-      initialData: listConfig.sourceList,
+    return NotificationListener<ScrollNotification>(
+      onNotification: _handleScrollNotification,
+      child: GlowNotificationWidget(
+        StreamBuilder<LoadingMoreBase<T>>(
+          builder: (
+            BuildContext buildContext,
+            AsyncSnapshot<LoadingMoreBase<T>> s,
+          ) {
+            return listConfig.buildContent(
+              buildContext,
+              listConfig.sourceList,
+            );
+          },
+          stream: listConfig.sourceList.rebuild,
+          initialData: listConfig.sourceList,
+        ),
+        showGlowLeading: listConfig.showGlowLeading,
+        showGlowTrailing: listConfig.showGlowTrailing,
+      ),
     );
   }
 
