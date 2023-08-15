@@ -122,7 +122,7 @@ class _NestedScrollViewDemoState extends State<NestedScrollViewDemo>
     final double offset = info?.dragOffset ?? 0.0;
     Widget child = Container();
     if (info != null) {
-      if (info.mode == RefreshIndicatorMode.error) {
+      if (info.mode == PullToRefreshIndicatorMode.error) {
         child = GestureDetector(
           onTap: () {
             // refreshNotification;
