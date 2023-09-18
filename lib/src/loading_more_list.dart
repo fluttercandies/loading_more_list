@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:loading_more_list/src/glow_notification_widget.dart';
 import 'package:loading_more_list/src/list_config/list_config.dart';
-import 'package:loading_more_list_library/loading_more_list_library.dart';
 
 //loading more for listview and gridview
 class LoadingMoreList<T> extends StatelessWidget {
@@ -19,18 +18,18 @@ class LoadingMoreList<T> extends StatelessWidget {
     return NotificationListener<ScrollNotification>(
       onNotification: _handleScrollNotification,
       child: GlowNotificationWidget(
-        StreamBuilder<LoadingMoreBase<T>>(
+        StreamBuilder<Iterable<T>>(
           builder: (
             BuildContext buildContext,
-            AsyncSnapshot<LoadingMoreBase<T>> s,
+            AsyncSnapshot<Iterable<T>> s,
           ) {
             return listConfig.buildContent(
               buildContext,
-              listConfig.sourceList,
+              s.data,
             );
           },
           stream: listConfig.sourceList.rebuild,
-          initialData: listConfig.sourceList,
+          initialData: listConfig.sourceList.wrapData(listConfig.sourceList),
         ),
         showGlowLeading: listConfig.showGlowLeading,
         showGlowTrailing: listConfig.showGlowTrailing,

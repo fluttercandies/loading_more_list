@@ -255,7 +255,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   final Clip clipBehavior;
 
   @override
-  Widget buildContent(BuildContext context, LoadingMoreBase<T>? source) {
+  Widget buildContent(BuildContext context, Iterable<T>? source) {
     Widget? widget = super.buildContent(context, source);
 
     if (widget == null) {
@@ -279,7 +279,8 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           addSemanticIndexes: addSemanticIndexes,
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
-          itemBuilder: buildItem,
+          itemBuilder: (BuildContext context, int index) =>
+              buildItem(context, index, source!),
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
           keyboardDismissBehavior: keyboardDismissBehavior,
@@ -301,7 +302,8 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           addSemanticIndexes: addSemanticIndexes,
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
-          itemBuilder: buildItem,
+          itemBuilder: (BuildContext context, int index) =>
+              buildItem(context, index, source!),
           extendedListDelegate: delegate,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
@@ -324,7 +326,8 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           addSemanticIndexes: addSemanticIndexes,
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
-          itemBuilder: buildItem,
+          itemBuilder: (BuildContext context, int index) =>
+              buildItem(context, index, source!),
           extendedListDelegate: delegate,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,

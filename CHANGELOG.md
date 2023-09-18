@@ -1,3 +1,8 @@
+## 6.0.0
+
+* Breaking change: The type of rebuild is changed from Stream<LoadingMoreBase<T>>  to Stream<Iterable<T>> in LoadingMoreBase<T>.
+* Add a new method 'wrapData', you can modify the list here.
+
 ## 5.0.3
 
 * Fix StreamBuilder not return latest list.

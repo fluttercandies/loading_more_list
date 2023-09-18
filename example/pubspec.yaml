@@ -4,7 +4,7 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.0 <4.0.0'
   flutter: ">=2.0.0"
 
 dependencies:
@@ -25,7 +25,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+# dependency_overrides:
+#   loading_more_list_library:
+#     path: ../../loading_more_list_library
 flutter:
   uses-material-design: true
   assets:

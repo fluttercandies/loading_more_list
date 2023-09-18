@@ -73,6 +73,7 @@ class LoadingMoreListConfig<T> {
   /// The builder to get child count,the input is [LoadingMoreBase.length].
   final int Function(int count)? childCountBuilder;
 
+  /// return actual index
   final int Function(int int)? getActualIndex;
 
   bool get isSliver => this is SliverListConfig<T>;
@@ -83,12 +84,12 @@ class LoadingMoreListConfig<T> {
 
   bool get isLoading => sourceList.isLoading;
 
-  Widget? buildContent(BuildContext context, LoadingMoreBase<T>? source) {
+  Widget? buildContent(BuildContext context, Iterable<T>? source) {
     //from stream builder or from refresh
     if (source == null ||
         (source.isEmpty &&
-            source.indicatorStatus == IndicatorStatus.fullScreenBusying)) {
-      if (source == null || !source.isLoading) {
+            sourceList.indicatorStatus == IndicatorStatus.fullScreenBusying)) {
+      if (source == null || !sourceList.isLoading) {
         if (autoRefresh) {
           // first load
           if (this is SliverListConfig) {
@@ -113,8 +114,8 @@ class LoadingMoreListConfig<T> {
           );
       return widget;
     } else if (source.isEmpty &&
-        (source.indicatorStatus == IndicatorStatus.empty ||
-            source.indicatorStatus == IndicatorStatus.fullScreenError)) {
+        (sourceList.indicatorStatus == IndicatorStatus.empty ||
+            sourceList.indicatorStatus == IndicatorStatus.fullScreenError)) {
       Widget? widget1;
       if (indicatorBuilder != null)
         widget1 = indicatorBuilder!(context, sourceList.indicatorStatus);
@@ -122,20 +123,21 @@ class LoadingMoreListConfig<T> {
           IndicatorWidget(
             sourceList.indicatorStatus,
             isSliver: isSliver,
-            tryAgain: source.indicatorStatus == IndicatorStatus.fullScreenError
-                ? sourceList.errorRefresh
-                : null,
+            tryAgain:
+                sourceList.indicatorStatus == IndicatorStatus.fullScreenError
+                    ? sourceList.errorRefresh
+                    : null,
           );
       return widget1;
     }
     return null;
   }
 
-  Widget buildItem(BuildContext context, int index) {
+  Widget buildItem(BuildContext context, int index, Iterable<T> source) {
     if (index ==
         (childCount ??
-            childCountBuilder?.call(sourceList.length) ??
-            sourceList.length)) {
+            childCountBuilder?.call(source.length) ??
+            source.length)) {
       final Widget? widget = buildErrorItem(context);
       if (widget != null) {
         return widget;
@@ -156,10 +158,11 @@ class LoadingMoreListConfig<T> {
       widget1 = widget1 ?? IndicatorWidget(status, isSliver: isSliver);
       return widget1;
     }
+    final int actualIndex = getActualIndex?.call(index) ?? index;
     return itemBuilder(
       context,
-      sourceList[getActualIndex?.call(index) ?? index],
-      index,
+      source.elementAt(actualIndex),
+      actualIndex,
     );
   }
 
