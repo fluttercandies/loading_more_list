@@ -5,10 +5,17 @@ import 'package:loading_more_list/src/list_config/sliver_list_config.dart';
 import 'package:loading_more_list_library/loading_more_list_library.dart';
 
 //loading more for sliverlist and sliverGrid
-class LoadingMoreSliverList<T> extends StatelessWidget {
-  const LoadingMoreSliverList(this.sliverListConfig, {Key? key})
-      : super(key: key);
+class LoadingMoreSliverList<T> extends StatefulWidget {
   final SliverListConfig<T> sliverListConfig;
+
+  const LoadingMoreSliverList(this.sliverListConfig, {Key? key}) : super(key: key);
+
+  @override
+  State<LoadingMoreSliverList<T>> createState() => _LoadingMoreSliverListState();
+}
+
+class _LoadingMoreSliverListState<T> extends State<LoadingMoreSliverList<T>> {
+  late final sliverListConfig = widget.sliverListConfig;
 
   @override
   Widget build(BuildContext context) {
