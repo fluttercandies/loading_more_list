@@ -1,3 +1,7 @@
+## 6.1.0
+
+* Add `center` for `LoadingMoreCustomScrollView`(#50)
+
 ## 6.0.0
 
 * Breaking change: The type of rebuild is changed from Stream<LoadingMoreBase<T>>  to Stream<Iterable<T>> in LoadingMoreBase<T>.

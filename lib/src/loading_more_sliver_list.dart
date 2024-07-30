@@ -51,6 +51,7 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
     this.clipBehavior = Clip.hardEdge,
     this.configs,
     this.preloadExtent = 0,
+    this.center,
   }) : super(
           key: key,
         );
@@ -233,6 +234,24 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   /// The extent to preload the LoadingMoreBase when user scroll the list
   final double preloadExtent;
 
+  /// The first child in the [GrowthDirection.forward] growth direction.
+  ///
+  /// Children after [center] will be placed in the [AxisDirection] determined
+  /// by [scrollDirection] and [reverse] relative to the [center]. Children
+  /// before [center] will be placed in the opposite of the axis direction
+  /// relative to the [center]. This makes the [center] the inflection point of
+  /// the growth direction.
+  ///
+  /// The [center] must be the key of one of the slivers built by [buildSlivers].
+  ///
+  /// Of the built-in subclasses of [ScrollView], only [CustomScrollView]
+  /// supports [center]; for that class, the given key must be the key of one of
+  /// the slivers in the [CustomScrollView.slivers] list.
+  ///
+  /// See also:
+  ///
+  ///  * [anchor], which controls where the [center] as aligned in the viewport.
+  final Key? center;
   @override
   _LoadingMoreCustomScrollViewState createState() =>
       _LoadingMoreCustomScrollViewState();
@@ -241,7 +260,11 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
 class _LoadingMoreCustomScrollViewState
     extends State<LoadingMoreCustomScrollView> {
   /// LoadingMoreSliverList collection
-  late List<SliverListConfig<dynamic>> _loadingMoreConfigs;
+  final List<SliverListConfig<dynamic>> _loadingMoreConfigs =
+      <SliverListConfig<dynamic>>[];
+  final List<SliverListConfig<dynamic>> _loadingMoreConfigsBeforeCenter =
+      <SliverListConfig<dynamic>>[];
+  int? _centerIndex;
   @override
   void initState() {
     _initConfigs();
@@ -259,15 +282,43 @@ class _LoadingMoreCustomScrollViewState
   }
 
   void _initConfigs() {
-    _loadingMoreConfigs = widget.configs ??
-        widget.slivers
-            .whereType<LoadingMoreSliverList<dynamic>>()
-            .map((LoadingMoreSliverList<dynamic> e) => e.sliverListConfig)
-            .toList();
+    _loadingMoreConfigs.clear();
+    _loadingMoreConfigsBeforeCenter.clear();
+    _centerIndex = null;
+    if (widget.center != null) {
+      _centerIndex = widget.slivers
+          .indexWhere((Widget element) => element.key == widget.center);
+    }
 
-    for (final SliverListConfig<dynamic> config in _loadingMoreConfigs) {
-      config.defaultShowNoMore = _loadingMoreConfigs.last == config;
-      config.defaultLock = _loadingMoreConfigs.first != config;
+    // TODO(zmtzawqlp): not support center
+    if (widget.configs != null) {
+      _loadingMoreConfigs.addAll(widget.configs!);
+    } else {
+      for (int i = 0; i < widget.slivers.length; i++) {
+        final Widget sliver = widget.slivers[i];
+        if (sliver is LoadingMoreSliverList<dynamic>) {
+          final SliverListConfig<dynamic> config = sliver.sliverListConfig;
+          if (_centerIndex != null && i < _centerIndex!) {
+            _loadingMoreConfigsBeforeCenter.insert(0, config);
+          } else {
+            _loadingMoreConfigs.add(config);
+          }
+        }
+      }
+    }
+
+    for (int i = 0; i < _loadingMoreConfigs.length; i++) {
+      final SliverListConfig<dynamic> config = _loadingMoreConfigs[i];
+      config.defaultShowNoMore = i == _loadingMoreConfigs.length - 1;
+      config.defaultLock = i != 0 && config.hasMore;
+    }
+
+    for (int i = 0; i < _loadingMoreConfigsBeforeCenter.length; i++) {
+      final SliverListConfig<dynamic> config =
+          _loadingMoreConfigsBeforeCenter[i];
+      config.defaultShowNoMore =
+          i == _loadingMoreConfigsBeforeCenter.length - 1;
+      config.defaultLock = i != 0 && config.hasMore;
     }
   }
 
@@ -290,6 +341,7 @@ class _LoadingMoreCustomScrollViewState
             keyboardDismissBehavior: widget.keyboardDismissBehavior,
             restorationId: widget.restorationId,
             clipBehavior: widget.clipBehavior,
+            center: widget.center,
           ),
           showGlowLeading: widget.showGlowLeading,
           showGlowTrailing: widget.showGlowTrailing,
@@ -308,38 +360,45 @@ class _LoadingMoreCustomScrollViewState
     // reach the pixels to loading more
     if (notification.metrics.pixels + widget.preloadExtent >=
         notification.metrics.maxScrollExtent) {
-      if (_loadingMoreConfigs.isNotEmpty) {
-        SliverListConfig<dynamic>? preList;
-        for (int i = 0; i < _loadingMoreConfigs.length; i++) {
-          final SliverListConfig<dynamic> item = _loadingMoreConfigs[i];
-
-          final bool preListIsloading = preList?.isLoading ?? false;
-          final bool preListhasMore = preList?.hasMore ?? false;
-
-          if (!preListIsloading &&
-              !preListhasMore &&
-              item.hasMore &&
-              !item.isLoading &&
-              !item.hasError) {
-            final LoadingMoreBase<dynamic> sourceList = item.sourceList;
-            item.defaultLock = false;
-            if (!item.actualLock) {
-              if (sourceList.isEmpty) {
-                if (item.autoRefresh) {
-                  sourceList.refresh();
-                }
-              } else if (item.autoLoadMore) {
-                sourceList.loadMore();
-              }
-            }
-
-            break;
-          }
-          preList = item;
-        }
-      }
+      _loadingMore(_loadingMoreConfigs);
+    } else if (notification.metrics.pixels - widget.preloadExtent <=
+        notification.metrics.minScrollExtent) {
+      _loadingMore(_loadingMoreConfigsBeforeCenter);
     }
     return false;
+  }
+
+  void _loadingMore(List<SliverListConfig<dynamic>> configs) {
+    if (configs.isNotEmpty) {
+      SliverListConfig<dynamic>? preList;
+      for (int i = 0; i < configs.length; i++) {
+        final SliverListConfig<dynamic> item = configs[i];
+
+        final bool preListIsloading = preList?.isLoading ?? false;
+        final bool preListhasMore = preList?.hasMore ?? false;
+
+        if (!preListIsloading &&
+            !preListhasMore &&
+            item.hasMore &&
+            !item.isLoading &&
+            !item.hasError) {
+          final LoadingMoreBase<dynamic> sourceList = item.sourceList;
+          item.defaultLock = false;
+          if (!item.actualLock) {
+            if (sourceList.isEmpty) {
+              if (item.autoRefresh) {
+                sourceList.refresh();
+              }
+            } else if (item.autoLoadMore) {
+              sourceList.loadMore();
+            }
+          }
+
+          break;
+        }
+        preList = item;
+      }
+    }
   }
 
   // void onDataChanged(LoadingMoreBase<dynamic> data) {

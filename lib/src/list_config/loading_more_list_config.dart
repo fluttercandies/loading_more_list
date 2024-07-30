@@ -117,8 +117,9 @@ class LoadingMoreListConfig<T> {
         (sourceList.indicatorStatus == IndicatorStatus.empty ||
             sourceList.indicatorStatus == IndicatorStatus.fullScreenError)) {
       Widget? widget1;
-      if (indicatorBuilder != null)
+      if (indicatorBuilder != null) {
         widget1 = indicatorBuilder!(context, sourceList.indicatorStatus);
+      }
       widget1 = widget1 ??
           IndicatorWidget(
             sourceList.indicatorStatus,
@@ -170,8 +171,9 @@ class LoadingMoreListConfig<T> {
     final bool hasError = sourceList.indicatorStatus == IndicatorStatus.error;
     if (hasError) {
       Widget? widget;
-      if (indicatorBuilder != null)
+      if (indicatorBuilder != null) {
         widget = indicatorBuilder!(context, IndicatorStatus.error);
+      }
       widget = widget ??
           IndicatorWidget(
             IndicatorStatus.error,
