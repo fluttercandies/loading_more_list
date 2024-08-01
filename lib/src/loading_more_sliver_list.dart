@@ -12,6 +12,17 @@ class LoadingMoreSliverList<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _LoadingMoreCustomScrollViewState? state =
+        _LoadingMoreCustomScrollViewState.of(context);
+    assert(
+      state != null,
+      'LoadingMoreSliverList must be a sliver of LoadingMoreCustomScrollView',
+    );
+    if (state != null && state.widget.getConfigFromSliverContext) {
+      state._updateConfig(this, context);
+      _InheritedWidget.of(context);
+    }
+
     return StreamBuilder<Iterable<T>>(
       builder: (
         BuildContext buildContext,
@@ -29,7 +40,7 @@ class LoadingMoreSliverList<T> extends StatelessWidget {
   }
 }
 
-//support for LoadingMoreSliverList
+/// support for LoadingMoreSliverList
 class LoadingMoreCustomScrollView extends StatefulWidget {
   const LoadingMoreCustomScrollView({
     Key? key,
@@ -49,9 +60,9 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.restorationId,
     this.clipBehavior = Clip.hardEdge,
-    this.configs,
     this.preloadExtent = 0,
     this.center,
+    this.getConfigFromSliverContext = false,
   }) : super(
           key: key,
         );
@@ -216,21 +227,6 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   /// Defaults to [Clip.hardEdge].
   final Clip clipBehavior;
 
-  /// maybe your sliver is not a LoadingMoreSliverList
-
-  /// class MyLoadingMoreSliverList extends StatelessWidget {
-  ///   const MyLoadingMoreSliverList({Key? key}) : super(key: key);
-  ///
-  ///   @override
-  ///   Widget build(BuildContext context) {
-  ///     return LoadingMoreSliverList();
-  ///   }
-  /// }
-  ///
-  /// then you can pass them with [LoadingMoreCustomScrollView.configs]
-
-  final List<SliverListConfig<dynamic>>? configs;
-
   /// The extent to preload the LoadingMoreBase when user scroll the list
   final double preloadExtent;
 
@@ -252,6 +248,51 @@ class LoadingMoreCustomScrollView extends StatefulWidget {
   ///
   ///  * [anchor], which controls where the [center] as aligned in the viewport.
   final Key? center;
+
+  /// If you’ve wrapped LoadingMoreSliverList, for example with the following code:
+  ///
+  /// class MyLoadingMoreSliverList extends StatelessWidget {
+  ///   const MyLoadingMoreSliverList({
+  ///     Key? key,
+  ///     required this.listSourceRepository,
+  ///   }) : super(key: key);
+  ///
+  ///   final TuChongRepository listSourceRepository;
+  ///   @override
+  ///   Widget build(BuildContext context) {
+  ///     return SliverPadding(
+  ///       padding: const EdgeInsets.all(50),
+  ///       sliver: LoadingMoreSliverList<TuChongItem>(
+  ///         SliverListConfig<TuChongItem>(
+  ///           itemBuilder: itemBuilder,
+  ///           sourceList: listSourceRepository,
+  ///           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  ///             crossAxisCount: 2,
+  ///             crossAxisSpacing: 3.0,
+  ///             mainAxisSpacing: 3.0,
+  ///           ),
+  ///         ),
+  ///       ),
+  ///     );
+  ///   }
+  /// }
+  ///
+  /// then we can't get the configs from [LoadingMoreCustomScrollView.slivers].
+  ///
+  /// In this case, you can set [LoadingMoreCustomScrollView.getConfigFromSliverContext] to true,
+  /// it will get the config from the context of [LoadingMoreSliverList].
+  /// and the following code will work.
+  ///
+  /// return LoadingMoreCustomScrollView(
+  ///   test: true,
+  ///   slivers: <Widget>[
+  ///     MyLoadingMoreSliverList(),
+  ///   ],
+  /// );
+  ///
+  /// Default value is false.
+
+  final bool getConfigFromSliverContext;
   @override
   _LoadingMoreCustomScrollViewState createState() =>
       _LoadingMoreCustomScrollViewState();
@@ -262,9 +303,16 @@ class _LoadingMoreCustomScrollViewState
   /// LoadingMoreSliverList collection
   final List<SliverListConfig<dynamic>> _loadingMoreConfigs =
       <SliverListConfig<dynamic>>[];
+
   final List<SliverListConfig<dynamic>> _loadingMoreConfigsBeforeCenter =
       <SliverListConfig<dynamic>>[];
+
   int? _centerIndex;
+
+  static _LoadingMoreCustomScrollViewState? of(BuildContext context) {
+    return context.findAncestorStateOfType<_LoadingMoreCustomScrollViewState>();
+  }
+
   @override
   void initState() {
     _initConfigs();
@@ -273,8 +321,7 @@ class _LoadingMoreCustomScrollViewState
 
   @override
   void didUpdateWidget(LoadingMoreCustomScrollView oldWidget) {
-    if (oldWidget.slivers != widget.slivers ||
-        oldWidget.configs != widget.configs) {
+    if (oldWidget.slivers != widget.slivers) {
       _initConfigs();
     }
 
@@ -282,18 +329,14 @@ class _LoadingMoreCustomScrollViewState
   }
 
   void _initConfigs() {
-    _loadingMoreConfigs.clear();
-    _loadingMoreConfigsBeforeCenter.clear();
     _centerIndex = null;
     if (widget.center != null) {
       _centerIndex = widget.slivers
           .indexWhere((Widget element) => element.key == widget.center);
     }
-
-    // TODO(zmtzawqlp): not support center
-    if (widget.configs != null) {
-      _loadingMoreConfigs.addAll(widget.configs!);
-    } else {
+    _loadingMoreConfigs.clear();
+    _loadingMoreConfigsBeforeCenter.clear();
+    if (!widget.getConfigFromSliverContext) {
       for (int i = 0; i < widget.slivers.length; i++) {
         final Widget sliver = widget.slivers[i];
         if (sliver is LoadingMoreSliverList<dynamic>) {
@@ -305,53 +348,143 @@ class _LoadingMoreCustomScrollViewState
           }
         }
       }
-    }
 
-    for (int i = 0; i < _loadingMoreConfigs.length; i++) {
-      final SliverListConfig<dynamic> config = _loadingMoreConfigs[i];
-      config.defaultShowNoMore = i == _loadingMoreConfigs.length - 1;
+      for (int i = 0; i < _loadingMoreConfigs.length; i++) {
+        final SliverListConfig<dynamic> config = _loadingMoreConfigs[i];
+        config.defaultShowNoMore = i == _loadingMoreConfigs.length - 1;
+        config.defaultLock = i != 0 && config.hasMore;
+      }
+
+      for (int i = 0; i < _loadingMoreConfigsBeforeCenter.length; i++) {
+        final SliverListConfig<dynamic> config =
+            _loadingMoreConfigsBeforeCenter[i];
+        config.defaultShowNoMore =
+            i == _loadingMoreConfigsBeforeCenter.length - 1;
+        config.defaultLock = i != 0 && config.hasMore;
+      }
+    }
+  }
+
+  void _updateConfig(
+    LoadingMoreSliverList<dynamic> sliverList,
+    BuildContext configContext,
+  ) {
+    final SliverListConfig<dynamic> config = sliverList.sliverListConfig;
+    if (!_loadingMoreConfigs.contains(config) &&
+        !_loadingMoreConfigsBeforeCenter.contains(config)) {
+      config.configIndex =
+          _findTheConfigIndex(sliverList, configContext, widget);
+
+      final int? centerIndex = _centerIndex;
+      if (centerIndex != null && config.configIndex < centerIndex) {
+        _addConfig(config, _loadingMoreConfigsBeforeCenter);
+      } else {
+        _addConfig(config, _loadingMoreConfigs);
+      }
+    }
+  }
+
+  void _addConfig(
+    SliverListConfig<dynamic> config,
+    List<SliverListConfig<dynamic>> list,
+  ) {
+    list.add(config);
+    list.sort(
+      (SliverListConfig<dynamic> a, SliverListConfig<dynamic> b) {
+        return list == _loadingMoreConfigsBeforeCenter
+            ? b.configIndex.compareTo(a.configIndex)
+            : a.configIndex.compareTo(b.configIndex);
+      },
+    );
+    for (int i = 0; i < list.length; i++) {
+      final SliverListConfig<dynamic> config = list[i];
+      config.defaultShowNoMore = i == list.length - 1;
       config.defaultLock = i != 0 && config.hasMore;
     }
 
-    for (int i = 0; i < _loadingMoreConfigsBeforeCenter.length; i++) {
-      final SliverListConfig<dynamic> config =
-          _loadingMoreConfigsBeforeCenter[i];
-      config.defaultShowNoMore =
-          i == _loadingMoreConfigsBeforeCenter.length - 1;
-      config.defaultLock = i != 0 && config.hasMore;
+    // refresh defaultShowNoMore
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  int _findTheConfigIndex(
+    LoadingMoreSliverList<dynamic> sliverList,
+    BuildContext context,
+    LoadingMoreCustomScrollView scrollView,
+  ) {
+    final List<Widget> slivers = scrollView.slivers;
+
+    for (int i = 0; i < slivers.length; i++) {
+      if (sliverList == slivers[i]) {
+        return i;
+      }
+      bool isThisSliver = false;
+
+      context.visitAncestorElements((Element element) {
+        // stop
+        if (element.widget == scrollView) {
+          return false;
+        }
+        // find
+        else if (element.widget == slivers[i]) {
+          isThisSliver = true;
+          return false;
+        }
+        return true;
+      });
+
+      if (isThisSliver) {
+        return i;
+      }
     }
+    assert(false, 'can not find the sliver config index');
+    return 0;
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget sv = CustomScrollView(
+      semanticChildCount: widget.semanticChildCount,
+      shrinkWrap: widget.shrinkWrap,
+      scrollDirection: widget.scrollDirection,
+      physics: widget.physics,
+      primary: widget.primary,
+      cacheExtent: widget.cacheExtent,
+      controller: widget.controller,
+      slivers: widget.slivers,
+      reverse: widget.reverse,
+      dragStartBehavior: widget.dragStartBehavior,
+      keyboardDismissBehavior: widget.keyboardDismissBehavior,
+      restorationId: widget.restorationId,
+      clipBehavior: widget.clipBehavior,
+      center: widget.center,
+    );
+    if (widget.getConfigFromSliverContext) {
+      // in case: the one sliverList is in const widget, build method will not be called again, we will miss its' config.
+      sv = _InheritedWidget(
+        configList:
+            '${_loadingMoreConfigsBeforeCenter.map((SliverListConfig<dynamic> e) => e.configIndex).join(',')}|${_loadingMoreConfigs.map((SliverListConfig<dynamic> e) => e.configIndex).join(',')}',
+        child: sv,
+      );
+    }
+
     return NotificationListener<ScrollNotification>(
-        onNotification: _handleScrollNotification,
-        child: GlowNotificationWidget(
-          CustomScrollView(
-            semanticChildCount: widget.semanticChildCount,
-            shrinkWrap: widget.shrinkWrap,
-            scrollDirection: widget.scrollDirection,
-            physics: widget.physics,
-            primary: widget.primary,
-            cacheExtent: widget.cacheExtent,
-            controller: widget.controller,
-            slivers: widget.slivers,
-            reverse: widget.reverse,
-            dragStartBehavior: widget.dragStartBehavior,
-            keyboardDismissBehavior: widget.keyboardDismissBehavior,
-            restorationId: widget.restorationId,
-            clipBehavior: widget.clipBehavior,
-            center: widget.center,
-          ),
-          showGlowLeading: widget.showGlowLeading,
-          showGlowTrailing: widget.showGlowTrailing,
-        ));
-    // }
+      onNotification: _handleScrollNotification,
+      child: GlowNotificationWidget(
+        sv,
+        showGlowLeading: widget.showGlowLeading,
+        showGlowTrailing: widget.showGlowTrailing,
+      ),
+    );
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
-    if (widget.onScrollNotification != null)
+    if (widget.onScrollNotification != null) {
       widget.onScrollNotification!(notification);
+    }
 
     if (notification.depth != 0) {
       return false;
@@ -400,12 +533,22 @@ class _LoadingMoreCustomScrollViewState
       }
     }
   }
+}
 
-  // void onDataChanged(LoadingMoreBase<dynamic> data) {
-  //   //if (data != null) {
-  //   if (mounted) {
-  //     setState(() {});
-  //   }
-  //   //}
-  // }
+class _InheritedWidget extends InheritedWidget {
+  const _InheritedWidget({
+    Key? key,
+    required Widget child,
+    required this.configList,
+  }) : super(key: key, child: child);
+
+  final String configList;
+  @override
+  bool updateShouldNotify(covariant _InheritedWidget oldWidget) {
+    return configList != oldWidget.configList;
+  }
+
+  static _InheritedWidget? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_InheritedWidget>();
+  }
 }

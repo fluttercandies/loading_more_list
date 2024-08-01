@@ -74,6 +74,9 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   /// the scroll position changes drastically.
   final double? itemExtent;
 
+  /// The index of the config in the [LoadingMoreCustomScrollView.slivers].
+  int configIndex = 0;
+
   bool defaultShowNoMore = true;
 
   bool get actualShowNoMore => showNoMore ?? defaultShowNoMore;

@@ -12,6 +12,7 @@ const List<String> routeNames = <String>[
   'fluttercandies://GridViewDemo',
   'fluttercandies://ListViewDemo',
   'fluttercandies://MultipleSliverDemo',
+  'fluttercandies://MultipleSliverDemo1',
   'fluttercandies://NestedScrollViewDemo',
   'fluttercandies://SliverCenterDemo',
   'fluttercandies://SliverGridDemo',
@@ -72,6 +73,18 @@ class Routes {
   /// [exts] : {'group': 'Simple', 'order': 5}
   static const String fluttercandiesMultipleSliverDemo =
       'fluttercandies://MultipleSliverDemo';
+
+  /// 'Show how to build loading more multiple sliver list quickly, and support LoadingMoreCustomScrollView.slivers are not a direct LoadingMoreSliverList'
+  ///
+  /// [name] : 'fluttercandies://MultipleSliverDemo1'
+  ///
+  /// [routeName] : 'MultipleSliver1'
+  ///
+  /// [description] : 'Show how to build loading more multiple sliver list quickly, and support LoadingMoreCustomScrollView.slivers are not a direct LoadingMoreSliverList'
+  ///
+  /// [exts] : {'group': 'Simple', 'order': 7}
+  static const String fluttercandiesMultipleSliverDemo1 =
+      'fluttercandies://MultipleSliverDemo1';
 
   /// 'Show how to build loading more list in NestedScrollView quickly'
   ///

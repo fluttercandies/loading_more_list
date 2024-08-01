@@ -1,3 +1,9 @@
+## 7.0.0
+
+* Breaking change: remove [LoadingMoreCustomScrollView.configs]
+* Add [LoadingMoreCustomScrollView.getConfigFromSliverContext] to support [LoadingMoreCustomScrollView.slivers] are not a direct LoadingMoreSliverList.(#59)
+
+
 ## 6.1.0
 
 * Add `center` for `LoadingMoreCustomScrollView`(#50)
