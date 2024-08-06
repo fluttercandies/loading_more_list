@@ -28,6 +28,8 @@ class LoadingMoreSliverList<T> extends StatelessWidget {
         BuildContext buildContext,
         AsyncSnapshot<Iterable<T>> s,
       ) {
+        state?.hasNoMore(sliverListConfig);
+
         return sliverListConfig.buildContent(
           buildContext,
           s.data,
@@ -442,6 +444,19 @@ class _LoadingMoreCustomScrollViewState
     }
     assert(false, 'can not find the sliver config index');
     return 0;
+  }
+
+  // One config has no more data, check whether need to load next config
+  void hasNoMore(SliverListConfig<dynamic> config) {
+    if (config.hasMore) {
+      return;
+    }
+    // check whether need to load next config
+    if (_loadingMoreConfigs.contains(config)) {
+      _loadingMore(_loadingMoreConfigs);
+    } else if (_loadingMoreConfigsBeforeCenter.contains(config)) {
+      _loadingMore(_loadingMoreConfigsBeforeCenter);
+    }
   }
 
   @override

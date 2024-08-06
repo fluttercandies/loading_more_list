@@ -1,3 +1,7 @@
+## 7.0.1
+
+* One config has no more data, check whether need to load next config
+
 ## 7.0.0
 
 * Breaking change: remove [LoadingMoreCustomScrollView.configs]
