@@ -3,6 +3,7 @@ import 'package:loading_more_list_library/loading_more_list_library.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 import '../indicator_widget.dart';
+import 'config_base.dart';
 import 'sliver_list_config.dart';
 
 typedef LoadingMoreItemBuilder<T> = Widget Function(
@@ -16,7 +17,7 @@ typedef LoadingMoreIndicatorBuilder = Widget? Function(
   IndicatorStatus status,
 );
 
-class LoadingMoreListConfig<T> {
+class LoadingMoreListConfig<T> with ConfigBase<T> {
   const LoadingMoreListConfig(
     this.itemBuilder,
     this.sourceList, {
@@ -78,21 +79,13 @@ class LoadingMoreListConfig<T> {
 
   bool get isSliver => this is SliverListConfig<T>;
 
-  bool get hasMore => sourceList.hasMore;
-
-  bool get hasError => sourceList.hasError;
-
-  bool get isLoading => sourceList.isLoading;
-
-  Widget? buildContent(BuildContext context, Iterable<T>? source) {
+  Widget? buildContent(BuildContext context) {
     //from stream builder or from refresh
-    if (source == null ||
-        (source.isEmpty &&
-            sourceList.indicatorStatus == IndicatorStatus.fullScreenBusying)) {
-      if (source == null || !sourceList.isLoading) {
+    if (isEmpty && indicatorStatus == IndicatorStatus.fullScreenBusying) {
+      if (!isLoading) {
         if (autoRefresh) {
           // first load
-          if (this is SliverListConfig) {
+          if (isSliver) {
             final SliverListConfig<dynamic> sliverListConfig =
                 this as SliverListConfig<dynamic>;
             // prevent lock list load
@@ -100,7 +93,8 @@ class LoadingMoreListConfig<T> {
               return const SliverToBoxAdapter(child: SizedBox.shrink());
             }
           }
-          sourceList.refresh();
+
+          refresh();
         }
       }
       Widget? widget;
@@ -113,21 +107,20 @@ class LoadingMoreListConfig<T> {
             isSliver: isSliver,
           );
       return widget;
-    } else if (source.isEmpty &&
-        (sourceList.indicatorStatus == IndicatorStatus.empty ||
-            sourceList.indicatorStatus == IndicatorStatus.fullScreenError)) {
+    } else if (isEmpty &&
+        (indicatorStatus == IndicatorStatus.empty ||
+            indicatorStatus == IndicatorStatus.fullScreenError)) {
       Widget? widget1;
       if (indicatorBuilder != null) {
-        widget1 = indicatorBuilder!(context, sourceList.indicatorStatus);
+        widget1 = indicatorBuilder!(context, indicatorStatus);
       }
       widget1 = widget1 ??
           IndicatorWidget(
-            sourceList.indicatorStatus,
+            indicatorStatus,
             isSliver: isSliver,
-            tryAgain:
-                sourceList.indicatorStatus == IndicatorStatus.fullScreenError
-                    ? sourceList.errorRefresh
-                    : null,
+            tryAgain: indicatorStatus == IndicatorStatus.fullScreenError
+                ? errorRefresh
+                : null,
           );
       return widget1;
     }
@@ -144,12 +137,12 @@ class LoadingMoreListConfig<T> {
         return widget;
       }
 
-      final IndicatorStatus status = sourceList.hasMore
+      final IndicatorStatus status = hasMore
           ? IndicatorStatus.loadingMoreBusying
           : IndicatorStatus.noMoreLoad;
 
-      if (sourceList.hasMore && autoLoadMore) {
-        sourceList.loadMore();
+      if (hasMore && autoLoadMore) {
+        loadMore();
       }
 
       Widget? widget1;
@@ -168,7 +161,7 @@ class LoadingMoreListConfig<T> {
   }
 
   Widget? buildErrorItem(BuildContext context) {
-    final bool hasError = sourceList.indicatorStatus == IndicatorStatus.error;
+    final bool hasError = indicatorStatus == IndicatorStatus.error;
     if (hasError) {
       Widget? widget;
       if (indicatorBuilder != null) {
@@ -178,7 +171,7 @@ class LoadingMoreListConfig<T> {
           IndicatorWidget(
             IndicatorStatus.error,
             isSliver: isSliver,
-            tryAgain: sourceList.errorRefresh,
+            tryAgain: errorRefresh,
           );
       return widget;
     }
@@ -251,4 +244,37 @@ class LoadingMoreListConfig<T> {
           : null,
     );
   }
+
+  @override
+  bool get hasMore => sourceList.hasMore;
+
+  @override
+  bool get hasError => sourceList.hasError;
+
+  @override
+  bool get isLoading => sourceList.isLoading;
+
+  @override
+  bool get isEmpty => sourceList.isEmpty;
+
+  @override
+  IndicatorStatus get indicatorStatus => sourceList.indicatorStatus;
+
+  @override
+  Future<bool> errorRefresh() {
+    return sourceList.errorRefresh();
+  }
+
+  @override
+  Future<bool> loadMore() {
+    return sourceList.loadMore();
+  }
+
+  @override
+  Future<bool> refresh([bool notifyStateChanged = false]) {
+    return sourceList.refresh(notifyStateChanged);
+  }
+
+  @override
+  int get length => sourceList.length;
 }

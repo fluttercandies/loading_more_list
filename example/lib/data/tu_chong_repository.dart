@@ -22,20 +22,16 @@ class TuChongRepository extends LoadingMoreBase<TuChongItem> {
   TuChongRepository({this.maxLength = 300});
   int _pageIndex = 1;
   bool _hasMore = true;
-  bool forceRefresh = false;
   @override
-  bool get hasMore => (_hasMore && length < maxLength) || forceRefresh;
+  bool get hasMore => _hasMore && length < maxLength;
   final int maxLength;
 
   @override
   Future<bool> refresh([bool notifyStateChanged = false]) async {
     _hasMore = true;
     _pageIndex = 1;
-    //force to refresh list when you don't want clear list before request
-    //for the case, if your list already has 20 items.
-    forceRefresh = !notifyStateChanged;
-    final bool result = await super.refresh(notifyStateChanged);
-    forceRefresh = false;
+
+    final bool result = await super.refresh(true);
     return result;
   }
 
@@ -52,7 +48,7 @@ class TuChongRepository extends LoadingMoreBase<TuChongItem> {
     bool isSuccess = false;
     try {
       //to show loading more clearly, in your app,remove this
-      //await Future<void>.delayed(const Duration(seconds: 5));
+      await Future<void>.delayed(const Duration(seconds: 2));
       List<TuChongItem>? feedList;
       if (!kIsWeb) {
         final Response result =

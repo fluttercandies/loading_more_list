@@ -1,8 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_more_list/src/glow_notification_widget.dart';
-import 'package:loading_more_list/src/list_config/sliver_list_config.dart';
-import 'package:loading_more_list_library/loading_more_list_library.dart';
+import 'package:loading_more_list/loading_more_list.dart';
 
 //loading more for sliverlist and sliverGrid
 class LoadingMoreSliverList<T> extends StatelessWidget {
@@ -32,7 +30,6 @@ class LoadingMoreSliverList<T> extends StatelessWidget {
 
         return sliverListConfig.buildContent(
           buildContext,
-          s.data,
         );
       },
       stream: sliverListConfig.sourceList.rebuild,
@@ -40,6 +37,23 @@ class LoadingMoreSliverList<T> extends StatelessWidget {
           sliverListConfig.sourceList.wrapData(sliverListConfig.sourceList),
     );
   }
+}
+
+class LoadingMoreSliver extends LoadingMoreSliverList<int> {
+  const LoadingMoreSliver(SliverConfig sliverListConfig, {Key? key})
+      : super(
+          sliverListConfig,
+          key: key,
+        );
+}
+
+class LoadingMoreLoadingSliver<T> extends LoadingMoreSliverList<T> {
+  const LoadingMoreLoadingSliver(SliveLoadingConfig<T> sliverListConfig,
+      {Key? key})
+      : super(
+          sliverListConfig,
+          key: key,
+        );
 }
 
 /// support for LoadingMoreSliverList
@@ -530,15 +544,14 @@ class _LoadingMoreCustomScrollViewState
             item.hasMore &&
             !item.isLoading &&
             !item.hasError) {
-          final LoadingMoreBase<dynamic> sourceList = item.sourceList;
           item.defaultLock = false;
           if (!item.actualLock) {
-            if (sourceList.isEmpty) {
+            if (item.isEmpty) {
               if (item.autoRefresh) {
-                sourceList.refresh();
+                item.refresh();
               }
             } else if (item.autoLoadMore) {
-              sourceList.loadMore();
+              item.loadMore();
             }
           }
 

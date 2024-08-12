@@ -25,7 +25,6 @@ class LoadingMoreList<T> extends StatelessWidget {
           ) {
             return listConfig.buildContent(
               buildContext,
-              s.data,
             );
           },
           stream: listConfig.sourceList.rebuild,
@@ -51,10 +50,10 @@ class LoadingMoreList<T> extends StatelessWidget {
       if (listConfig.hasMore && !listConfig.hasError && !listConfig.isLoading) {
         if (listConfig.sourceList.isEmpty) {
           if (listConfig.autoRefresh) {
-            listConfig.sourceList.refresh();
+            listConfig.refresh();
           }
         } else if (listConfig.autoLoadMore) {
-          listConfig.sourceList.loadMore();
+          listConfig.loadMore();
         }
       }
     }

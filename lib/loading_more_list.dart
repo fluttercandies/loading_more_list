@@ -10,6 +10,7 @@ export 'src/glow_notification_widget.dart';
 export 'src/indicator_widget.dart';
 export 'src/list_config/list_config.dart';
 export 'src/list_config/loading_more_list_config.dart';
+export 'src/list_config/sliver_config.dart';
 export 'src/list_config/sliver_list_config.dart';
 export 'src/loading_more_list.dart';
 export 'src/loading_more_sliver_list.dart';

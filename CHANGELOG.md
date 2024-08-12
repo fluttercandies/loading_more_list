@@ -1,3 +1,7 @@
+## 7.1.0
+
+* Add `SliveLoadingConfig` and `SliverConfig` 
+
 ## 7.0.1
 
 * One config has no more data, check whether need to load next config

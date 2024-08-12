@@ -86,30 +86,25 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
   bool get actualLock => lock ?? defaultLock;
 
   @override
-  Widget buildContent(BuildContext context, Iterable<T>? source) {
-    return _innerBuilderContent(context, source);
+  Widget buildContent(BuildContext context) {
+    return _innerBuilderContent(context);
   }
 
-  Widget _innerBuilderContent(
-    BuildContext context,
-    Iterable<T>? source,
-  ) {
-    Widget? widget = super.buildContent(context, source);
+  Widget _innerBuilderContent(BuildContext context) {
+    Widget? widget = super.buildContent(context);
     if (widget == null) {
       int lastOne = 1;
-      if (!actualShowNoMore && !sourceList.hasMore) {
+      if (!actualShowNoMore && !hasMore) {
         lastOne = 0;
       }
-      widget = _innerBuilderList(context, source, lastOne);
+      widget = innerBuilderList(context, lastOne);
     }
     return widget;
   }
 
-  Widget _innerBuilderList(
-      BuildContext context, Iterable<T>? source, int lastOne) {
+  Widget innerBuilderList(BuildContext context, int lastOne) {
     Widget widget;
-    final int count =
-        childCount ?? childCountBuilder?.call(source!.length) ?? source!.length;
+    final int count = childCount ?? childCountBuilder?.call(length) ?? length;
     final ExtendedListDelegate delegate = getExtendedListDelegate(count);
 
     if (delegate is SliverWaterfallFlowDelegate) {
@@ -117,7 +112,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
         gridDelegate: delegate,
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) =>
-              buildItem(context, index, source!),
+              buildItem(context, index, sourceList),
           addAutomaticKeepAlives: addAutomaticKeepAlives,
           addRepaintBoundaries: addRepaintBoundaries,
           addSemanticIndexes: addSemanticIndexes,
@@ -131,7 +126,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           extendedListDelegate: delegate,
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) =>
-                buildItem(context, index, source!),
+                buildItem(context, index, sourceList),
             addAutomaticKeepAlives: addAutomaticKeepAlives,
             addRepaintBoundaries: addRepaintBoundaries,
             addSemanticIndexes: addSemanticIndexes,
@@ -147,7 +142,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           extendedListDelegate: delegate,
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) =>
-                buildItem(context, index, source!),
+                buildItem(context, index, sourceList),
             addAutomaticKeepAlives: addAutomaticKeepAlives,
             addRepaintBoundaries: addRepaintBoundaries,
             addSemanticIndexes: addSemanticIndexes,
@@ -161,7 +156,7 @@ class SliverListConfig<T> extends LoadingMoreListConfig<T> {
           extendedListDelegate: delegate,
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) =>
-                buildItem(context, index, source!),
+                buildItem(context, index, sourceList),
             addAutomaticKeepAlives: addAutomaticKeepAlives,
             addRepaintBoundaries: addRepaintBoundaries,
             addSemanticIndexes: addSemanticIndexes,

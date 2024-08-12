@@ -17,6 +17,7 @@ import 'demo/simple/grid_view_demo.dart';
 import 'demo/simple/list_view_demo.dart';
 import 'demo/simple/multiple_sliver_demo.dart';
 import 'demo/simple/multiple_sliver_demo1.dart';
+import 'demo/simple/multiple_sliver_demo2.dart';
 import 'demo/simple/sliver_center.dart';
 import 'demo/simple/sliver_grid_demo.dart';
 import 'demo/simple/sliver_list_demo.dart';
@@ -91,6 +92,19 @@ FFRouteSettings getRouteSettings({
         exts: <String, dynamic>{
           'group': 'Simple',
           'order': 7,
+        },
+      );
+    case 'fluttercandies://MultipleSliverDemo2':
+      return FFRouteSettings(
+        name: name,
+        arguments: arguments,
+        builder: () => MultipleSliverDemo2(),
+        routeName: 'MultipleSliver2',
+        description:
+            'Show how to build loading more multiple sliver list quickly with SliveLoadingConfig and SliverConfig',
+        exts: <String, dynamic>{
+          'group': 'Simple',
+          'order': 8,
         },
       );
     case 'fluttercandies://NestedScrollViewDemo':

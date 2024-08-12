@@ -255,13 +255,11 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
   final Clip clipBehavior;
 
   @override
-  Widget buildContent(BuildContext context, Iterable<T>? source) {
-    Widget? widget = super.buildContent(context, source);
+  Widget buildContent(BuildContext context) {
+    Widget? widget = super.buildContent(context);
 
     if (widget == null) {
-      final int count = childCount ??
-          childCountBuilder?.call(source!.length) ??
-          source!.length;
+      final int count = childCount ?? childCountBuilder?.call(length) ?? length;
       final ExtendedListDelegate delegate = getExtendedListDelegate(count);
 
       if (delegate is SliverWaterfallFlowDelegate) {
@@ -280,7 +278,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
           itemBuilder: (BuildContext context, int index) =>
-              buildItem(context, index, source!),
+              buildItem(context, index, sourceList),
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
           keyboardDismissBehavior: keyboardDismissBehavior,
@@ -303,7 +301,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
           itemBuilder: (BuildContext context, int index) =>
-              buildItem(context, index, source!),
+              buildItem(context, index, sourceList),
           extendedListDelegate: delegate,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
@@ -327,7 +325,7 @@ class ListConfig<T> extends LoadingMoreListConfig<T> {
           cacheExtent: cacheExtent,
           semanticChildCount: semanticChildCount,
           itemBuilder: (BuildContext context, int index) =>
-              buildItem(context, index, source!),
+              buildItem(context, index, sourceList),
           extendedListDelegate: delegate,
           itemCount: count + 1,
           dragStartBehavior: dragStartBehavior,
