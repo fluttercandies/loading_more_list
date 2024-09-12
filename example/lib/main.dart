@@ -1,3 +1,4 @@
+import 'package:extended_keyboard/extended_keyboard.dart';
 import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,11 @@ import 'example_route.dart';
 import 'example_routes.dart';
 import 'utils/screen_util.dart';
 
-void main() => runApp(MyApp());
+Future<void> main() async {
+  KeyboardBinding();
+  await SystemKeyboard().init();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -39,7 +44,8 @@ class MyApp extends StatelessWidget {
           routeSettingsWrapper: (FFRouteSettings ffRouteSettings) {
             if (ffRouteSettings.name == Routes.fluttercandiesMainpage ||
                 ffRouteSettings.name == Routes.fluttercandiesDemogrouppage ||
-                settings.name == Routes.fluttercandiesNestedScrollViewDemo) {
+                settings.name == Routes.fluttercandiesNestedScrollViewDemo ||
+                settings.name == Routes.fluttercandiesChatDemo) {
               return ffRouteSettings;
             }
             return ffRouteSettings.copyWith(
