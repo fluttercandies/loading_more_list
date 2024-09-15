@@ -14,6 +14,7 @@ import 'package:extended_text_field/extended_text_field.dart';
 import 'package:ff_annotation_route_library/ff_annotation_route_library.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 
 enum KeyboardPanelType {
@@ -47,7 +48,7 @@ class _ChatDemoState extends State<ChatDemo> {
   late TuChongRepository imageList = TuChongRepository(maxLength: 100);
   final ScrollController _controller = ScrollController();
 
-  final ChatMessageHistory _chatMessageHistory = ChatMessageHistory();
+  late ChatMessageHistory _chatMessageHistory;
 
   final List<Message> _chatMessages = <Message>[];
   final Key _centerKey = const ValueKey<String>('center-sliver');
@@ -55,6 +56,7 @@ class _ChatDemoState extends State<ChatDemo> {
       CustomKeyboardController(KeyboardType.system);
 
   final FocusNode _focusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -75,13 +77,15 @@ class _ChatDemoState extends State<ChatDemo> {
         showTime: false,
       ));
     }
+
+    _chatMessageHistory = ChatMessageHistory(_chatMessages.first);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: const Text('ChatDemo(KeyboardBuilder)')),
+      appBar: AppBar(title: const Text('ChatDemo')),
       body: SafeArea(
         bottom: true,
         child: KeyboardBuilder(
@@ -107,6 +111,17 @@ class _ChatDemoState extends State<ChatDemo> {
                         SliverListConfig<Message>(
                           itemBuilder: _itemBuilder,
                           sourceList: _chatMessageHistory,
+                          indicatorBuilder:
+                              (BuildContext context, IndicatorStatus status) {
+                            if (status == IndicatorStatus.fullScreenBusying) {
+                              return const SliverToBoxAdapter(
+                                child: IndicatorWidget(
+                                  IndicatorStatus.loadingMoreBusying,
+                                ),
+                              );
+                            }
+                            return null;
+                          },
                         ),
                       ),
                       SliverList(
@@ -282,6 +297,7 @@ class _ChatDemoState extends State<ChatDemo> {
                     },
                     child: ExtendedImage.network(
                       url,
+                      fit: BoxFit.cover,
                     ),
                   );
                 },
@@ -310,21 +326,19 @@ class _ChatDemoState extends State<ChatDemo> {
     setState(() {
       final DateTime dateTime = DateTime.now();
       if (_chatMessages.isNotEmpty) {
-        final Message lastMessage = _chatMessages.last;
-        if (dateTime.difference(lastMessage.dateTime).inSeconds > 300) {
-          _chatMessages.add(Message(
-            content: text,
-            dateTime: dateTime,
-            showTime: true,
-          ));
+        Message lastMessage = _chatMessages.removeLast();
+        if (dateTime.difference(lastMessage.dateTime).inSeconds >
+            Message.showTimeDuration) {
+          lastMessage = lastMessage.copyWith(showTime: true);
         }
-      } else {
-        _chatMessages.add(Message(
-          content: text,
-          dateTime: dateTime,
-          showTime: false,
-        ));
+        _chatMessages.add(lastMessage);
       }
+
+      _chatMessages.add(Message(
+        content: text,
+        dateTime: dateTime,
+        showTime: false,
+      ));
     });
     SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
       _controller.animateTo(
@@ -354,6 +368,7 @@ class _ChatDemoState extends State<ChatDemo> {
     if (message.isMe) {
       children = children.reversed.toList();
     }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -367,7 +382,10 @@ class _ChatDemoState extends State<ChatDemo> {
           if (message.showTime)
             Center(
               child: Text(
-                message.dateTime.toString(),
+                DateFormat(isSameDay(message.dateTime, DateTime.now())
+                        ? 'HH:mm'
+                        : 'yyyy-MM-dd HH:mm')
+                    .format(message.dateTime),
                 style: const TextStyle(
                   fontSize: 10,
                   color: Colors.grey,
@@ -378,6 +396,12 @@ class _ChatDemoState extends State<ChatDemo> {
       ),
     );
   }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
 }
 
 class Message {
@@ -385,15 +409,34 @@ class Message {
     required this.content,
     required this.dateTime,
     required this.showTime,
-  }) : isMe = Random().nextBool();
+    bool? isMe,
+  }) : isMe = isMe ?? Random().nextBool();
 
   final bool isMe;
   final String content;
   final DateTime dateTime;
   final bool showTime;
+
+  Message copyWith({
+    bool? isMe,
+    String? content,
+    DateTime? dateTime,
+    bool? showTime,
+  }) {
+    return Message(
+      content: content ?? this.content,
+      dateTime: dateTime ?? this.dateTime,
+      showTime: showTime ?? this.showTime,
+      isMe: isMe ?? this.isMe,
+    );
+  }
+
+  static const int showTimeDuration = 1800;
 }
 
 class ChatMessageHistory extends LoadingMoreBase<Message> {
+  ChatMessageHistory(this.lastOne);
+  Message lastOne;
   @override
   Future<bool> loadData([bool isLoadMoreAction = false]) async {
     await Future<void>.delayed(
@@ -401,19 +444,20 @@ class ChatMessageHistory extends LoadingMoreBase<Message> {
     );
     final int index = length;
 
-    Message? lastOne = isEmpty ? null : last;
+    int duration = 0;
+
     for (int i = index; i < index + 10; i++) {
-      final int abc = Random().nextInt(1000);
+      final DateTime time = lastOne.dateTime.add(
+        Duration(seconds: index == length ? Random().nextInt(2800) : duration),
+      );
       final Message message = Message(
         content: 'message $i',
-        dateTime: lastOne == null
-            ? DateTime.now()
-            : lastOne.dateTime.add(
-                Duration(seconds: abc),
-              ),
-        showTime: abc > 300,
+        dateTime: time,
+        showTime: time.difference(lastOne.dateTime).inSeconds >
+            Message.showTimeDuration,
       );
       add(message);
+      duration += Random().nextInt(2000);
       lastOne = message;
     }
     return true;

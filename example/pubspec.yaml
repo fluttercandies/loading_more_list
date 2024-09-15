@@ -16,6 +16,7 @@ dependencies:
   extended_text_field: any
   extended_text: any
   html: any
+  intl: any
 
   ff_annotation_route_library: ^3.0.0
   flutter:
