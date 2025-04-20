@@ -2,7 +2,7 @@
 
 A loading more list which supports ListView,GridView,WaterfallFlow and Slivers.
 
-[![pub package](https://img.shields.io/pub/v/loading_more_list.svg)](https://pub.dartlang.org/packages/loading_more_list) [![GitHub stars](https://img.shields.io/github/stars/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/stargazers) [![GitHub forks](https://img.shields.io/github/forks/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/network)  [![GitHub license](https://img.shields.io/github/license/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/blob/master/LICENSE)  [![GitHub issues](https://img.shields.io/github/issues/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/issues) <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=5bcc0gy"><img border="0" src="https://pub.idqqimg.com/wpa/images/group.png" alt="flutter-candies" title="flutter-candies"></a>
+[![pub package](https://img.shields.io/pub/v/loading_more_list.svg)](https://pub.dartlang.org/packages/loading_more_list) [![GitHub stars](https://img.shields.io/github/stars/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/stargazers) [![GitHub forks](https://img.shields.io/github/forks/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/network)  [![GitHub license](https://img.shields.io/github/license/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/blob/master/LICENSE)  [![GitHub issues](https://img.shields.io/github/issues/fluttercandies/loading_more_list)](https://github.com/fluttercandies/loading_more_list/issues) <a href="https://qm.qq.com/q/ZyJbSVjfSU"><img src="https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffluttercandies%2F.github%2Frefs%2Fheads%2Fmain%2Fdata.yml&query=%24.qq_group_number&style=for-the-badge&label=QQ%E7%BE%A4&logo=qq&color=1DACE8" /></a>
 
 Language: English | [中文简体](README-ZH.md)
 
@@ -123,7 +123,7 @@ ListConfig<T> and SliverListConfig<T>
 | gridDelegate         | The delegate for GridView.                                                     | -                        |
 | indicatorBuilder     | widget builder for different loading state.                                    | IndicatorWidget          |
 | padding              | The amount of space by which to inset the child sliver for SliverListConfig<T> | -                        |
-| childCountBuilder    | The builder to get child count, the input is sourceList.length                                                 | -                        |
+| childCountBuilder    | The builder to get child count, the input is sourceList.length                 | -                        |
 
 ## Widget
 
@@ -142,9 +142,9 @@ LoadingMoreSliverList<T>
 
 LoadingMoreCustomScrollView
 
-| argument                | description                                                                                    | default |
-| ----------------------- | ---------------------------------------------------------------------------------------------- | ------- |
-| onScrollNotification    | Called when a ScrollNotification of the appropriate type arrives at this location in the tree. | -       |
+| argument             | description                                                                                    | default |
+| -------------------- | ---------------------------------------------------------------------------------------------- | ------- |
+| onScrollNotification | Called when a ScrollNotification of the appropriate type arrives at this location in the tree. | -       |
 
 
 ## ListView
